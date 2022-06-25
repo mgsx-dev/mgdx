@@ -19,7 +19,7 @@ publishing {
 	publications {
 		maven(MavenPublication) {
 			groupId project.group
-			artifactId "${project.name}-desktop"
+			artifactId "mgdx-desktop"
 			version project.version
 			from components.java
 		}
