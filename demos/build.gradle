@@ -1,0 +1,46 @@
+apply plugin: 'application'
+
+sourceSets.main.resources.srcDirs += [ 'assets' ]
+mainClassName = 'net.mgsx.gdx.demos.MgdxDemoDesktop'
+eclipse.project.name = appName + '-demos'
+sourceCompatibility = 1.8
+
+dependencies {
+	implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+	implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+	implementation project(':core')
+	implementation project(':desktop')
+}
+
+def os = System.properties['os.name'].toLowerCase()
+
+run {
+	workingDir = 'assets'
+	setIgnoreExitValue(true)
+
+	if (os.contains('mac')) {
+		// Required to run LWJGL3 Java apps on MacOS
+		jvmArgs += "-XstartOnFirstThread"
+	}
+}
+
+jar {
+	archiveBaseName.set(appName)
+	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+	dependsOn configurations.runtimeClasspath
+	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+	exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
+	dependencies {
+		exclude('META-INF/INDEX.LIST', 'META-INF/maven/**')
+	}
+	manifest {
+		attributes 'Main-Class': project.mainClassName
+	}
+	doLast {
+		file(archiveFile).setExecutable(true, false)
+	}
+}
+
+// Equivalent to the jar task; here for compatibility with gdx-setup.
+task dist(dependsOn: [jar]) {
+}

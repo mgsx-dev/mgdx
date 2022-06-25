@@ -1,0 +1,64 @@
+## Gradle
+/.gradle
+/gradle-app.setting
+/core/build/
+/dekstop/build/
+/demos/build/
+
+## Java:
+*.class
+*.war
+*.ear
+hs_err_pid*
+.attach_pid*
+
+## Android:
+/android/libs/armeabi-v7a/
+/android/libs/arm64-v8a/
+/android/libs/x86/
+/android/libs/x86_64/
+/android/gen/
+local.properties
+com_crashlytics_export_strings.xml
+
+## GWT:
+/html/war/
+/html/war/gwt_bree/
+/html/gwt-unitCache/
+.apt_generated/
+/html/war/WEB-INF/deploy/
+/html/war/WEB-INF/classes/
+/html/.gwt/
+gwt-unitCache/
+/html/www-test/
+/html/.gwt-tmp/
+*.symbolMap
+
+## IntelliJ, Android Studio:
+.idea/
+*.ipr
+*.iws
+*.iml
+/out/
+/core/out/
+/desktop/out/
+/demos/out/
+
+## Eclipse
+.classpath
+.project
+.metadata
+/core/bin/
+/desktop/bin/
+/demos/bin/
+*.tmp
+*.bak
+*.swp
+*~.nib
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
+
+## OS Specific
+.DS_Store
