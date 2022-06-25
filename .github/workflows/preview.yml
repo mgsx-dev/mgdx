@@ -1,0 +1,29 @@
+name: Preview
+
+# on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-16.04
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: '1.8'
+            
+      - name: Build demos
+        run: ./gradlew desktop:dist
+
+      - name: Upload demo
+        uses: actions/upload-artifact@v2
+        with:
+          name: mgdx-demos
+          path: demos/build/libs/*.jar
+        
+      - name: Cleanup Gradle Cache
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
