@@ -240,15 +240,15 @@ public interface GL32 extends GL31 {
 
     // C function void glDebugMessageControl ( GLenum source, GLenum type, GLenum severity, GLsizei count, const GLuint *ids, GLboolean enabled )
 
-    void glDebugMessageControl(
-        int source,
-        int type,
-        int severity,
-        int count,
-        int[] ids,
-        int offset,
-        boolean enabled
-    );
+//    void glDebugMessageControl(
+//        int source,
+//        int type,
+//        int severity,
+//        int count,
+//        int[] ids,
+//        int offset,
+//        boolean enabled
+//    );
 
     // C function void glDebugMessageControl ( GLenum source, GLenum type, GLenum severity, GLsizei count, const GLuint *ids, GLboolean enabled )
 
@@ -282,21 +282,21 @@ public interface GL32 extends GL31 {
 
     // C function GLuint glGetDebugMessageLog ( GLuint count, GLsizei bufSize, GLenum *sources, GLenum *types, GLuint *ids, GLenum *severities, GLsizei *lengths, GLchar *messageLog )
 
-    int glGetDebugMessageLog(
-        int count,
-        int bufSize,
-        int[] sources,
-        int sourcesOffset,
-        int[] types,
-        int typesOffset,
-        int[] ids,
-        int idsOffset,
-        int[] severities,
-        int severitiesOffset,
-        int[] lengths,
-        int lengthsOffset,
-        byte[] messageLog,
-        int messageLogOffset);
+//    int glGetDebugMessageLog(
+//        int count,
+//        int bufSize,
+//        int[] sources,
+//        int sourcesOffset,
+//        int[] types,
+//        int typesOffset,
+//        int[] ids,
+//        int idsOffset,
+//        int[] severities,
+//        int severitiesOffset,
+//        int[] lengths,
+//        int lengthsOffset,
+//        byte[] messageLog,
+//        int messageLogOffset);
 
     // C function GLuint glGetDebugMessageLog ( GLuint count, GLsizei bufSize, GLenum *sources, GLenum *types, GLuint *ids, GLenum *severities, GLsizei *lengths, GLchar *messageLog )
 
@@ -541,39 +541,39 @@ public interface GL32 extends GL31 {
 
     // C function void glGetnUniformiv ( GLuint program, GLint location, GLsizei bufSize, GLint *params )
 
-    void glGetnUniformiv(
-        int program,
-        int location,
-        int bufSize,
-        int[] params,
-        int offset
-    );
+//    void glGetnUniformiv(
+//        int program,
+//        int location,
+//        int bufSize,
+//        int[] params,
+//        int offset
+//    );
 
     // C function void glGetnUniformiv ( GLuint program, GLint location, GLsizei bufSize, GLint *params )
 
     void glGetnUniformiv(
         int program,
         int location,
-        int bufSize,
+//        int bufSize,
         java.nio.IntBuffer params
     );
 
     // C function void glGetnUniformuiv ( GLuint program, GLint location, GLsizei bufSize, GLuint *params )
 
-    void glGetnUniformuiv(
-        int program,
-        int location,
-        int bufSize,
-        int[] params,
-        int offset
-    );
+//    void glGetnUniformuiv(
+//        int program,
+//        int location,
+//        int bufSize,
+//        int[] params,
+//        int offset
+//    );
 
     // C function void glGetnUniformuiv ( GLuint program, GLint location, GLsizei bufSize, GLuint *params )
 
     void glGetnUniformuiv(
         int program,
         int location,
-        int bufSize,
+//        int bufSize,
         java.nio.IntBuffer params
     );
 

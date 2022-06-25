@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL32;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL41;
 import org.lwjgl.opengl.GL42;
@@ -49,12 +51,6 @@ public class Lwjgl3GL31 extends Lwjgl3GL30 implements GL31 {
 	}
 
 	@Override
-	public void glGetFramebufferParameteriv(int target, int pname, int[] params, int offset) {
-		notSupported();
-		// GL46.glGetFramebufferParameteriv
-	}
-
-	@Override
 	public void glGetFramebufferParameteriv(int target, int pname, IntBuffer params) {
 		GL43.glGetFramebufferParameteriv(target, pname, params);
 	}
@@ -75,41 +71,29 @@ public class Lwjgl3GL31 extends Lwjgl3GL30 implements GL31 {
 	}
 
 	@Override
-	public void glGetProgramResourceiv(int program, int programInterface, int index, int propCount, int[] props,
-			int propsOffset, int bufSize, int[] length, int lengthOffset, int[] params, int paramsOffset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glGetProgramResourceiv(int program, int programInterface, int index, int propCount, IntBuffer props,
-			int bufSize, IntBuffer length, IntBuffer params) {
-		// TODO Auto-generated method stub
-		
+	public void glGetProgramResourceiv(int program, int programInterface, int index, IntBuffer props,
+			IntBuffer length, IntBuffer params) {
+		GL43.glGetProgramResourceiv(program, programInterface, index, props, length, params);
 	}
 
 	@Override
 	public int glGetProgramResourceLocation(int program, int programInterface, String name) {
-		// TODO Auto-generated method stub
-		return 0;
+		return GL43.glGetProgramResourceLocation(program, programInterface, name);
 	}
 
 	@Override
 	public void glUseProgramStages(int pipeline, int stages, int program) {
-		// TODO Auto-generated method stub
-		
+		GL41.glUseProgramStages(pipeline, stages, program);
 	}
 
 	@Override
 	public void glActiveShaderProgram(int pipeline, int program) {
-		// TODO Auto-generated method stub
-		
+		GL41.glActiveShaderProgram(pipeline, program);
 	}
 
 	@Override
 	public int glCreateShaderProgramv(int type, String[] strings) {
-		// TODO Auto-generated method stub
-		return 0;
+		return GL41.glCreateShaderProgramv(type, strings);
 	}
 
 	@Override
@@ -118,99 +102,68 @@ public class Lwjgl3GL31 extends Lwjgl3GL30 implements GL31 {
 	}
 
 	@Override
-	public void glDeleteProgramPipelines(int n, int[] pipelines, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glDeleteProgramPipelines(IntBuffer pipelines) {
+		GL41.glDeleteProgramPipelines(pipelines);
 	}
 
 	@Override
-	public void glDeleteProgramPipelines(int n, IntBuffer pipelines) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glGenProgramPipelines(int n, int[] pipelines, int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glGenProgramPipelines(int n, IntBuffer pipelines) {
-		// TODO Auto-generated method stub
-		
+	public void glGenProgramPipelines(IntBuffer pipelines) {
+		GL41.glGenProgramPipelines(pipelines);
 	}
 
 	@Override
 	public boolean glIsProgramPipeline(int pipeline) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void glGetProgramPipelineiv(int pipeline, int pname, int[] params, int offset) {
-		// TODO Auto-generated method stub
-		
+		return GL41.glIsProgramPipeline(pipeline);
 	}
 
 	@Override
 	public void glGetProgramPipelineiv(int pipeline, int pname, IntBuffer params) {
-		// TODO Auto-generated method stub
-		
+		GL41.glGetProgramPipelineiv(pipeline, pname, params);
 	}
 
 	@Override
 	public void glProgramUniform1i(int program, int location, int v0) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform1i(program, location, v0);
 	}
 
 	@Override
 	public void glProgramUniform2i(int program, int location, int v0, int v1) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform2i(program, location, v0, v1);
 	}
 
 	@Override
 	public void glProgramUniform3i(int program, int location, int v0, int v1, int v2) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform3i(program, location, v0, v1, v2);
 	}
 
 	@Override
 	public void glProgramUniform4i(int program, int location, int v0, int v1, int v2, int v3) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform4i(program, location, v0, v1, v2, v3);
 	}
 
 	@Override
 	public void glProgramUniform1ui(int program, int location, int v0) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform1ui(program, location, v0);
 	}
 
 	@Override
 	public void glProgramUniform2ui(int program, int location, int v0, int v1) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform2ui(program, location, v0, v1);
 	}
 
 	@Override
 	public void glProgramUniform3ui(int program, int location, int v0, int v1, int v2) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform3ui(program, location, v0, v1, v2);
 	}
 
 	@Override
 	public void glProgramUniform4ui(int program, int location, int v0, int v1, int v2, int v3) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform4ui(program, location, v0, v1, v2, v3);
 	}
 
 	@Override
 	public void glProgramUniform1f(int program, int location, float v0) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform1f(program, location, v0);
 	}
 
 	@Override
@@ -220,293 +173,133 @@ public class Lwjgl3GL31 extends Lwjgl3GL30 implements GL31 {
 
 	@Override
 	public void glProgramUniform3f(int program, int location, float v0, float v1, float v2) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform3f(program, location, v0, v1, v2);
 	}
 
 	@Override
 	public void glProgramUniform4f(int program, int location, float v0, float v1, float v2, float v3) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniform4f(program, location, v0, v1, v2, v3);
 	}
 
 	@Override
-	public void glProgramUniform1iv(int program, int location, int count, int[] value, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform1iv(int program, int location, IntBuffer value) {
+		GL41.glProgramUniform1iv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform1iv(int program, int location, int count, IntBuffer value) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform2iv(int program, int location, IntBuffer value) {
+		GL41.glProgramUniform2iv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform2iv(int program, int location, int count, int[] value, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform3iv(int program, int location, IntBuffer value) {
+		GL41.glProgramUniform3iv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform2iv(int program, int location, int count, IntBuffer value) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform4iv(int program, int location, IntBuffer value) {
+		GL41.glProgramUniform4iv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform3iv(int program, int location, int count, int[] value, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform1uiv(int program, int location, IntBuffer value) {
+		GL41.glProgramUniform1uiv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform3iv(int program, int location, int count, IntBuffer value) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform2uiv(int program, int location, IntBuffer value) {
+		GL41.glProgramUniform2uiv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform4iv(int program, int location, int count, int[] value, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform3uiv(int program, int location, IntBuffer value) {
+		GL41.glProgramUniform3uiv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform4iv(int program, int location, int count, IntBuffer value) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform4uiv(int program, int location, IntBuffer value) {
+		GL41.glProgramUniform4uiv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform1uiv(int program, int location, int count, int[] value, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform1fv(int program, int location, FloatBuffer value) {
+		GL41.glProgramUniform1fv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform1uiv(int program, int location, int count, IntBuffer value) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform2fv(int program, int location, FloatBuffer value) {
+		GL41.glProgramUniform2fv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform2uiv(int program, int location, int count, int[] value, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform3fv(int program, int location, FloatBuffer value) {
+		GL41.glProgramUniform3fv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform2uiv(int program, int location, int count, IntBuffer value) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniform4fv(int program, int location, FloatBuffer value) {
+		GL41.glProgramUniform4fv(program, location, value);
 	}
 
 	@Override
-	public void glProgramUniform3uiv(int program, int location, int count, int[] value, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniformMatrix2fv(int program, int location, boolean transpose, FloatBuffer value) {
+		GL41.glProgramUniformMatrix2fv(program, location, transpose, value);
 	}
 
 	@Override
-	public void glProgramUniform3uiv(int program, int location, int count, IntBuffer value) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniformMatrix3fv(int program, int location, boolean transpose, FloatBuffer value) {
+		GL41.glProgramUniformMatrix3fv(program, location, transpose, value);
 	}
 
 	@Override
-	public void glProgramUniform4uiv(int program, int location, int count, int[] value, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glProgramUniformMatrix4fv(int program, int location, boolean transpose, FloatBuffer value) {
+		GL41.glProgramUniformMatrix4fv(program, location, transpose, value);
 	}
 
 	@Override
-	public void glProgramUniform4uiv(int program, int location, int count, IntBuffer value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniform1fv(int program, int location, int count, float[] value, int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniform1fv(int program, int location, int count, FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniform2fv(int program, int location, int count, float[] value, int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniform2fv(int program, int location, int count, FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniform3fv(int program, int location, int count, float[] value, int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniform3fv(int program, int location, int count, FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniform4fv(int program, int location, int count, float[] value, int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniform4fv(int program, int location, int count, FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix2fv(int program, int location, int count, boolean transpose, float[] value,
-			int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix2fv(int program, int location, int count, boolean transpose, FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix3fv(int program, int location, int count, boolean transpose, float[] value,
-			int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix3fv(int program, int location, int count, boolean transpose, FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix4fv(int program, int location, int count, boolean transpose, float[] value,
-			int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix4fv(int program, int location, int count, boolean transpose, FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix2x3fv(int program, int location, int count, boolean transpose, float[] value,
-			int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix2x3fv(int program, int location, int count, boolean transpose,
+	public void glProgramUniformMatrix2x3fv(int program, int location, boolean transpose,
 			FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniformMatrix2x3fv(program, location, transpose, value);
 	}
 
 	@Override
-	public void glProgramUniformMatrix3x2fv(int program, int location, int count, boolean transpose, float[] value,
-			int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix3x2fv(int program, int location, int count, boolean transpose,
+	public void glProgramUniformMatrix3x2fv(int program, int location, boolean transpose,
 			FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniformMatrix3x2fv(program, location, transpose, value);
 	}
 
 	@Override
-	public void glProgramUniformMatrix2x4fv(int program, int location, int count, boolean transpose, float[] value,
-			int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix2x4fv(int program, int location, int count, boolean transpose,
+	public void glProgramUniformMatrix2x4fv(int program, int location, boolean transpose,
 			FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniformMatrix2x4fv(program, location, transpose, value);
 	}
 
 	@Override
-	public void glProgramUniformMatrix4x2fv(int program, int location, int count, boolean transpose, float[] value,
-			int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix4x2fv(int program, int location, int count, boolean transpose,
+	public void glProgramUniformMatrix4x2fv(int program, int location, boolean transpose,
 			FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniformMatrix4x2fv(program, location, transpose, value);
 	}
 
 	@Override
-	public void glProgramUniformMatrix3x4fv(int program, int location, int count, boolean transpose, float[] value,
-			int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix3x4fv(int program, int location, int count, boolean transpose,
+	public void glProgramUniformMatrix3x4fv(int program, int location, boolean transpose,
 			FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniformMatrix3x4fv(program, location, transpose, value);
 	}
 
 	@Override
-	public void glProgramUniformMatrix4x3fv(int program, int location, int count, boolean transpose, float[] value,
-			int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glProgramUniformMatrix4x3fv(int program, int location, int count, boolean transpose,
+	public void glProgramUniformMatrix4x3fv(int program, int location, boolean transpose,
 			FloatBuffer value) {
-		// TODO Auto-generated method stub
-		
+		GL41.glProgramUniformMatrix4x3fv(program, location, transpose, value);
 	}
 
 	@Override
 	public void glValidateProgramPipeline(int pipeline) {
-		// TODO Auto-generated method stub
-		
+		GL41.glValidateProgramPipeline(pipeline);
 	}
 
 	@Override
 	public String glGetProgramPipelineInfoLog(int program) {
-		// TODO Auto-generated method stub
-		return null;
+		return GL41.glGetProgramPipelineInfoLog(program);
 	}
 
 	@Override
@@ -538,45 +331,23 @@ public class Lwjgl3GL31 extends Lwjgl3GL30 implements GL31 {
 	}
 
 	@Override
-	public void glGetMultisamplefv(int pname, int index, float[] val, int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void glGetMultisamplefv(int pname, int index, FloatBuffer val) {
-		// TODO Auto-generated method stub
-		
+		GL32.glGetMultisamplefv(pname, index, val);
 	}
 
 	@Override
 	public void glSampleMaski(int maskNumber, int mask) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glGetTexLevelParameteriv(int target, int level, int pname, int[] params, int offset) {
-		// TODO Auto-generated method stub
-		
+		GL32.glSampleMaski(maskNumber, mask);
 	}
 
 	@Override
 	public void glGetTexLevelParameteriv(int target, int level, int pname, IntBuffer params) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glGetTexLevelParameterfv(int target, int level, int pname, float[] params, int offset) {
-		// TODO Auto-generated method stub
-		
+		GL11.glGetTexLevelParameteriv(target, level, pname, params);
 	}
 
 	@Override
 	public void glGetTexLevelParameterfv(int target, int level, int pname, FloatBuffer params) {
-		// TODO Auto-generated method stub
-		
+		GL11.glGetTexLevelParameterfv(target, level, pname, params);
 	}
 
 	@Override
@@ -586,26 +357,22 @@ public class Lwjgl3GL31 extends Lwjgl3GL30 implements GL31 {
 
 	@Override
 	public void glVertexAttribFormat(int attribindex, int size, int type, boolean normalized, int relativeoffset) {
-		// TODO Auto-generated method stub
-		
+		GL43.glVertexAttribFormat(attribindex, size, type, normalized, relativeoffset);
 	}
 
 	@Override
 	public void glVertexAttribIFormat(int attribindex, int size, int type, int relativeoffset) {
-		// TODO Auto-generated method stub
-		
+		GL43.glVertexAttribIFormat(attribindex, size, type, relativeoffset);
 	}
 
 	@Override
 	public void glVertexAttribBinding(int attribindex, int bindingindex) {
-		// TODO Auto-generated method stub
-		
+		GL43.glVertexAttribBinding(attribindex, bindingindex);
 	}
 
 	@Override
 	public void glVertexBindingDivisor(int bindingindex, int divisor) {
-		// TODO Auto-generated method stub
-		
+		GL43.glVertexBindingDivisor(bindingindex, divisor);
 	}
 
 

@@ -211,12 +211,12 @@ public interface GL31 extends GL30 {
 	
 	// C function void glGetFramebufferParameteriv ( GLenum target, GLenum pname, GLint *params )
 	
-	void glGetFramebufferParameteriv(
-	    int target,
-	    int pname,
-	    int[] params,
-	    int offset
-	);
+//	void glGetFramebufferParameteriv(
+//	    int target,
+//	    int pname,
+//	    int[] params,
+//	    int offset
+//	);
 	
 	// C function void glGetFramebufferParameteriv ( GLenum target, GLenum pname, GLint *params )
 	
@@ -263,19 +263,19 @@ public interface GL31 extends GL30 {
 	
 	// C function void glGetProgramResourceiv ( GLuint program, GLenum programInterface, GLuint index, GLsizei propCount, const GLenum *props, GLsizei bufSize, GLsizei *length, GLint *params )
 	
-	void glGetProgramResourceiv(
-	    int program,
-	    int programInterface,
-	    int index,
-	    int propCount,
-	    int[] props,
-	    int propsOffset,
-	    int bufSize,
-	    int[] length,
-	    int lengthOffset,
-	    int[] params,
-	    int paramsOffset
-	);
+//	void glGetProgramResourceiv(
+//	    int program,
+//	    int programInterface,
+//	    int index,
+//	    int propCount,
+//	    int[] props,
+//	    int propsOffset,
+//	    int bufSize,
+//	    int[] length,
+//	    int lengthOffset,
+//	    int[] params,
+//	    int paramsOffset
+//	);
 	
 	// C function void glGetProgramResourceiv ( GLuint program, GLenum programInterface, GLuint index, GLsizei propCount, const GLenum *props, GLsizei bufSize, GLsizei *length, GLint *params )
 	
@@ -283,9 +283,9 @@ public interface GL31 extends GL30 {
 	    int program,
 	    int programInterface,
 	    int index,
-	    int propCount,
+//	    int propCount,
 	    java.nio.IntBuffer props,
-	    int bufSize,
+//	    int bufSize,
 	    java.nio.IntBuffer length,
 	    java.nio.IntBuffer params
 	);
@@ -328,31 +328,31 @@ public interface GL31 extends GL30 {
 	
 	// C function void glDeleteProgramPipelines ( GLsizei n, const GLuint *pipelines )
 	
-	void glDeleteProgramPipelines(
-	    int n,
-	    int[] pipelines,
-	    int offset
-	);
+//	void glDeleteProgramPipelines(
+//	    int n,
+//	    int[] pipelines,
+//	    int offset
+//	);
 	
 	// C function void glDeleteProgramPipelines ( GLsizei n, const GLuint *pipelines )
 	
 	void glDeleteProgramPipelines(
-	    int n,
+//	    int n,
 	    java.nio.IntBuffer pipelines
 	);
 	
 	// C function void glGenProgramPipelines ( GLsizei n, GLuint *pipelines )
 	
-	void glGenProgramPipelines(
-	    int n,
-	    int[] pipelines,
-	    int offset
-	);
+//	void glGenProgramPipelines(
+//	    int n,
+//	    int[] pipelines,
+//	    int offset
+//	);
 	
 	// C function void glGenProgramPipelines ( GLsizei n, GLuint *pipelines )
 	
 	void glGenProgramPipelines(
-	    int n,
+//	    int n,
 	    java.nio.IntBuffer pipelines
 	);
 	
@@ -364,12 +364,12 @@ public interface GL31 extends GL30 {
 	
 	// C function void glGetProgramPipelineiv ( GLuint pipeline, GLenum pname, GLint *params )
 	
-	void glGetProgramPipelineiv(
-	    int pipeline,
-	    int pname,
-	    int[] params,
-	    int offset
-	);
+//	void glGetProgramPipelineiv(
+//	    int pipeline,
+//	    int pname,
+//	    int[] params,
+//	    int offset
+//	);
 	
 	// C function void glGetProgramPipelineiv ( GLuint pipeline, GLenum pname, GLint *params )
 	
@@ -495,417 +495,417 @@ public interface GL31 extends GL30 {
 	
 	// C function void glProgramUniform1iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
 	
-	void glProgramUniform1iv(
-	    int program,
-	    int location,
-	    int count,
-	    int[] value,
-	    int offset
-	);
+//	void glProgramUniform1iv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    int[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform1iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
 	
 	void glProgramUniform1iv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    java.nio.IntBuffer value
 	);
+	
+	// C function void glProgramUniform2iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
+	
+//	void glProgramUniform2iv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    int[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform2iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
 	
 	void glProgramUniform2iv(
 	    int program,
 	    int location,
-	    int count,
-	    int[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform2iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
-	
-	void glProgramUniform2iv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.IntBuffer value
 	);
+	
+	// C function void glProgramUniform3iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
+	
+//	void glProgramUniform3iv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    int[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform3iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
 	
 	void glProgramUniform3iv(
 	    int program,
 	    int location,
-	    int count,
-	    int[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform3iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
-	
-	void glProgramUniform3iv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.IntBuffer value
 	);
+	
+	// C function void glProgramUniform4iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
+	
+//	void glProgramUniform4iv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    int[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform4iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
 	
 	void glProgramUniform4iv(
 	    int program,
 	    int location,
-	    int count,
-	    int[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform4iv ( GLuint program, GLint location, GLsizei count, const GLint *value )
-	
-	void glProgramUniform4iv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.IntBuffer value
 	);
+	
+	// C function void glProgramUniform1uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
+	
+//	void glProgramUniform1uiv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    int[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform1uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
 	
 	void glProgramUniform1uiv(
 	    int program,
 	    int location,
-	    int count,
-	    int[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform1uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
-	
-	void glProgramUniform1uiv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.IntBuffer value
 	);
+	
+	// C function void glProgramUniform2uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
+	
+//	void glProgramUniform2uiv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    int[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform2uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
 	
 	void glProgramUniform2uiv(
 	    int program,
 	    int location,
-	    int count,
-	    int[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform2uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
-	
-	void glProgramUniform2uiv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.IntBuffer value
 	);
+	
+	// C function void glProgramUniform3uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
+	
+//	void glProgramUniform3uiv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    int[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform3uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
 	
 	void glProgramUniform3uiv(
 	    int program,
 	    int location,
-	    int count,
-	    int[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform3uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
-	
-	void glProgramUniform3uiv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.IntBuffer value
 	);
+	
+	// C function void glProgramUniform4uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
+	
+//	void glProgramUniform4uiv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    int[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform4uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
 	
 	void glProgramUniform4uiv(
 	    int program,
 	    int location,
-	    int count,
-	    int[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform4uiv ( GLuint program, GLint location, GLsizei count, const GLuint *value )
-	
-	void glProgramUniform4uiv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.IntBuffer value
 	);
 	
 	// C function void glProgramUniform1fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
 	
-	void glProgramUniform1fv(
-	    int program,
-	    int location,
-	    int count,
-	    float[] value,
-	    int offset
-	);
+//	void glProgramUniform1fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform1fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
 	
 	void glProgramUniform1fv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    java.nio.FloatBuffer value
 	);
+	
+	// C function void glProgramUniform2fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
+	
+//	void glProgramUniform2fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform2fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
 	
 	void glProgramUniform2fv(
 	    int program,
 	    int location,
-	    int count,
-	    float[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform2fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
-	
-	void glProgramUniform2fv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.FloatBuffer value
 	);
+	
+	// C function void glProgramUniform3fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
+	
+//	void glProgramUniform3fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform3fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
 	
 	void glProgramUniform3fv(
 	    int program,
 	    int location,
-	    int count,
-	    float[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform3fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
-	
-	void glProgramUniform3fv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.FloatBuffer value
 	);
+	
+	// C function void glProgramUniform4fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
+	
+//	void glProgramUniform4fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniform4fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
 	
 	void glProgramUniform4fv(
 	    int program,
 	    int location,
-	    int count,
-	    float[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniform4fv ( GLuint program, GLint location, GLsizei count, const GLfloat *value )
-	
-	void glProgramUniform4fv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    java.nio.FloatBuffer value
 	);
+	
+	// C function void glProgramUniformMatrix2fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
+	
+//	void glProgramUniformMatrix2fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    boolean transpose,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniformMatrix2fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
 	void glProgramUniformMatrix2fv(
 	    int program,
 	    int location,
-	    int count,
-	    boolean transpose,
-	    float[] value,
-	    int offset
-	);
-	
-	// C function void glProgramUniformMatrix2fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
-	
-	void glProgramUniformMatrix2fv(
-	    int program,
-	    int location,
-	    int count,
+//	    int count,
 	    boolean transpose,
 	    java.nio.FloatBuffer value
 	);
 	
 	// C function void glProgramUniformMatrix3fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
-	void glProgramUniformMatrix3fv(
-	    int program,
-	    int location,
-	    int count,
-	    boolean transpose,
-	    float[] value,
-	    int offset
-	);
+//	void glProgramUniformMatrix3fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    boolean transpose,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniformMatrix3fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
 	void glProgramUniformMatrix3fv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    boolean transpose,
 	    java.nio.FloatBuffer value
 	);
 	
 	// C function void glProgramUniformMatrix4fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
-	void glProgramUniformMatrix4fv(
-	    int program,
-	    int location,
-	    int count,
-	    boolean transpose,
-	    float[] value,
-	    int offset
-	);
+//	void glProgramUniformMatrix4fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    boolean transpose,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniformMatrix4fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
 	void glProgramUniformMatrix4fv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    boolean transpose,
 	    java.nio.FloatBuffer value
 	);
 	
 	// C function void glProgramUniformMatrix2x3fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
-	void glProgramUniformMatrix2x3fv(
-	    int program,
-	    int location,
-	    int count,
-	    boolean transpose,
-	    float[] value,
-	    int offset
-	);
+//	void glProgramUniformMatrix2x3fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    boolean transpose,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniformMatrix2x3fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
 	void glProgramUniformMatrix2x3fv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    boolean transpose,
 	    java.nio.FloatBuffer value
 	);
 	
 	// C function void glProgramUniformMatrix3x2fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
-	void glProgramUniformMatrix3x2fv(
-	    int program,
-	    int location,
-	    int count,
-	    boolean transpose,
-	    float[] value,
-	    int offset
-	);
+//	void glProgramUniformMatrix3x2fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    boolean transpose,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniformMatrix3x2fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
 	void glProgramUniformMatrix3x2fv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    boolean transpose,
 	    java.nio.FloatBuffer value
 	);
 	
 	// C function void glProgramUniformMatrix2x4fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
-	void glProgramUniformMatrix2x4fv(
-	    int program,
-	    int location,
-	    int count,
-	    boolean transpose,
-	    float[] value,
-	    int offset
-	);
+//	void glProgramUniformMatrix2x4fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    boolean transpose,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniformMatrix2x4fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
 	void glProgramUniformMatrix2x4fv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    boolean transpose,
 	    java.nio.FloatBuffer value
 	);
 	
 	// C function void glProgramUniformMatrix4x2fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
-	void glProgramUniformMatrix4x2fv(
-	    int program,
-	    int location,
-	    int count,
-	    boolean transpose,
-	    float[] value,
-	    int offset
-	);
+//	void glProgramUniformMatrix4x2fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    boolean transpose,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniformMatrix4x2fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
 	void glProgramUniformMatrix4x2fv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    boolean transpose,
 	    java.nio.FloatBuffer value
 	);
 	
 	// C function void glProgramUniformMatrix3x4fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
-	void glProgramUniformMatrix3x4fv(
-	    int program,
-	    int location,
-	    int count,
-	    boolean transpose,
-	    float[] value,
-	    int offset
-	);
+//	void glProgramUniformMatrix3x4fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    boolean transpose,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniformMatrix3x4fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
 	void glProgramUniformMatrix3x4fv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    boolean transpose,
 	    java.nio.FloatBuffer value
 	);
 	
 	// C function void glProgramUniformMatrix4x3fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
-	void glProgramUniformMatrix4x3fv(
-	    int program,
-	    int location,
-	    int count,
-	    boolean transpose,
-	    float[] value,
-	    int offset
-	);
+//	void glProgramUniformMatrix4x3fv(
+//	    int program,
+//	    int location,
+//	    int count,
+//	    boolean transpose,
+//	    float[] value,
+//	    int offset
+//	);
 	
 	// C function void glProgramUniformMatrix4x3fv ( GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value )
 	
 	void glProgramUniformMatrix4x3fv(
 	    int program,
 	    int location,
-	    int count,
+//	    int count,
 	    boolean transpose,
 	    java.nio.FloatBuffer value
 	);
@@ -976,12 +976,12 @@ public interface GL31 extends GL30 {
 	
 	// C function void glGetMultisamplefv ( GLenum pname, GLuint index, GLfloat *val )
 	
-	void glGetMultisamplefv(
-	    int pname,
-	    int index,
-	    float[] val,
-	    int offset
-	);
+//	void glGetMultisamplefv(
+//	    int pname,
+//	    int index,
+//	    float[] val,
+//	    int offset
+//	);
 	
 	// C function void glGetMultisamplefv ( GLenum pname, GLuint index, GLfloat *val )
 	
@@ -1000,13 +1000,13 @@ public interface GL31 extends GL30 {
 	
 	// C function void glGetTexLevelParameteriv ( GLenum target, GLint level, GLenum pname, GLint *params )
 	
-	void glGetTexLevelParameteriv(
-	    int target,
-	    int level,
-	    int pname,
-	    int[] params,
-	    int offset
-	);
+//	void glGetTexLevelParameteriv(
+//	    int target,
+//	    int level,
+//	    int pname,
+//	    int[] params,
+//	    int offset
+//	);
 	
 	// C function void glGetTexLevelParameteriv ( GLenum target, GLint level, GLenum pname, GLint *params )
 	
@@ -1019,13 +1019,13 @@ public interface GL31 extends GL30 {
 	
 	// C function void glGetTexLevelParameterfv ( GLenum target, GLint level, GLenum pname, GLfloat *params )
 	
-	void glGetTexLevelParameterfv(
-	    int target,
-	    int level,
-	    int pname,
-	    float[] params,
-	    int offset
-	);
+//	void glGetTexLevelParameterfv(
+//	    int target,
+//	    int level,
+//	    int pname,
+//	    float[] params,
+//	    int offset
+//	);
 	
 	// C function void glGetTexLevelParameterfv ( GLenum target, GLint level, GLenum pname, GLfloat *params )
 	

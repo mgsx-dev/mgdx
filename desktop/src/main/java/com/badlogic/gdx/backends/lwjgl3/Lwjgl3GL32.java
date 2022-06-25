@@ -4,15 +4,19 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL31;
+import org.lwjgl.opengl.GL33;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GL45;
-import org.lwjgl.opengl.GL46;
 import org.lwjgl.opengl.GLDebugMessageCallbackI;
 import org.lwjgl.system.MemoryUtil;
+
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.graphics.GL32;
 
@@ -29,13 +33,6 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 	public void glCopyImageSubData(int srcName, int srcTarget, int srcLevel, int srcX, int srcY, int srcZ, int dstName,
 			int dstTarget, int dstLevel, int dstX, int dstY, int dstZ, int srcWidth, int srcHeight, int srcDepth) {
 		GL43.glCopyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight, srcDepth);
-	}
-
-	@Override
-	public void glDebugMessageControl(int source, int type, int severity, int count, int[] ids, int offset,
-			boolean enabled) {
-		// TODO Auto-generated method stub
-		GL46.glDebugMessageControl(source, type, severity, ids, enabled);
 	}
 
 	@Override
@@ -56,14 +53,6 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 				callback.onMessage(source, type, id, severity, MemoryUtil.memUTF8(message, length));
 			}
 		}, 0);
-	}
-
-	@Override
-	public int glGetDebugMessageLog(int count, int bufSize, int[] sources, int sourcesOffset, int[] types,
-			int typesOffset, int[] ids, int idsOffset, int[] severities, int severitiesOffset, int[] lengths,
-			int lengthsOffset, byte[] messageLog, int messageLogOffset) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override
@@ -146,38 +135,54 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 
 	@Override
 	public boolean glIsEnabledi(int target, int index) {
-		return GL46.glIsEnabledi(target, index);
+		return GL30.glIsEnabledi(target, index);
 	}
 
 	@Override
 	public void glDrawElementsBaseVertex(int mode, int type, ByteBuffer indices, int basevertex) {
-		GL46.glDrawElementsBaseVertex(mode, type, indices, basevertex); // TODO
+		org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, type, indices, basevertex);
 	}
 
 	@Override
 	public void glDrawRangeElementsBaseVertex(int mode, int start, int end, int count, int type, Buffer indices,
 			int basevertex) {
-		org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, type, (ByteBuffer)indices, basevertex); // TODO limit
+		// TODO limit
+		if(indices instanceof ByteBuffer){
+			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, (ByteBuffer)indices, basevertex);
+		}else if(indices instanceof IntBuffer){
+			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, (IntBuffer)indices, basevertex);
+		}else if(indices instanceof ShortBuffer){
+			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, (ShortBuffer)indices, basevertex);
+		}else{
+			throw new GdxRuntimeException("buffer type not supported");
+		}
 	}
 
 	@Override
 	public void glDrawElementsInstancedBaseVertex(int mode, int count, int type, Buffer indices, int instanceCount,
 			int basevertex) {
-		// TODO Auto-generated method stub
-		
+		// TODO limit
+		if(indices instanceof ByteBuffer){
+			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, (ByteBuffer)indices, instanceCount, basevertex);
+		}else if(indices instanceof IntBuffer){
+			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, (IntBuffer)indices, instanceCount, basevertex);
+		}else if(indices instanceof ShortBuffer){
+			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, (ShortBuffer)indices, instanceCount, basevertex);
+		}else{
+			throw new GdxRuntimeException("buffer type not supported");
+		}
 	}
 
 	@Override
 	public void glDrawElementsInstancedBaseVertex(int mode, int count, int type, int indicesOffset, int instanceCount,
 			int basevertex) {
-		// TODO Auto-generated method stub
-		
+		// TODO test
+		org.lwjgl.opengl.GL32.nglDrawElementsInstancedBaseVertex(mode, count, type, indicesOffset, instanceCount, basevertex);
 	}
 
 	@Override
 	public void glFramebufferTexture(int target, int attachment, int texture, int level) {
-		// TODO Auto-generated method stub
-		
+		org.lwjgl.opengl.GL32.glFramebufferTexture(target, attachment, texture, level);
 	}
 
 	@Override
@@ -192,31 +197,17 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 
 	@Override
 	public void glGetnUniformfv(int program, int location, FloatBuffer params) {
-		GL46.glGetnUniformfv(program, location, params);
+		GL45.glGetnUniformfv(program, location, params);
 	}
 
 	@Override
-	public void glGetnUniformiv(int program, int location, int bufSize, int[] params, int offset) {
-		// TODO Auto-generated method stub
-		
+	public void glGetnUniformiv(int program, int location, IntBuffer params) {
+		GL45.glGetnUniformiv(program, location, params);
 	}
 
 	@Override
-	public void glGetnUniformiv(int program, int location, int bufSize, IntBuffer params) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glGetnUniformuiv(int program, int location, int bufSize, int[] params, int offset) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void glGetnUniformuiv(int program, int location, int bufSize, IntBuffer params) {
-		// TODO Auto-generated method stub
-		
+	public void glGetnUniformuiv(int program, int location, IntBuffer params) {
+		GL45.glGetnUniformuiv(program, location, params);
 	}
 
 	@Override
@@ -246,51 +237,43 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 
 	@Override
 	public void glGetTexParameterIuiv(int target, int pname, IntBuffer params) {
-		// TODO Auto-generated method stub
-		
+		GL30.glGetTexParameterIuiv(target, pname, params);
 	}
 
 	@Override
 	public void glSamplerParameterIiv(int sampler, int pname, IntBuffer param) {
-		// TODO Auto-generated method stub
-		
+		GL33.glSamplerParameterIiv(sampler, pname, param);
 	}
 
 	@Override
 	public void glSamplerParameterIuiv(int sampler, int pname, IntBuffer param) {
-		// TODO Auto-generated method stub
-		
+		GL33.glSamplerParameterIuiv(sampler, pname, param);
 	}
 
 	@Override
 	public void glGetSamplerParameterIiv(int sampler, int pname, IntBuffer params) {
-		// TODO Auto-generated method stub
-		
+		GL33.glGetSamplerParameterIiv(sampler, pname, params);
 	}
 
 	@Override
 	public void glGetSamplerParameterIuiv(int sampler, int pname, IntBuffer params) {
-		// TODO Auto-generated method stub
-		
+		GL33.glGetSamplerParameterIuiv(sampler, pname, params);
 	}
 
 	@Override
 	public void glTexBuffer(int target, int internalformat, int buffer) {
-		// TODO Auto-generated method stub
-		
+		GL31.glTexBuffer(target, internalformat, buffer);
 	}
 
 	@Override
 	public void glTexBufferRange(int target, int internalformat, int buffer, int offset, int size) {
-		// TODO Auto-generated method stub
-		
+		GL43.glTexBufferRange(target, internalformat, buffer, offset, size);
 	}
 
 	@Override
 	public void glTexStorage3DMultisample(int target, int samples, int internalformat, int width, int height, int depth,
 			boolean fixedsamplelocations) {
-		// TODO Auto-generated method stub
-		GL46.glTexStorage3DMultisample(target, samples, internalformat, width, height, depth, fixedsamplelocations);
+		GL43.glTexStorage3DMultisample(target, samples, internalformat, width, height, depth, fixedsamplelocations);
 	}
 
 }
