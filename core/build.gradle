@@ -12,8 +12,6 @@ java {
 	withJavadocJar()
 }
 
-group = 'com.github.mgsx-dev'
-
 publishing {
 	publications {
 		maven(MavenPublication) {

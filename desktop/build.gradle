@@ -6,3 +6,22 @@ dependencies {
 	implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 	implementation project(':core')
 }
+
+
+apply plugin: 'maven-publish'
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId project.group
+			artifactId "${project.name}-desktop"
+			version project.version
+			from components.java
+		}
+	}
+}
