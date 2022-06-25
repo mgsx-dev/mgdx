@@ -4,3 +4,7 @@ eclipse.project.name = appName + '-core'
 dependencies {
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
 }
+
+apply plugin: 'maven'
+
+group = 'com.github.mgsx-dev'
