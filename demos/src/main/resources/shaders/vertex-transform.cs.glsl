@@ -3,7 +3,7 @@
 // Compute Shader SSB Data Structure and Buffer Definition
 
 struct VtxInData {
-   vec3  position;
+   vec4  position;
 };
 
 layout (std140, binding = 0) buffer srcBuffer {
@@ -11,7 +11,7 @@ layout (std140, binding = 0) buffer srcBuffer {
 } inBuffer ;
 
 struct VtxOutData {
-   vec3  position;
+   vec4  position;
    vec4  color;
 };
 
@@ -26,9 +26,13 @@ uniform float u_time;
 
 void main() {
 	VtxInData in_v = inBuffer.verts[gl_GlobalInvocationID.x];
+	VtxOutData out_v;
 
-	VtxOutData out_v = outBuffer.verts[gl_GlobalInvocationID.x];
+	out_v.position = in_v.position;
+	// out_v.position.x = fract(u_time);
+	out_v.color = vec4(in_v.position);
+	out_v.color.r = fract(u_time);
+	out_v.color.a = 1.0;
 
-	out_v.position = in_v.position + vec3(0.5, 0.0, 0.0);
-	out_v.color = vec4(0.0, 0.0, fract(u_time), 1.0);
+	outBuffer.verts[gl_GlobalInvocationID.x] = out_v;
 }

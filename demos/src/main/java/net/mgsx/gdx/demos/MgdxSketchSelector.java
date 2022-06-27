@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import net.mgsx.gdx.demos.sketches.DefaultSketch;
+import net.mgsx.gdx.demos.sketches.GL31ComputeShaderSSBOSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShaderVBOSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShadersSketch;
 import net.mgsx.gdx.demos.sketches.GL31FrameBufferMultisampleSketch;
@@ -27,6 +28,7 @@ public class MgdxSketchSelector extends Dialog
 		sketches.addAll(
 			DefaultSketch.class,
 			GL31ComputeShaderVBOSketch.class,
+			GL31ComputeShaderSSBOSketch.class,
 			GL31ProgramPipelineSketch.class,
 			GL31FrameBufferMultisampleSketch.class,
 			GL31ComputeShadersSketch.class,
