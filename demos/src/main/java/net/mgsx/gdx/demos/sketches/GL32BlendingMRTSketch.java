@@ -55,7 +55,7 @@ public class GL32BlendingMRTSketch extends ScreenAdapter
 		
 		// Mgdx.gl32.glBlendEquationSeparatei(1, GL20.GL_FUNC_SUBTRACT, GL20.GL_FUNC_ADD);
 		for(int i=0 ; i<fbo.getTextureAttachments().size ; i++){
-			boolean enabled = Mgdx.gl32.glIsEnabledi(i, GL20.GL_BLEND);
+			boolean enabled = Mgdx.gl32.glIsEnabledi(GL20.GL_BLEND, i);
 			System.out.println("#" + i + " blending: " + enabled);
 		}
 	}
@@ -85,7 +85,7 @@ public class GL32BlendingMRTSketch extends ScreenAdapter
 		
 		Mgdx.gl32.glEnablei(GL20.GL_BLEND, 6);
 		Mgdx.gl32.glBlendFunci(6, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Mgdx.gl32.glBlendEquationSeparatei(6, GL32.GL_HARDLIGHT, GL20.GL_FUNC_ADD);
+		Mgdx.gl32.glBlendEquationSeparatei(6, GL32.GL_FUNC_REVERSE_SUBTRACT, GL20.GL_FUNC_ADD);
 		
 		Mgdx.gl32.glEnablei(GL20.GL_BLEND, 7);
 		Mgdx.gl32.glBlendFunci(7, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
