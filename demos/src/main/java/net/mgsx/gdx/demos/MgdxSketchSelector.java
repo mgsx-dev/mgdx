@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 import net.mgsx.gdx.demos.sketches.DefaultSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShadersSketch;
 import net.mgsx.gdx.demos.sketches.GL31FrameBufferMultisampleSketch;
+import net.mgsx.gdx.demos.sketches.GL31ProgramPipelineSketch;
 import net.mgsx.gdx.demos.sketches.GL32BlendingMRTSketch;
 import net.mgsx.gdx.demos.sketches.GL32DebugControlSketch;
 
@@ -24,6 +25,7 @@ public class MgdxSketchSelector extends Dialog
 	static{
 		sketches.addAll(
 			DefaultSketch.class,
+			GL31ProgramPipelineSketch.class,
 			GL31FrameBufferMultisampleSketch.class,
 			GL31ComputeShadersSketch.class,
 			GL32DebugControlSketch.class,
@@ -51,6 +53,7 @@ public class MgdxSketchSelector extends Dialog
 			}
 		});
 		getContentTable().add(selector).row();
+		setSketch(sketches.first());
 	}
 
 	private void setSketch(Class<? extends Screen> sketch) {

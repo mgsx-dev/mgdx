@@ -4,7 +4,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.profiling.GL30Interceptor;
 
 import net.mgsx.gdx.graphics.GL31;
 
