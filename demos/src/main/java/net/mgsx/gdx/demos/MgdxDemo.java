@@ -2,6 +2,8 @@ package net.mgsx.gdx.demos;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.profiling.GLErrorListener;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -14,6 +16,7 @@ public class MgdxDemo extends MgdxGame
 {
 	private Stage stage;
 	private Skin skin;
+	private GLProfiler profiler;
 	
 	public MgdxDemo() {
 		settings.glMode = GLMode.GL32;
@@ -24,6 +27,9 @@ public class MgdxDemo extends MgdxGame
 	
 	@Override
 	public void create() {
+		profiler = new GLProfiler(Gdx.graphics);
+		profiler.enable();
+		profiler.setListener(GLErrorListener.THROWING_LISTENER);
 		stage = new Stage(new ScreenViewport());
 		skin = new Skin(Gdx.files.internal("skins/uiskin.json"));
 		new MgdxSketchSelector(this, skin).show(stage);
