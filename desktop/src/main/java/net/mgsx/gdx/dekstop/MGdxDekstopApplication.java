@@ -47,7 +47,8 @@ public class MGdxDekstopApplication {
 			@Override
 			public Lwjgl3Window newWindow(ApplicationListener listener, Lwjgl3WindowConfiguration config) {
 				Lwjgl3Window wnd = super.newWindow(listener, config);
-				if(Mgdx.gl31 != null) Gdx.gl = Gdx.gl30 = Mgdx.gl31;
+				if(Mgdx.gl31 != null) Gdx.gl = Gdx.gl20 = Gdx.gl30 = Mgdx.gl31;
+				if(Mgdx.gl32 != null) Gdx.gl = Gdx.gl20 = Gdx.gl30 = Mgdx.gl31 = Mgdx.gl32;
 				return wnd;
 			}
 		};

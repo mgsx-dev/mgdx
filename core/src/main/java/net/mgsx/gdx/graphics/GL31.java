@@ -351,6 +351,7 @@ public interface GL31 extends GL30 {
 	
 	// C function void glGenProgramPipelines ( GLsizei n, GLuint *pipelines )
 	
+	int glGenProgramPipeline();
 	void glGenProgramPipelines(
 //	    int n,
 	    java.nio.IntBuffer pipelines

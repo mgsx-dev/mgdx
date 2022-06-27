@@ -20,6 +20,7 @@ import net.mgsx.gdx.graphics.GL31;
 public class Lwjgl3GL31 extends Lwjgl3GL30 implements GL31 {
 	
 	private final static ByteBuffer tmpByteBuffer = BufferUtils.newByteBuffer(16);
+	private final static IntBuffer tmpIntBuffer = BufferUtils.newIntBuffer(16);
 	
 	protected void notSupported(){
 		throw new GdxRuntimeException("not supported");
@@ -109,6 +110,11 @@ public class Lwjgl3GL31 extends Lwjgl3GL30 implements GL31 {
 	@Override
 	public void glGenProgramPipelines(IntBuffer pipelines) {
 		GL41.glGenProgramPipelines(pipelines);
+	}
+	@Override
+	public int glGenProgramPipeline() {
+		glGenProgramPipelines(tmpIntBuffer);
+		return tmpIntBuffer.get();
 	}
 
 	@Override
