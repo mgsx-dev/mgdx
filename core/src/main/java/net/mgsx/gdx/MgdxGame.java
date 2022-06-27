@@ -16,7 +16,7 @@ public abstract class MgdxGame extends Game
 	public static class Settings {
 		
 		public enum GLMode {
-			GL20, GL30, GL31, GL32
+			GL20, GL30, GL31, GL32, GLMAX
 		}
 		
 		public boolean useVSync = true;

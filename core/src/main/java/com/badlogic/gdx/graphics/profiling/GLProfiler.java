@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.FloatCounter;
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.GL31;
 import net.mgsx.gdx.graphics.GL32;
+import net.mgsx.gdx.graphics.GLMax;
 
 /** When enabled, collects statistics about GL calls and checks for GL errors. Enabling will wrap Gdx.gl* instances with delegate
  * classes which provide described functionality and route GL calls to the actual GL instances.
@@ -45,7 +46,9 @@ public class GLProfiler {
 	public GLProfiler (Graphics graphics) {
 		this.graphics = graphics;
 		GL30 gl30 = graphics.getGL30();
-		if(Mgdx.gl32 != null){
+		if(Mgdx.glMax != null){
+			glInterceptor = new GLMaxInterceptor(this, Mgdx.glMax);
+		}else if(Mgdx.gl32 != null){
 			glInterceptor = new GL32Interceptor(this, Mgdx.gl32);
 		}else if(Mgdx.gl31 != null){
 			glInterceptor = new GL31Interceptor(this, Mgdx.gl31);
@@ -67,6 +70,9 @@ public class GLProfiler {
 		if(Mgdx.gl31 != null){
 			Mgdx.gl31 = (GL31)glInterceptor;
 		}
+		if(Mgdx.glMax != null){
+			Mgdx.glMax = (GLMax)glInterceptor;
+		}
 		
 		GL30 gl30 = graphics.getGL30();
 		if (gl30 != null) {
@@ -87,6 +93,9 @@ public class GLProfiler {
 		}
 		if(Mgdx.gl31 != null){
 			Mgdx.gl31 = ((GL31Interceptor)glInterceptor).gl31;
+		}
+		if(Mgdx.glMax != null){
+			Mgdx.glMax = ((GLMaxInterceptor)glInterceptor).glMax;
 		}
 		
 		GL30 gl30 = graphics.getGL30();

@@ -19,7 +19,7 @@ public class MgdxDemo extends MgdxGame
 	private GLProfiler profiler;
 	
 	public MgdxDemo() {
-		settings.glMode = GLMode.GL32;
+		settings.glMode = GLMode.GLMAX;
 		settings.glMajor = 4;
 		settings.glMinor = 5;
 		settings.icons = new String[]{"libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png"};

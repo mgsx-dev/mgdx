@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration.GLEmulation;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GL31;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GL32;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GLMax;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowConfiguration;
 
@@ -41,6 +42,9 @@ public class MGdxDekstopApplication {
 			break;
 		case GL32: config.setOpenGLEmulation(GLEmulation.GL30, game.settings.glMajor, game.settings.glMinor);
 			Mgdx.gl31 = Mgdx.gl32 = new Lwjgl3GL32();
+			break;
+		case GLMAX: config.setOpenGLEmulation(GLEmulation.GL30, game.settings.glMajor, game.settings.glMinor);
+			Mgdx.gl31 = Mgdx.gl32 = Mgdx.glMax = new Lwjgl3GLMax();
 			break;
 		}
 		new Lwjgl3Application(game, config){
