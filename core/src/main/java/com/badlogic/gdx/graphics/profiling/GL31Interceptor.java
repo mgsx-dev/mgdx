@@ -120,22 +120,15 @@ public class GL31Interceptor extends GL30Interceptor implements GL31 {
 		check();
 	}
 
-	public void glDeleteProgramPipelines(IntBuffer pipelines) {
+	public void glDeleteProgramPipelines(int count, IntBuffer pipelines) {
 		calls++;
-		gl31.glDeleteProgramPipelines(pipelines);
+		gl31.glDeleteProgramPipelines(count, pipelines);
 		check();
 	}
 
-	public int glGenProgramPipeline() {
+	public void glGenProgramPipelines(int count, IntBuffer pipelines) {
 		calls++;
-		int v = gl31.glGenProgramPipeline();
-		check();
-		return v;
-	}
-
-	public void glGenProgramPipelines(IntBuffer pipelines) {
-		calls++;
-		gl31.glGenProgramPipelines(pipelines);
+		gl31.glGenProgramPipelines(count, pipelines);
 		check();
 	}
 

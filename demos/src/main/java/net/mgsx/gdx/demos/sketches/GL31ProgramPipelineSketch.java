@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.GL31;
+import net.mgsx.gdx.utils.GLUtils;
 
 public class GL31ProgramPipelineSketch extends ScreenAdapter
 {
@@ -22,7 +23,6 @@ public class GL31ProgramPipelineSketch extends ScreenAdapter
 	private int vertProgram;
 	private int fragProgram;
 	private Matrix4 transform = new Matrix4();
-	private FloatBuffer transformBuffer = BufferUtils.newFloatBuffer(16);
 	private float time;
 	private int vboHandle;
 
@@ -35,7 +35,7 @@ public class GL31ProgramPipelineSketch extends ScreenAdapter
 		vertProgram = Mgdx.gl31.glCreateShaderProgramv(GL20.GL_VERTEX_SHADER, new String[]{Gdx.files.classpath("shaders/solid-batch.vs.glsl").readString()});
 		fragProgram = Mgdx.gl31.glCreateShaderProgramv(GL20.GL_FRAGMENT_SHADER, new String[]{Gdx.files.classpath("shaders/solid-batch.fs.glsl").readString()});
 		
-		ppHandle = Mgdx.gl31.glGenProgramPipeline();
+		ppHandle = GLUtils.glGenProgramPipeline();
 		Mgdx.gl31.glUseProgramStages(ppHandle, GL31.GL_VERTEX_SHADER_BIT, vertProgram);
 		Mgdx.gl31.glUseProgramStages(ppHandle, GL31.GL_FRAGMENT_SHADER_BIT, fragProgram);
 		
@@ -99,9 +99,10 @@ public class GL31ProgramPipelineSketch extends ScreenAdapter
 		int u_projTrans = Mgdx.gl31.glGetUniformLocation(vertProgram, "u_projTrans");
 		boolean useNew = true;
 		if(useNew){
-			transformBuffer.put(transform.val);
-			transformBuffer.flip();
-			Mgdx.gl31.glProgramUniformMatrix4fv(vertProgram, u_projTrans, false, transformBuffer);
+			FloatBuffer buf = GLUtils.buffer16f;
+			buf.put(transform.val);
+			buf.flip();
+			Mgdx.gl31.glProgramUniformMatrix4fv(vertProgram, u_projTrans, false, buf);
 		}else{
 			Mgdx.gl31.glActiveShaderProgram(ppHandle, vertProgram);
 			Gdx.gl.glUniformMatrix4fv(u_projTrans, 1, false, transform.val, 0);
@@ -121,7 +122,7 @@ public class GL31ProgramPipelineSketch extends ScreenAdapter
 		IntBuffer buf = BufferUtils.newIntBuffer(1);
 		buf.put(ppHandle);
 		buf.flip();
-		Mgdx.gl31.glDeleteProgramPipelines(buf);
+		GLUtils.glDeleteProgramPipeline(ppHandle);
 	
 		Gdx.gl20.glDeleteProgram(vertProgram);
 		Gdx.gl20.glDeleteProgram(fragProgram);
