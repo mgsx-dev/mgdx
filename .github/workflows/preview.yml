@@ -15,7 +15,7 @@ jobs:
           java-version: '1.8'
             
       - name: Build demos
-        run: ./gradlew desktop:jar
+        run: ./gradlew demos:dist
 
       - name: Upload demo
         uses: actions/upload-artifact@v2
