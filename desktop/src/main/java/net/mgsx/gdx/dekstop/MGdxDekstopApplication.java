@@ -1,15 +1,11 @@
 package net.mgsx.gdx.dekstop;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration.GLEmulation;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GL31;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GL32;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GLMax;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.MgdxLwjgl3Application;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.MgdxGame;
@@ -47,14 +43,6 @@ public class MGdxDekstopApplication {
 			Mgdx.gl31 = Mgdx.gl32 = Mgdx.glMax = new Lwjgl3GLMax();
 			break;
 		}
-		new Lwjgl3Application(game, config){
-			@Override
-			public Lwjgl3Window newWindow(ApplicationListener listener, Lwjgl3WindowConfiguration config) {
-				Lwjgl3Window wnd = super.newWindow(listener, config);
-				if(Mgdx.gl31 != null) Gdx.gl = Gdx.gl20 = Gdx.gl30 = Mgdx.gl31;
-				if(Mgdx.gl32 != null) Gdx.gl = Gdx.gl20 = Gdx.gl30 = Mgdx.gl31 = Mgdx.gl32;
-				return wnd;
-			}
-		};
+		new MgdxLwjgl3Application(game, config);
 	}
 }
