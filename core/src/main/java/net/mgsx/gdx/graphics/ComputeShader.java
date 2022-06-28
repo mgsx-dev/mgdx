@@ -100,6 +100,11 @@ public class ComputeShader implements Disposable{
 		return program;
 	}
 
+	public void setUniformi(String name, int value) {
+		int loc = Gdx.gl.glGetUniformLocation(program, name);
+		Gdx.gl.glUniform1i(loc, value);
+	}
+
 	public void setUniformf(String name, Color value) {
 		int loc = Gdx.gl.glGetUniformLocation(program, name);
 		Gdx.gl.glUniform4f(loc, value.r, value.g, value.b, value.a);
@@ -112,6 +117,17 @@ public class ComputeShader implements Disposable{
 		int loc = Gdx.gl.glGetUniformLocation(program, name);
 		Gdx.gl.glUniform1f(loc, value);
 	}
-
+	public void setUniformf(String name, float v1, float v2) {
+		int loc = Gdx.gl.glGetUniformLocation(program, name);
+		Gdx.gl.glUniform2f(loc, v1, v2);
+	}
+	public void setUniformfv(String name, float [] values) {
+		int loc = Gdx.gl.glGetUniformLocation(program, name);
+		Gdx.gl.glUniform1fv(loc, values.length, values, 0);
+	}
+	public void setUniformiv(String name, int [] values) {
+		int loc = Gdx.gl.glGetUniformLocation(program, name);
+		Gdx.gl.glUniform1iv(loc, values.length, values, 0);
+	}
 
 }
