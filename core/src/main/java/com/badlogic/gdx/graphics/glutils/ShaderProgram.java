@@ -27,6 +27,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -34,6 +35,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectIntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -194,8 +196,13 @@ public class ShaderProgram implements Disposable {
 			return;
 		}
 		
-		program = linkProgram(createProgram());
-		if (program == -1) {
+		program = createProgram();
+		if(program == -1){
+			isCompiled = false;
+			return;
+		}
+		attachShaders();
+		if (!linkProgram()) {
 			isCompiled = false;
 			return;
 		}
@@ -230,14 +237,17 @@ public class ShaderProgram implements Disposable {
 		return program != 0 ? program : -1;
 	}
 
-	private int linkProgram (int program) {
+	private void attachShaders () {
 		GL20 gl = Gdx.gl20;
-		if (program == -1) return -1;
 
 		for(ShaderPart part : parts){
 			gl.glAttachShader(program, part.handle);
 		}
-		
+	}
+	
+	private boolean linkProgram(){
+		GL20 gl = Gdx.gl20;
+
 		gl.glLinkProgram(program);
 
 		ByteBuffer tmp = ByteBuffer.allocateDirect(4);
@@ -252,10 +262,9 @@ public class ShaderProgram implements Disposable {
 // if (infoLogLength > 1) {
 			log = Gdx.gl20.glGetProgramInfoLog(program);
 // }
-			return -1;
+			return false;
 		}
-
-		return program;
+		return true;
 	}
 
 	final static IntBuffer intbuf = BufferUtils.newIntBuffer(1);
@@ -935,5 +944,13 @@ public class ShaderProgram implements Disposable {
 	/** @return the handle of the shader program */
 	public int getHandle () {
 		return program;
+	}
+
+	public void setTransformFeedback(boolean interleaved, String...varyings) {
+		if(Gdx.gl30 == null) throw new GdxRuntimeException("transform feedback require gl30");
+		Gdx.gl30.glTransformFeedbackVaryings(program, varyings, interleaved ? GL30.GL_INTERLEAVED_ATTRIBS : GL30.GL_SEPARATE_ATTRIBS);
+		if(!linkProgram()){
+			isCompiled = false;
+		}
 	}
 }
