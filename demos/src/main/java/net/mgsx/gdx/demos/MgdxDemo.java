@@ -32,8 +32,8 @@ public class MgdxDemo extends MgdxGame
 		profiler.setListener(GLErrorListener.THROWING_LISTENER);
 		stage = new Stage(new ScreenViewport());
 		skin = new Skin(Gdx.files.internal("skins/uiskin.json"));
-		new MgdxSketchSelector(this, skin).show(stage);
 		Gdx.input.setInputProcessor(stage);
+		new MgdxSketchSelector(this, skin).show(stage);
 	}
 	
 	@Override
