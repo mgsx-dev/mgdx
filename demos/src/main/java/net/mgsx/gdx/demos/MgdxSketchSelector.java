@@ -23,7 +23,7 @@ import net.mgsx.gdx.demos.sketches.GL32BlendingMRTSketch;
 import net.mgsx.gdx.demos.sketches.GL32DebugControlSketch;
 import net.mgsx.gdx.demos.sketches.GL32GeometryShaderSketch;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSimpleSketch;
-import net.mgsx.gdx.demos.sketches.GL32TesselationShaderTest;
+import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSketch;
 import net.mgsx.gdx.demos.sketches.GLHDRBlurCascadeSketech;
 
 public class MgdxSketchSelector extends Dialog
@@ -42,7 +42,7 @@ public class MgdxSketchSelector extends Dialog
 			GL32DebugControlSketch.class,
 			GL32GeometryShaderSketch.class,
 			GL32TesselationShaderSimpleSketch.class,
-			GL32TesselationShaderTest.class,
+			GL32TesselationShaderSketch.class,
 			GL32BlendingMRTSketch.class
 			);
 	}

@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.JsonReader;
 
 import net.mgsx.gdx.graphics.GL32;
 
-public class GL32TesselationShaderTest extends ScreenAdapter {
+public class GL32TesselationShaderSketch extends ScreenAdapter {
 	ShaderProgram shader;
 	Mesh mesh;
 	Matrix4 projection = new Matrix4();
@@ -33,7 +33,7 @@ public class GL32TesselationShaderTest extends ScreenAdapter {
 	private Array<FileHandle> models;
 	private int modelIndex = 0;
 
-	public GL32TesselationShaderTest () {
+	public GL32TesselationShaderSketch () {
 
 		ShaderStage.geometry.prependCode = Gdx.app.getType().equals(Application.ApplicationType.Desktop) ? "#version 150\n" : "#version 320 es\n";
 		ShaderStage.tesselationControl.prependCode = Gdx.app.getType().equals(Application.ApplicationType.Desktop) ? "#version 400\n" : "#version 320 es\n";
