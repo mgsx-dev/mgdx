@@ -6,11 +6,11 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.ComputeShader;
 import net.mgsx.gdx.graphics.GL31;
+import net.mgsx.gdx.utils.ShaderProgramUtils;
 
 public class GL31ComputeShadersSketch extends ScreenAdapter
 {
@@ -26,12 +26,7 @@ public class GL31ComputeShadersSketch extends ScreenAdapter
 		texture = new Texture(64, 64, Format.RGBA8888);
 		
 		computeShader = new ComputeShader(Gdx.files.classpath("shaders/demo.cs.glsl").readString());
-		if(!computeShader.isCompiled()){
-			throw new GdxRuntimeException(computeShader.getLog());
-		}
-		else if(computeShader.hasLogs()){
-			Gdx.app.error("GL31ComputeShadersSketch", computeShader.getLog());
-		}
+		ShaderProgramUtils.check(computeShader);
 		
 		Mgdx.gl31.glBindImageTexture(0, texture.getTextureObjectHandle(), 0, false, 0, GL31.GL_WRITE_ONLY, GL30.GL_RGBA8);
 		
