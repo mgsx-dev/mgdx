@@ -11,14 +11,14 @@ import net.mgsx.gdx.utils.ShaderProgramUtils;
 import net.mgsx.gfx.BlurCascade;
 import net.mgsx.gfx.GLFormat;
 
-public class GLHDRBlurCascadeSketech extends ScreenAdapter
+public class HDRBlurCascadeSketech extends ScreenAdapter
 {
 	private Texture textureBase;
 	private SpriteBatch batch;
 	private BlurCascade blur;
 	private ShaderProgram toneMapping;
 
-	public GLHDRBlurCascadeSketech() {
+	public HDRBlurCascadeSketech() {
 		
 		batch = new SpriteBatch();
 		

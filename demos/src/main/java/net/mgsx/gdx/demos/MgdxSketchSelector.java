@@ -26,7 +26,7 @@ import net.mgsx.gdx.demos.sketches.GL32DebugControlSketch;
 import net.mgsx.gdx.demos.sketches.GL32GeometryShaderSketch;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSimpleSketch;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSketch;
-import net.mgsx.gdx.demos.sketches.GLHDRBlurCascadeSketech;
+import net.mgsx.gdx.demos.sketches.HDRBlurCascadeSketech;
 
 public class MgdxSketchSelector extends Dialog
 {
@@ -34,7 +34,7 @@ public class MgdxSketchSelector extends Dialog
 	static{
 		sketches.addAll(
 			DefaultSketch.class,
-			GLHDRBlurCascadeSketech.class,
+			HDRBlurCascadeSketech.class,
 			GL30Texture3DSketch.class,
 			GL30TransformFeedbackSketch.class,
 			GL31ComputeShaderChainSketch.class,
