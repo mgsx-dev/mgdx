@@ -51,10 +51,10 @@ public class GL32TesselationShaderTest extends ScreenAdapter {
 		}
 
 		models = new Array<FileHandle>();
+		models.add(Gdx.files.internal("models/knight.g3dj"));
 		models.add(Gdx.files.internal("models/teapot.g3dj"));
 		models.add(Gdx.files.internal("models/torus.g3dj"));
 		models.add(Gdx.files.internal("models/sphere.g3dj"));
-		models.add(Gdx.files.internal("models/knight.g3dj"));
 
 		nextMesh();
 	}
