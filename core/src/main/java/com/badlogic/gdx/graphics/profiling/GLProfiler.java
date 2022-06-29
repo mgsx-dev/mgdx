@@ -16,6 +16,7 @@
 
 package com.badlogic.gdx.graphics.profiling;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.math.FloatCounter;
@@ -77,9 +78,12 @@ public class GLProfiler {
 		GL30 gl30 = graphics.getGL30();
 		if (gl30 != null) {
 			graphics.setGL30((GL30)glInterceptor);
+			Gdx.gl30 = (GL30)glInterceptor;
 		} else {
-			graphics.setGL20(glInterceptor);
 		}
+		graphics.setGL20(glInterceptor);
+		
+		Gdx.gl = Gdx.gl20 = glInterceptor;
 
 		enabled = true;
 	}
@@ -101,8 +105,8 @@ public class GLProfiler {
 		GL30 gl30 = graphics.getGL30();
 		if (gl30 != null)
 			graphics.setGL30(((GL30Interceptor)graphics.getGL30()).gl30);
-		else
-			graphics.setGL20(((GL20Interceptor)graphics.getGL20()).gl20);
+		// else
+		graphics.setGL20(((GL20Interceptor)graphics.getGL20()).gl20);
 
 		enabled = false;
 	}
