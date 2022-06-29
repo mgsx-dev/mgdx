@@ -8,7 +8,10 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL45;
+
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.graphics.GLMax;
 
@@ -41,6 +44,29 @@ public class Lwjgl3GLMax extends Lwjgl3GL32 implements GLMax
 		}
 		else if(data instanceof ShortBuffer){
 			GL45.glGetNamedBufferSubData(buffer, offset, (ShortBuffer)data);
+		}else{
+			throw new GdxRuntimeException("not supported");
+		}
+	}
+	
+	@Override
+	public void glGetTexImage(int target, int level, int glFormat, int glType, Buffer pixels) {
+		if(pixels instanceof ByteBuffer){
+			GL11.glGetTexImage(target, level, glFormat, glType, (ByteBuffer)pixels);
+		}
+		else if(pixels instanceof DoubleBuffer){
+			GL11.glGetTexImage(target, level, glFormat, glType, (DoubleBuffer)pixels);
+		}
+		else if(pixels instanceof FloatBuffer){
+			GL11.glGetTexImage(target, level, glFormat, glType, (FloatBuffer)pixels);
+		}
+		else if(pixels instanceof IntBuffer){
+			GL11.glGetTexImage(target, level, glFormat, glType, (IntBuffer)pixels);
+		}
+		else if(pixels instanceof ShortBuffer){
+			GL11.glGetTexImage(target, level, glFormat, glType, (ShortBuffer)pixels);
+		}else{
+			throw new GdxRuntimeException("not supported");
 		}
 	}
 

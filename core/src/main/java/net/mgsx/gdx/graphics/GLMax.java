@@ -8,4 +8,6 @@ public interface GLMax extends GL32 {
 	
 	void glGetNamedBufferSubData(int buffer, int offset, Buffer data);
 
+	void glGetTexImage(int target, int level, int glFormat, int glType, Buffer pixels);
+
 }
