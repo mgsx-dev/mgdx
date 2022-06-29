@@ -66,7 +66,7 @@ public class GL31ComputeShaderVBOSketch extends ScreenAdapter
 		Gdx.gl.glEnableVertexAttribArray(a_position);
 		Gdx.gl.glEnableVertexAttribArray(a_color);
 		Gdx.gl.glVertexAttribPointer(a_position, 4, GL20.GL_FLOAT, false, bytesPerVertex, 0);
-		Gdx.gl.glVertexAttribPointer(a_color, 4, GL20.GL_FLOAT, false, bytesPerVertex, 3 * 4);
+		Gdx.gl.glVertexAttribPointer(a_color, 4, GL20.GL_FLOAT, false, bytesPerVertex, 4 * 4);
 		
 		Gdx.gl30.glBindVertexArray(0);
 	}
