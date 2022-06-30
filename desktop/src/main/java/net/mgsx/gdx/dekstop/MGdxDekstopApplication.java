@@ -1,11 +1,15 @@
 package net.mgsx.gdx.dekstop;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration.GLEmulation;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GL31;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GL32;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GLMax;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.badlogic.gdx.backends.lwjgl3.MgdxLwjgl3Application;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.MgdxGame;
@@ -43,6 +47,18 @@ public class MGdxDekstopApplication {
 			Mgdx.gl31 = Mgdx.gl32 = Mgdx.glMax = new Lwjgl3GLMax();
 			break;
 		}
+		config.setWindowListener(new Lwjgl3WindowAdapter(){
+			@Override
+			public void filesDropped(String[] files) {
+				if(Mgdx.inputs.fileDropListener != null){
+					Array<FileHandle> fileHandles = new Array<FileHandle>();
+					for(String file : files){
+						fileHandles.add(Gdx.files.absolute(file));
+					}
+					Mgdx.inputs.fileDropListener.filesDropped(fileHandles);
+				}
+			}
+		});
 		new MgdxLwjgl3Application(game, config);
 	}
 }

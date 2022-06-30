@@ -1,5 +1,6 @@
 package net.mgsx.gfx;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferBuilder;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -23,17 +25,23 @@ public class BlurCascade implements Disposable
 		this.format = format;
 		this.maxStages = maxStages;
 		batch = new SpriteBatch();
-		batch.setBlendFunctionSeparate(GL20.GL_ONE, GL20.GL_ONE, GL20.GL_ZERO, GL20.GL_ZERO);
+		
+		// batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE_MINUS_CONSTANT_ALPHA);
+		batch.setBlendFunction(GL20.GL_CONSTANT_ALPHA, GL20.GL_ONE_MINUS_CONSTANT_ALPHA);
 	}
 
 	public Texture render(Texture inputTexture){
-		return render(inputTexture, maxStages);
+		return render(inputTexture, maxStages, null);
 	}
-	public Texture render(Texture inputTexture, int stages){
+	public Texture render(Texture inputTexture, int stages, ShaderProgram initialShader){
+		ensureFBOs(inputTexture);
+
 		if(stages <= 0) return inputTexture;
 		stages = MathUtils.clamp(stages, 1, fbos.size);
+		// avoid crash when window size is zero
+		if(fbos.size == 0) return inputTexture;
 		
-		ensureFBOs(inputTexture);
+		
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
 		batch.disableBlending();
 		batch.setColor(Color.WHITE);
@@ -41,9 +49,11 @@ public class BlurCascade implements Disposable
 		{
 			FrameBuffer dst = fbos.first();
 			dst.begin();
+			batch.setShader(initialShader);
 			batch.draw(inputTexture, 0, 0, 1, 1, 0, 0, 1, 1);
 			batch.flush();
 		}
+		batch.setShader(null);
 		
 		Texture src = fbos.first().getColorBufferTexture();
 		for(int i=1 ; i<stages ; i++){
@@ -54,6 +64,7 @@ public class BlurCascade implements Disposable
 			src = dst.getColorBufferTexture();
 		}
 		batch.enableBlending();
+		Gdx.gl.glBlendColor(0,0,0, .5f); // TODO user defined mix control
 		for(int i=stages-2 ; i>=0 ; i--){
 			FrameBuffer dst = fbos.get(i);
 			dst.begin();
@@ -64,6 +75,8 @@ public class BlurCascade implements Disposable
 		
 		batch.end();
 		fbos.first().end();
+		
+		Gdx.gl.glBlendColor(0,0,0,0);
 		
 		return src;
 	}
