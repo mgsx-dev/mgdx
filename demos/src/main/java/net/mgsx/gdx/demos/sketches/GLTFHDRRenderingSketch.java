@@ -71,14 +71,14 @@ public class GLTFHDRRenderingSketch extends ScreenAdapter
 		
 		batch = new SpriteBatch();
 		
-		cameraManager = new BlenderCamera(Vector3.Zero, .05f, Input.Buttons.LEFT); // XXX BoomBox
+		cameraManager = new BlenderCamera(Vector3.Zero, 5f, Input.Buttons.LEFT);
 		
 		ibl = new IBL();
 		ibl.load("textures/demo2", "png", false);
 		ibl.apply(sceneManager);
 		
 		// TODO generate IBL as HDR (float maps) or load KTX2 files
-		ibl.loadHDRI(Gdx.files.classpath("textures/demo2/table_mountain_2_4k.hdr"));
+		ibl.loadHDRI(Gdx.files.internal("textures/demo2/table_mountain_2_4k.hdr"));
 		
 		skyBox = new SceneSkybox(ibl.getEnvironmentCubemap(), SRGB.FAST, false);
 		
@@ -110,7 +110,8 @@ public class GLTFHDRRenderingSketch extends ScreenAdapter
 		
 		// asset = new GLTFLoader().load(Gdx.files.internal("models/cubes.gltf"));
 		// asset = new GLTFLoader().load(Gdx.files.internal("models/BoomBox/glTF/BoomBox.gltf"));
-		loadGLTFModel(Gdx.files.internal("models/BoomBox/glTF/BoomBox.gltf"));
+		// loadGLTFModel(Gdx.files.internal("models/BoomBox/glTF/BoomBox.gltf"));
+		loadGLTFModel(Gdx.files.internal("models/cubes.gltf"));
 	}
 	
 	private void loadFile(FileHandle file) {

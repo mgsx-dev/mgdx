@@ -16,6 +16,7 @@ public class GLUtils {
 		return buffer1i.get();
 	}
 	public static void glDeleteProgramPipeline(int pipeline) {
+		buffer1i.clear();
 		buffer1i.put(pipeline);
 		buffer1i.flip();
 		Mgdx.gl31.glDeleteProgramPipelines(1, buffer1i);
