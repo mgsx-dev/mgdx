@@ -471,6 +471,10 @@ public class KTX2TextureData implements TextureData, CubemapData, Texture3DData,
 	public int getTarget(){
 		return glTarget;
 	}
+	
+	public int getMipmapCount(){
+		return levelCount;
+	}
 
 	public static GLTexture load(FileHandle file) {
 		KTX2TextureData td = new KTX2TextureData(file);

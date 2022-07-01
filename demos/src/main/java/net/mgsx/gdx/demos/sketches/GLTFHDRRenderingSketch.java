@@ -33,8 +33,8 @@ import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
-import net.mgsx.ibl.IBL;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
+import net.mgsx.ibl.IBL;
 
 public class GLTFHDRRenderingSketch extends ScreenAdapter
 {
