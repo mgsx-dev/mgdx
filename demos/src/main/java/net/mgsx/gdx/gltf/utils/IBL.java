@@ -17,10 +17,10 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.Mgdx;
+import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.g2d.EnvironmentMapBaker;
 import net.mgsx.gdx.graphics.g2d.HDRILoader;
 import net.mgsx.gdx.utils.FileHandleUtils;
-import net.mgsx.gfx.GLFormat;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.scene.SceneManager;

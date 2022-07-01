@@ -1,4 +1,4 @@
-package net.mgsx.gfx;
+package net.mgsx.gdx.graphics;
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;

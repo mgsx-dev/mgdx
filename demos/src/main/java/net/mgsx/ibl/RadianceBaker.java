@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import net.mgsx.gfx.GLFormat;
+import net.mgsx.gdx.graphics.GLFormat;
 
 public class RadianceBaker implements Disposable {
 	

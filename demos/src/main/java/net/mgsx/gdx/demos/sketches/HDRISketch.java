@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import net.mgsx.gdx.Mgdx;
+import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.g2d.HDRILoader;
-import net.mgsx.gfx.GLFormat;
 import net.mgsx.gfx.ToneMappingShader;
 import net.mgsx.gfx.ToneMappingShader.Exposure;
 

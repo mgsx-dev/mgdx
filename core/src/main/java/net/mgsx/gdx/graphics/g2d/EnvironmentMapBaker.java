@@ -13,8 +13,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Disposable;
 
+import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.utils.ShaderProgramUtils;
-import net.mgsx.gfx.GLFormat;
 
 public class EnvironmentMapBaker implements Disposable
 {

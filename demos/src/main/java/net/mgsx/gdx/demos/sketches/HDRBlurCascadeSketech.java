@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
+import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.utils.ShaderProgramUtils;
 import net.mgsx.gfx.BlurCascade;
 import net.mgsx.gfx.BlurCascade.BlurMixMode;
-import net.mgsx.gfx.GLFormat;
 
 public class HDRBlurCascadeSketech extends ScreenAdapter
 {

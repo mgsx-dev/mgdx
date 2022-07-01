@@ -12,8 +12,8 @@ import com.badlogic.gdx.graphics.glutils.GLOnlyTextureData;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.g2d.RGBE.Header;
-import net.mgsx.gfx.GLFormat;
 
 public class HDRILoader {
 	
