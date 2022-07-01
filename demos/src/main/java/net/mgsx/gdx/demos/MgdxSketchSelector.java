@@ -28,6 +28,7 @@ import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSimpleSketch;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSketch;
 import net.mgsx.gdx.demos.sketches.GLTFHDRRenderingSketch;
 import net.mgsx.gdx.demos.sketches.HDRBlurCascadeSketech;
+import net.mgsx.gdx.demos.sketches.HDRISketch;
 
 public class MgdxSketchSelector extends Dialog
 {
@@ -36,6 +37,7 @@ public class MgdxSketchSelector extends Dialog
 		sketches.addAll(
 			DefaultSketch.class,
 			GLTFHDRRenderingSketch.class,
+			HDRISketch.class,
 			HDRBlurCascadeSketech.class,
 			GL30Texture3DSketch.class,
 			GL30TransformFeedbackSketch.class,

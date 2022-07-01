@@ -2,7 +2,6 @@ package net.mgsx.gdx.demos.sketches;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -28,12 +27,7 @@ public class HDRBlurCascadeSketech extends ScreenAdapter
 			Gdx.files.internal("shaders/tone-mapping.fs.glsl").readString());
 		ShaderProgramUtils.check(toneMapping);
 		
-		GLFormat format = new GLFormat();
-		format.format = GL30.GL_RGBA;
-		format.internalFormat = GL30.GL_RGBA16F;
-		format.type = GL30.GL_FLOAT;
-		
-		blur = new BlurCascade(format, 16);
+		blur = new BlurCascade(GLFormat.RGBA16, 16);
 		
 		textureBase = new Texture(Gdx.files.classpath("libgdx128.png"));
 	}

@@ -62,3 +62,5 @@ gwt-unitCache/
 
 ## OS Specific
 .DS_Store
+
+/demos/cache/

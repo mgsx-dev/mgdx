@@ -33,12 +33,9 @@ void main() {
 	v_uv.y = asin(dir.y) / PI + 0.5;
     vec4 color = texture2D(u_hdr, v_uv);
 
-    // gamma correction
     vec3 envColor = color.rgb;
 
 #ifdef GAMMA_CORRECTION
-//	envColor = envColor / (envColor + vec3(1.0));
-//	envColor = pow(envColor, vec3(1.0/2.2));
     envColor = vec3(pow(envColor.r, u_exposure), pow(envColor.g, u_exposure), pow(envColor.b, u_exposure));
 #endif
 
