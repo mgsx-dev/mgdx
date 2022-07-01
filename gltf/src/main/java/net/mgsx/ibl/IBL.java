@@ -1,4 +1,4 @@
-package net.mgsx.gdx.gltf.utils;
+package net.mgsx.ibl;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,16 +18,13 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.GLFormat;
-import net.mgsx.gdx.graphics.g2d.EnvironmentMapBaker;
 import net.mgsx.gdx.graphics.g2d.HDRILoader;
+import net.mgsx.gdx.graphics.glutils.FlexCubemapData;
 import net.mgsx.gdx.utils.FileHandleUtils;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
-import net.mgsx.ibl.FlexCubemapData;
-import net.mgsx.ibl.IrradianceBaker;
-import net.mgsx.ibl.RadianceBaker;
 
 public class IBL implements Disposable
 {

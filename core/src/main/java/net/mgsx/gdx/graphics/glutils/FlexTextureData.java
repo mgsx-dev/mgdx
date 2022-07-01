@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package net.mgsx.ibl;
+package net.mgsx.gdx.graphics.glutils;
 
 import java.nio.FloatBuffer;
 

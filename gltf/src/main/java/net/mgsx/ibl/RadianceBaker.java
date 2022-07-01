@@ -20,6 +20,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gdx.graphics.glutils.FlexCubemapData;
+import net.mgsx.gdx.graphics.glutils.FlexFrameBuffer;
 
 public class RadianceBaker implements Disposable {
 	

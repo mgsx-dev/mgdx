@@ -1,4 +1,4 @@
-package net.mgsx.gdx.graphics.g2d;
+package net.mgsx.ibl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Cubemap;

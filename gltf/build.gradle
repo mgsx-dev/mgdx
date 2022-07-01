@@ -1,0 +1,26 @@
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-gltf'
+
+dependencies {
+	implementation project(':core')
+	implementation "com.github.mgsx-dev.gdx-gltf:gltf:$gltfVersion"
+	implementation "com.github.mgsx-dev.gdx-gltf:ibl-composer:$gltfVersion"
+}
+
+apply plugin: 'maven-publish'
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId project.group
+			artifactId "mgdx-gltf"
+			version project.version
+			from components.java
+		}
+	}
+}

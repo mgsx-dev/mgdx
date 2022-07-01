@@ -1,4 +1,4 @@
-package net.mgsx.gdx.gltf.utils;
+package net.mgsx.gltf;
 
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
