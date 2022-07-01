@@ -43,10 +43,8 @@ public class IBL implements Disposable
 		final int radSize = 512;
 		final int irdSize = 32;
 		
-		// TODO cache to files (KTX2)
 		IBL ibl = new IBL();
 		
-		// TODO use KTX2 instead !
 		ibl.environmentCubemap = fromCache(hdrFile, "env", envSize, false, format, useCache, ()->{
 			Texture hdri = new HDRILoader().load(hdrFile, GLFormat.RGB32);
 			EnvironmentMapBaker envBaker = new EnvironmentMapBaker(hdri);
@@ -59,7 +57,7 @@ public class IBL implements Disposable
 		
 		ibl.specularCubemap = fromCache(hdrFile, "specualr", radSize, true, format, useCache, ()->{
 			RadianceBaker radBaker = new RadianceBaker();
-			Cubemap map = radBaker.createRadiance(ibl.environmentCubemap, radSize, format); // XXX 32
+			Cubemap map = radBaker.createRadiance(ibl.environmentCubemap, radSize, format);
 			radBaker.dispose();
 			return map;
 		});
@@ -78,6 +76,9 @@ public class IBL implements Disposable
 	}
 	
 	private static Cubemap fromCache(FileHandle source, String tag, int size, boolean mipmaps, GLFormat format, boolean enabled, Supplier<Cubemap> baker){
+		
+		// TODO use KTX2 instead !
+		
 		Cubemap map = null;
 		FileHandle cache = null;
 		if(enabled){

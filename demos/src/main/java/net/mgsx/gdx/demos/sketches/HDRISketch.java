@@ -27,7 +27,6 @@ public class HDRISketch extends ScreenAdapter
 	public HDRISketch() {
 		batch = new SpriteBatch();
 		toneMapping = new ToneMappingShader.Exposure(true);
-		// XXX
 		load(Gdx.files.internal("textures/demo2/table_mountain_2_4k.hdr"));
 	}
 	
