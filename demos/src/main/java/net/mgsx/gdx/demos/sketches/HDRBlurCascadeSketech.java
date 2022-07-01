@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import net.mgsx.gdx.utils.ShaderProgramUtils;
 import net.mgsx.gfx.BlurCascade;
+import net.mgsx.gfx.BlurCascade.BlurMixMode;
 import net.mgsx.gfx.GLFormat;
 
 public class HDRBlurCascadeSketech extends ScreenAdapter
@@ -38,6 +39,7 @@ public class HDRBlurCascadeSketech extends ScreenAdapter
 		float inputX = Gdx.input.getX() / (float)Gdx.graphics.getWidth();
 		float inputY = Gdx.input.getY() / (float)Gdx.graphics.getHeight();
 		
+		blur.setMixFunc(BlurMixMode.ADD, 1f);
 		Texture resultTexture = blur.render(textureBase);
 		
 		toneMapping.bind();

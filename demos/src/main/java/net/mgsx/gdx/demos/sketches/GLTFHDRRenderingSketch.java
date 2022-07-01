@@ -21,6 +21,7 @@ import net.mgsx.gdx.gltf.utils.GLTFMaterialUtils;
 import net.mgsx.gdx.gltf.utils.IBL;
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
 import net.mgsx.gfx.BlurCascade;
+import net.mgsx.gfx.BlurCascade.BlurMixMode;
 import net.mgsx.gfx.BrighnessExtractShader;
 import net.mgsx.gfx.GLFormat;
 import net.mgsx.gfx.ToneMappingShader;
@@ -147,6 +148,7 @@ public class GLTFHDRRenderingSketch extends ScreenAdapter
 
 		float bloomRate = iy;
 		float exposure = ix*ix*2;
+		float blurMix = .3f;
 		
 		// Boost emissive factor and force metalic roughness
 		if(scene != null){
@@ -179,6 +181,7 @@ public class GLTFHDRRenderingSketch extends ScreenAdapter
 		if(useBloom){
 			bloomExtract.bind();
 			bloomExtract.setThresholdRealistic(1f);
+			blur.setMixFunc(BlurMixMode.ADD, blurMix);
 			Texture blooTexturem = blur.render(fbo.getColorBufferTexture(), Integer.MAX_VALUE, bloomExtract);
 			
 			fbo.begin();

@@ -15,21 +15,33 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class BlurCascade implements Disposable
 {
+	public enum BlurMixMode {
+		MIX, ADD
+	}
+	
 	private Array<FrameBuffer> fbos = new Array<FrameBuffer>();
 	private int maxStages;
 	private GLFormat format;
 	private SpriteBatch batch;
+	private float mixRate;
 	
 	public BlurCascade(GLFormat format, int maxStages) {
 		super();
 		this.format = format;
 		this.maxStages = maxStages;
 		batch = new SpriteBatch();
-		
-		// batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE_MINUS_CONSTANT_ALPHA);
-		batch.setBlendFunction(GL20.GL_CONSTANT_ALPHA, GL20.GL_ONE_MINUS_CONSTANT_ALPHA);
+		setMixFunc(BlurMixMode.MIX, .5f);
 	}
 
+	public void setMixFunc(BlurMixMode mode, float rate){
+		if(mode == BlurMixMode.MIX){
+			batch.setBlendFunction(GL20.GL_CONSTANT_ALPHA, GL20.GL_ONE_MINUS_CONSTANT_ALPHA);
+		}else if(mode == BlurMixMode.ADD){
+			batch.setBlendFunction(GL20.GL_CONSTANT_ALPHA, GL20.GL_ONE);
+		}
+		this.mixRate = rate;
+	}
+	
 	public Texture render(Texture inputTexture){
 		return render(inputTexture, maxStages, null);
 	}
@@ -64,7 +76,7 @@ public class BlurCascade implements Disposable
 			src = dst.getColorBufferTexture();
 		}
 		batch.enableBlending();
-		Gdx.gl.glBlendColor(0,0,0, .5f); // TODO user defined mix control
+		Gdx.gl.glBlendColor(0,0,0, mixRate);
 		for(int i=stages-2 ; i>=0 ; i--){
 			FrameBuffer dst = fbos.get(i);
 			dst.begin();
