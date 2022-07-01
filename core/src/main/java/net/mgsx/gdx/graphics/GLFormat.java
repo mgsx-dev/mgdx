@@ -71,4 +71,29 @@ public class GLFormat {
 		default: throw new GdxRuntimeException("unknown");
 		}
 	}
+
+	public GLFormat pack() {
+		switch(internalFormat){
+		case GL30.GL_R8: 
+		case GL30.GL_RG8:
+		case GL30.GL_RGB8:
+		case GL30.GL_RGBA8:
+			
+		case GL30.GL_R32F:
+		case GL30.GL_RG32F:
+		case GL30.GL_RGB32F:
+		case GL30.GL_RGBA32F:
+
+			return new GLFormat(internalFormat, format, type);
+
+		case GL30.GL_R16F: 
+		case GL30.GL_RG16F:
+		case GL30.GL_RGB16F:
+		case GL30.GL_RGBA16F:
+			
+			return new GLFormat(internalFormat, format, GL30.GL_HALF_FLOAT);
+			
+		default: throw new GdxRuntimeException("unknown");
+		}
+	}
 }

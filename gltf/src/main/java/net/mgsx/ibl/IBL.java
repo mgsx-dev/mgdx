@@ -12,6 +12,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Cubemap;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -25,6 +27,9 @@ import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
+import net.mgsx.ktx2.KTX2Processor;
+import net.mgsx.ktx2.KTX2Processor.MipMapMode;
+import net.mgsx.ktx2.KTX2TextureData;
 
 public class IBL implements Disposable
 {
@@ -32,6 +37,9 @@ public class IBL implements Disposable
 	private Cubemap environmentCubemap;
 	private Cubemap specularCubemap;
 	private Texture brdfLUT;
+	
+	public static boolean useKtx2 = true;
+	public static boolean useCompression = true;
 	
 	public static IBL fromHDR(FileHandle hdrFile, boolean useCache){
 		
@@ -41,6 +49,7 @@ public class IBL implements Disposable
 		final int irdSize = 32;
 		
 		IBL ibl = new IBL();
+//		long ptime = System.currentTimeMillis();
 		
 		ibl.environmentCubemap = fromCache(hdrFile, "env", envSize, false, format, useCache, ()->{
 			Texture hdri = new HDRILoader().load(hdrFile, GLFormat.RGB32);
@@ -51,8 +60,7 @@ public class IBL implements Disposable
 			return map;
 		});
 		
-		
-		ibl.specularCubemap = fromCache(hdrFile, "specualr", radSize, true, format, useCache, ()->{
+		ibl.specularCubemap = fromCache(hdrFile, "specular", radSize, true, format, useCache, ()->{
 			RadianceBaker radBaker = new RadianceBaker();
 			Cubemap map = radBaker.createRadiance(ibl.environmentCubemap, radSize, format);
 			radBaker.dispose();
@@ -66,6 +74,8 @@ public class IBL implements Disposable
 			return map;
 		});
 		
+//		System.out.println(System.currentTimeMillis() - ptime);
+		
 		ibl.brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
 		
 		return ibl;
@@ -73,9 +83,56 @@ public class IBL implements Disposable
 	}
 	
 	private static Cubemap fromCache(FileHandle source, String tag, int size, boolean mipmaps, GLFormat format, boolean enabled, Supplier<Cubemap> baker){
-		
-		// TODO use KTX2 instead !
-		
+		if(useKtx2){
+			return fromCacheKtx2(source, tag, size, mipmaps, format, enabled, baker);
+		}else{
+			return fromCacheRaw(source, tag, size, mipmaps, format, enabled, baker);
+		}
+	}
+	private static Cubemap fromCacheKtx2(FileHandle source, String tag, int size, boolean mipmaps, GLFormat format,
+			boolean enabled, Supplier<Cubemap> baker) {
+		FileHandle cache = Gdx.files.local("cache/ibl-" + source.nameWithoutExtension() + 
+				"-" + tag + ".ktx2");
+		Cubemap map = null;
+		if(cache.exists()){
+			KTX2TextureData data = new KTX2TextureData(cache);
+			data.prepare();
+			if(data.getWidth() == size && data.getHeight() == size && data.getTarget() == GL20.GL_TEXTURE_CUBE_MAP){
+				map = new Cubemap(data);
+				if(mipmaps){
+					map.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+				}else{
+					map.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+				}
+			}
+		}
+		if(map == null){
+			map = baker.get();
+			writeCacheKtx2(map, cache, size, mipmaps, format);
+		}
+		return map;
+	}
+	private static void writeCacheKtx2(Cubemap map, FileHandle file, int size, boolean mipmaps, GLFormat format) {
+		int mipmapCount = mipmaps ? RadianceBaker.sizeToPOT(size)+1 : 1;
+		int w = size;
+		int h = size;
+		Array<ByteBuffer> buffers = new Array<ByteBuffer>();
+		GLFormat gpuFormat = format.pack();
+		map.bind();
+		for(int l=0 ; l<mipmapCount ; l++){
+			int bufferSize = w*h*gpuFormat.bppCpu;
+			for(int f=0 ; f<6 ; f++){
+				ByteBuffer buffer = BufferUtils.newByteBuffer(bufferSize);
+				Mgdx.glMax.glGetTexImage(GL20.GL_TEXTURE_CUBE_MAP_POSITIVE_X+f, l, format.format, format.type, buffer);
+				buffers.add(buffer);
+			}
+			w/=2;
+			h/=2;
+		}
+		KTX2Processor.exportCubemap(file, buffers, size, size, mipmapCount, 1, format.internalFormat, mipmaps ? MipMapMode.RAW : MipMapMode.NONE, useCompression);
+	}
+
+	private static Cubemap fromCacheRaw(FileHandle source, String tag, int size, boolean mipmaps, GLFormat format, boolean enabled, Supplier<Cubemap> baker){
 		Cubemap map = null;
 		FileHandle cache = null;
 		if(enabled){
@@ -94,24 +151,31 @@ public class IBL implements Disposable
 		if(map == null){
 			map = baker.get();
 			if(cache != null){
-				writeCache(map, cache, format);
+				writeCacheRaw(map, cache, mipmaps, format);
 			}
 		}
 		return map;
 	}
-	
-	private static void writeCache(Cubemap map, FileHandle file, GLFormat format) {
+
+	private static void writeCacheRaw(Cubemap map, FileHandle file, boolean mipmaps, GLFormat format) {
+		int w = map.getWidth();
+		int h = map.getHeight();
+		int mipmapCount = mipmaps ? RadianceBaker.sizeToPOT(Math.min(w, h))+1 : 1;
 		map.bind();
-		ByteBuffer buffer = BufferUtils.newByteBuffer(map.getWidth() * map.getHeight() * format.bppCpu);
 		try {
 			OutputStream output = file.write(false);
 			GZIPOutputStream gzip = new GZIPOutputStream(output);
-			for(int i=0 ; i<6 ; i++){
-				Mgdx.glMax.glGetTexImage(GL20.GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, format.format, format.type, buffer);
-				byte [] tmp = new byte[buffer.limit()];
-				buffer.get(tmp);
-				buffer.rewind();
-				gzip.write(tmp);
+			for(int l=0 ; l<mipmapCount ; l++){
+				ByteBuffer buffer = BufferUtils.newByteBuffer(w * h * format.bppCpu);
+				for(int i=0 ; i<6 ; i++){
+					Mgdx.glMax.glGetTexImage(GL20.GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, l, format.format, format.type, buffer);
+					byte [] tmp = new byte[buffer.limit()];
+					buffer.get(tmp);
+					buffer.rewind();
+					gzip.write(tmp);
+				}
+				w /= 2;
+				h /= 2;
 			}
 			gzip.close();
 		} catch (IOException e) {
