@@ -1,7 +1,7 @@
 
 # Disclamer
 
-**Never ready for production ! ** This repository only contains experimental features.
+**Never ready for production !** This repository only contains experimental features.
 
 # Features
 
@@ -57,20 +57,20 @@ Command line tools :
 
 Benchmark : using https://polyhaven.com/a/monks_forest (2k, 2048x1024, hdr) as reference : 
 
-| **Format** |--- **Compression** ---| **Size** | **Load time** | **Save time** | **Comment** |
-|---------------------------|:------------:|:-----------------|-------------|
-| HDR (original) 		| RGBE 		|  7.6 MB 	| 123ms
-| EXR float 32 bits		| NONE		| 25.2 MB 	| 
-| EXR int 32 bits		| NONE 		| 25.2 MB 	|
-| EXR float 16 bits		| NONE 		| 12.6 MB 	|
-| EXR float 16 bits		| ZIP 		|  7.2 MB 	|
-| EXR float 16 bits		| PIZ 		|  6.7 MB 	| 220ms
-| EXR float 16 bits		| RLE 		| 12.2 MB 	|
-| EXR float 16 bits		| ZIPS 		|  7.7 MB 	|
-| EXR float 16 bits		| ZFP 		|  --- MB 	|
-| KTX2 float 32 bits 	| ZLIB		|  9.3 MB 	| 159ms
-| KTX2 float 16 bits 	| ZLIB		|  8.3 MB 	| 126ms
-| KTX2 Cubemap 6x1k 	|  ???		| ?? |
+| **Format** |--- **Compression** ---| **Size** | **Loading time** |
+|-----------------------|:---------:|:----------|-------------|
+| HDR (original) 		| RGBE 		|  7.6 MB 	| 123ms |
+| EXR float 32 bits		| NONE		| 25.2 MB 	| |
+| EXR int 32 bits		| NONE 		| 25.2 MB 	| |
+| EXR float 16 bits		| NONE 		| 12.6 MB 	| |
+| EXR float 16 bits		| ZIP 		|  7.2 MB 	| |
+| EXR float 16 bits		| PIZ 		|  6.7 MB 	| 220ms |
+| EXR float 16 bits		| RLE 		| 12.2 MB 	| |
+| EXR float 16 bits		| ZIPS 		|  7.7 MB 	| |
+| EXR float 16 bits		| ZFP 		|  --- MB 	| |
+| KTX2 float 32 bits 	| ZLIB		|  9.3 MB 	| 159ms |
+| KTX2 float 16 bits 	| ZLIB		|  8.3 MB 	| 126ms |
+| KTX2 Cubemap 6x1k 	|  ???		| ?? 		| |
 
 
 notes:
