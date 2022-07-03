@@ -29,5 +29,19 @@ public class GLTFMaterialUtils {
 			}
 		}
 	}
+	public static void forceMetallic(Scene scene, float metallic){
+		for(Material m : scene.modelInstance.materials){
+			if(m.has(PBRFloatAttribute.Metallic)){
+				m.get(PBRFloatAttribute.class, PBRFloatAttribute.Metallic).value = metallic;
+			}
+		}
+	}
+	public static void forceRoughness(Scene scene, float roughness){
+		for(Material m : scene.modelInstance.materials){
+			if(m.has(PBRFloatAttribute.Roughness)){
+				m.get(PBRFloatAttribute.class, PBRFloatAttribute.Roughness).value = roughness;
+			}
+		}
+	}
 
 }

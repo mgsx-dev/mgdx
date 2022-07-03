@@ -26,9 +26,9 @@ import com.badlogic.gdx.utils.LittleEndianInputStream;
 
 import net.mgsx.gdx.graphics.Texture3D;
 import net.mgsx.gdx.graphics.Texture3DData;
-import net.mgsx.ktx2.KTX2Processor.ImageFace;
-import net.mgsx.ktx2.KTX2Processor.ImageLayer;
-import net.mgsx.ktx2.KTX2Processor.ImageLevel;
+import net.mgsx.ktx2.KTX2Data.ImageFace;
+import net.mgsx.ktx2.KTX2Data.ImageLayer;
+import net.mgsx.ktx2.KTX2Data.ImageLevel;
 
 // TODO no need for little endian classes, unsafe ByteBuffer is enough
 

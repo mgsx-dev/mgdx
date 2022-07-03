@@ -27,12 +27,19 @@ import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
+import net.mgsx.ktx2.KTX2Data.MipMapMode;
 import net.mgsx.ktx2.KTX2Processor;
-import net.mgsx.ktx2.KTX2Processor.MipMapMode;
 import net.mgsx.ktx2.KTX2TextureData;
 
 public class IBL implements Disposable
 {
+	public static class IBLBakingOptions {
+		public GLFormat format = GLFormat.RGB16;
+		public int envSize = 2048;
+		public int radSize = 512;
+		public int irdSize = 32;
+	}
+	
 	private Cubemap diffuseCubemap;
 	private Cubemap environmentCubemap;
 	private Cubemap specularCubemap;
@@ -42,34 +49,33 @@ public class IBL implements Disposable
 	public static boolean useCompression = true;
 	
 	public static IBL fromHDR(FileHandle hdrFile, boolean useCache){
-		
-		GLFormat format = GLFormat.RGB32;
-		final int envSize = 2048;
-		final int radSize = 512;
-		final int irdSize = 32;
+		return fromHDR(hdrFile, new IBLBakingOptions(), useCache);
+	}
+	
+	public static IBL fromHDR(FileHandle hdrFile, IBLBakingOptions options, boolean useCache){
 		
 		IBL ibl = new IBL();
 //		long ptime = System.currentTimeMillis();
 		
-		ibl.environmentCubemap = fromCache(hdrFile, "env", envSize, false, format, useCache, ()->{
+		ibl.environmentCubemap = fromCache(hdrFile, "env", options.envSize, false, options.format, useCache, ()->{
 			Texture hdri = new HDRILoader().load(hdrFile, GLFormat.RGB32);
 			EnvironmentMapBaker envBaker = new EnvironmentMapBaker(hdri);
-			Cubemap map = envBaker.createEnvMap(envSize, format, true);
+			Cubemap map = envBaker.createEnvMap(options.envSize, options.format, true);
 			envBaker.dispose();
 			hdri.dispose();
 			return map;
 		});
 		
-		ibl.specularCubemap = fromCache(hdrFile, "specular", radSize, true, format, useCache, ()->{
+		ibl.specularCubemap = fromCache(hdrFile, "specular", options.radSize, true, options.format, useCache, ()->{
 			RadianceBaker radBaker = new RadianceBaker();
-			Cubemap map = radBaker.createRadiance(ibl.environmentCubemap, radSize, format);
+			Cubemap map = radBaker.createRadiance(ibl.environmentCubemap, options.radSize, options.format);
 			radBaker.dispose();
 			return map;
 		});
 		
-		ibl.diffuseCubemap = fromCache(hdrFile, "diffuse", irdSize, false, format, useCache, ()->{
+		ibl.diffuseCubemap = fromCache(hdrFile, "diffuse", options.irdSize, false, options.format, useCache, ()->{
 			IrradianceBaker irdBaker = new IrradianceBaker();
-			Cubemap map = irdBaker.createIrradiance(ibl.environmentCubemap, irdSize, format);
+			Cubemap map = irdBaker.createIrradiance(ibl.environmentCubemap, options.irdSize, options.format);
 			irdBaker.dispose();
 			return map;
 		});
@@ -94,7 +100,7 @@ public class IBL implements Disposable
 		FileHandle cache = Gdx.files.local("cache/ibl-" + source.nameWithoutExtension() + 
 				"-" + tag + ".ktx2");
 		Cubemap map = null;
-		if(cache.exists()){
+		if(cache.exists() && enabled){
 			KTX2TextureData data = new KTX2TextureData(cache);
 			data.prepare();
 			if(data.getWidth() == size && data.getHeight() == size && data.getTarget() == GL20.GL_TEXTURE_CUBE_MAP){
@@ -108,7 +114,9 @@ public class IBL implements Disposable
 		}
 		if(map == null){
 			map = baker.get();
-			writeCacheKtx2(map, cache, size, mipmaps, format);
+			if(enabled){
+				writeCacheKtx2(map, cache, size, mipmaps, format);
+			}
 		}
 		return map;
 	}

@@ -3,6 +3,7 @@ package net.mgsx.ktx2;
 import java.io.DataOutput;
 import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.zip.Deflater;
 
@@ -18,22 +19,45 @@ import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.LongArray;
 
+import net.mgsx.ktx2.KTX2Data.CompressionMode;
+import net.mgsx.ktx2.KTX2Data.ImageFace;
+import net.mgsx.ktx2.KTX2Data.ImageLayer;
+import net.mgsx.ktx2.KTX2Data.ImageLevel;
+import net.mgsx.ktx2.KTX2Data.MipMapMode;
+import net.mgsx.ktx2.KTX2Data.TextureCompression;
+
 /**
  * https://www.khronos.org/registry/KTX/specs/2.0/ktxspec_v2.html 
  *
  */
 public class KTX2Processor {
 
-	public enum MipMapMode {
-		NONE, RAW, RUNTIME, GENERATE
-	}
-	
-	public enum CompressionMode {
-		None, ZLIB
-	}
-	
-	public enum TextureCompression {
-		None, ETC2
+	// returns all higher 16 bits as 0 for all results
+	public static int fromFloat( float fval )
+	{
+	    int fbits = Float.floatToIntBits( fval );
+	    int sign = fbits >>> 16 & 0x8000;          // sign only
+	    int val = ( fbits & 0x7fffffff ) + 0x1000; // rounded value
+
+	    if( val >= 0x47800000 )               // might be or become NaN/Inf
+	    {                                     // avoid Inf due to rounding
+	        if( ( fbits & 0x7fffffff ) >= 0x47800000 )
+	        {                                 // is or must become NaN/Inf
+	            if( val < 0x7f800000 )        // was value but too large
+	                return sign | 0x7c00;     // make it +/-Inf
+	            return sign | 0x7c00 |        // remains +/-Inf or NaN
+	                ( fbits & 0x007fffff ) >>> 13; // keep NaN (and Inf) bits
+	        }
+	        return sign | 0x7bff;             // unrounded not quite Inf
+	    }
+	    if( val >= 0x38800000 )               // remains normalized value
+	        return sign | val - 0x38000000 >>> 13; // exp - 127 + 15
+	    if( val < 0x33000000 )                // too small for subnormal
+	        return sign;                      // becomes +/-0
+	    val = ( fbits & 0x7fffffff ) >>> 23;  // tmp exp for subnormal calc
+	    return sign | ( ( fbits & 0x7fffff | 0x800000 ) // add subnormal bit
+	         + ( 0x800000 >>> val - 102 )     // round depending on cut off
+	      >>> 126 - val );   // div by 2^(1-(exp-127+15)) and >> 13 | exp=0
 	}
 	
 	private static void configureCompression(KTX2Processor p, CompressionMode compressionMode){
@@ -184,6 +208,9 @@ public class KTX2Processor {
 	}
 	
 	public static void exportCubemap(FileHandle outFile, Array<ByteBuffer> buffers, int width, int height, int mipmapCount, int layers, int glInternalFormat, MipMapMode mipmapMode, boolean compress) {
+		exportCubemap(outFile.write(false), buffers, width, height, mipmapCount, layers, glInternalFormat, mipmapMode, compress);
+	}
+	public static void exportCubemap(OutputStream output, Array<ByteBuffer> buffers, int width, int height, int mipmapCount, int layers, int glInternalFormat, MipMapMode mipmapMode, boolean compress) {
 		
 		KTX2Processor p = new KTX2Processor();
 		
@@ -234,7 +261,68 @@ public class KTX2Processor {
 		p.mipmapAtRuntime = mipmapMode == MipMapMode.RUNTIME;
 		
 		try {
-			p.save(outFile);
+			p.save(output);
+		} catch (IOException e) {
+			throw new GdxRuntimeException(e);
+		}
+	}
+	public static void export(OutputStream output, ByteBuffer buffer, int width, int height, int glInternalFormat, MipMapMode mipmapMode, boolean compress) {
+		Array<ByteBuffer> buffers = new Array<ByteBuffer>(1);
+		buffers.add(buffer);
+		export(output, buffers, width, height, 1, 1, glInternalFormat, mipmapMode, compress);
+	}
+	
+	public static void export(OutputStream output, Array<ByteBuffer> buffers, int width, int height, int mipmapCount, int layers, int glInternalFormat, MipMapMode mipmapMode, boolean compress) {
+		// TODO refactor with nFaces
+		KTX2Processor p = new KTX2Processor();
+		
+		if(compress)
+			p.supercompressionScheme = KTX2Format.SUPERCOMPRESSION_ZLIB;
+		
+		if(glInternalFormat == GL30.GL_RGB32F){
+			p.vkFormat = KTX2Format.VK_FORMAT_R32G32B32_SFLOAT;
+			p.typeSize = 4; // TODO not sure...
+		}else if(glInternalFormat == GL30.GL_RGBA32F){
+			p.vkFormat = KTX2Format.VK_FORMAT_R32G32B32A32_SFLOAT;
+			p.typeSize = 4; // TODO not sure...
+		}else if(glInternalFormat == GL30.GL_RGB16F){
+			p.vkFormat = KTX2Format.VK_FORMAT_R16G16B16_SFLOAT;
+			p.typeSize = 2;
+		}else if(glInternalFormat == GL30.GL_RGBA16F){
+			p.vkFormat = KTX2Format.VK_FORMAT_R16G16B16A16_SFLOAT;
+			p.typeSize = 2;
+		}else if(glInternalFormat == GL30.GL_RGB8 || glInternalFormat == GL20.GL_RGB){
+			p.vkFormat = KTX2Format.VK_FORMAT_R8G8B8_UNORM;
+			p.typeSize = 1;
+		}else if(glInternalFormat == GL30.GL_RGBA8 || glInternalFormat == GL20.GL_RGBA){
+			p.vkFormat = KTX2Format.VK_FORMAT_R8G8B8A8_UNORM;
+			p.typeSize = 1;
+		}else{
+			throw new GdxRuntimeException("format not supported: " + glInternalFormat);
+		}
+		
+		for(int l=0, i=0; l<mipmapCount && i<buffers.size ; l++){
+			ImageLevel level = new ImageLevel();
+			p.levels.add(level);
+			for(int layerIndex=0 ; layerIndex<layers ; layerIndex++){
+				ImageLayer layer = new ImageLayer();
+				level.layers.add(layer);
+				// single face
+				ImageFace face = new ImageFace();
+				layer.faces.add(face);
+				ByteBuffer buffer = buffers.get(i);
+				face.data = new byte[buffer.remaining()];
+				buffer.get(face.data);
+			}
+		}
+		
+		p.width = width;
+		p.height = height;
+		
+		p.mipmapAtRuntime = mipmapMode == MipMapMode.RUNTIME;
+		
+		try {
+			p.save(output);
 		} catch (IOException e) {
 			throw new GdxRuntimeException(e);
 		}
@@ -290,31 +378,15 @@ public class KTX2Processor {
 	
 	private TextureCompression textureCompression = TextureCompression.None;
 	
-	public static class ImageFace {
-		public byte [] data;
-		public ByteBuffer buffer;
-	}
-	public static class ImageLayer {
-		public final Array<ImageFace> faces = new Array<ImageFace>();
-	}
-
-	public static class ImageLevel {
-		public final Array<ImageLayer> layers = new Array<ImageLayer>();
-		long offset;
-		long size;
-		long uncompressedSize;
-		byte [] compressedData;
-	}
-	
 	public final Array<ImageLevel> levels = new Array<ImageLevel>();
 	
-	public void save(FileHandle file) throws IOException {
-		DataOutput out;
-		if(file.extension().toLowerCase().equals("ktx2")){
-			out = new LittleEndianOutputStream(file.write(false));
-		}else{
-			throw new GdxRuntimeException("file extension not supported, should be ktx2");
-		}
+	public void save(FileHandle file) throws IOException
+	{
+		save(file.write(false));
+	}
+	public void save(OutputStream output) throws IOException {
+//		DataOutput out = new LittleEndianOutputStream(output);
+		DataOutput out = new ByteBufferOutputStream(output);
 		
 		compress();
 		
@@ -494,10 +566,13 @@ public class KTX2Processor {
 				deflater.setInput(levelData);
 				deflater.finish();
 				
-				byte[] buffer = new byte[4096];
+				byte[] buffer = new byte[4096 * 1024]; // TODO config
 				int r;
 				pos = 0;
+				System.out.println("Deflate");
 				while((r = deflater.deflate(buffer)) > 0){
+					
+					System.out.println("Deflate copy");
 					// Case when compressed data is greater than uncompressed data (could be the case with noise textures)
 					if(pos + r > levelData.length){
 						byte[] tmp = new byte[levelData.length * 2];
@@ -508,6 +583,7 @@ public class KTX2Processor {
 					System.arraycopy(buffer, 0, levelData, pos, r);
 					pos += r;
 				}
+				System.out.println("Deflate finish");
 				deflater.end();
 				level.compressedData = new byte[pos];
 				System.arraycopy(levelData, 0, level.compressedData, 0, pos);

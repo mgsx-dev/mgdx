@@ -225,6 +225,12 @@ public class BlenderCamera {
 	public Camera getCamera(){
 		return current().camera;
 	}
+	public PerspectiveCamera getPerspectiveCamera(){
+		return perspective.camera;
+	}
+	public OrthographicCamera getOrthographicCamera(){
+		return orthographic.camera;
+	}
 	public void apply() {
 		current().viewport.apply();
 	}

@@ -147,12 +147,12 @@ public class GLTFHDRRenderingSketch extends ScreenAdapter
 		float iy = Gdx.input.getY() / (float)Gdx.graphics.getHeight();
 
 		float bloomRate = iy;
-		float exposure = ix*ix*2;
+		float exposure = ix*ix*10;
 		float blurMix = .3f;
 		
 		// Boost emissive factor and force metalic roughness
 		if(scene != null){
-			GLTFMaterialUtils.forceEmissiveTextureFactor(scene, 510);
+			GLTFMaterialUtils.forceEmissiveTextureFactor(scene, 20);
 			GLTFMaterialUtils.forceMetallicRoughness(scene, 1, 0);
 		}
 		

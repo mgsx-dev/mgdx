@@ -12,7 +12,9 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
+import net.mgsx.gdx.demos.sketches.BenchmarkFileFormatSketch;
 import net.mgsx.gdx.demos.sketches.DefaultSketch;
+import net.mgsx.gdx.demos.sketches.EXRSketch;
 import net.mgsx.gdx.demos.sketches.GL30Texture3DSketch;
 import net.mgsx.gdx.demos.sketches.GL30TransformFeedbackSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShaderChainSketch;
@@ -37,6 +39,8 @@ public class MgdxSketchSelector extends Dialog
 	static{
 		sketches.addAll(
 			DefaultSketch.class,
+			BenchmarkFileFormatSketch.class,
+			EXRSketch.class,
 			KTX2Sktech.class,
 			GLTFHDRRenderingSketch.class,
 			HDRISketch.class,

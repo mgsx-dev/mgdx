@@ -3,6 +3,7 @@ eclipse.project.name = appName + '-gltf'
 
 dependencies {
 	implementation project(':core')
+	implementation project(':desktop')
 	implementation "com.github.mgsx-dev.gdx-gltf:gltf:$gltfVersion"
 	implementation "com.github.mgsx-dev.gdx-gltf:ibl-composer:$gltfVersion"
 }

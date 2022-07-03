@@ -7,9 +7,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import net.mgsx.ktx2.KTX2Processor.CompressionMode;
-import net.mgsx.ktx2.KTX2Processor.MipMapMode;
-import net.mgsx.ktx2.KTX2Processor.TextureCompression;
+import net.mgsx.ktx2.KTX2Data.CompressionMode;
+import net.mgsx.ktx2.KTX2Data.MipMapMode;
+import net.mgsx.ktx2.KTX2Data.TextureCompression;
 
 /**
  * cubemap example:
