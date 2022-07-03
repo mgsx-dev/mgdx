@@ -57,8 +57,8 @@ Command line tools :
 
 Benchmark : using https://polyhaven.com/a/monks_forest (2k, 2048x1024, hdr) as reference : 
 
-| **Format** |--- **Compression** ---| **Size** | **Loading time** |
-|-----------------------|:---------:|:----------|-------------|
+| **Format** | **Compression** | **Size** | **Loading time** |
+|-----------------------|:---------:|----------:|-------------:|
 | HDR (original) 		| RGBE 		|  7.6 MB 	| 123ms |
 | EXR float 32 bits		| NONE		| 25.2 MB 	| |
 | EXR int 32 bits		| NONE 		| 25.2 MB 	| |
