@@ -5,9 +5,12 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferBuilder;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gfx.ToneMappingShader;
@@ -51,6 +54,21 @@ public class HDRModule implements GLTFComposerModule
 		
 		
 		UI.slider(t, "Key light", 0.01f, 100f, ctx.keyLight.intensity, ControlScale.LOG, value->ctx.keyLight.intensity=value);
+		
+		// key light orientation picker
+		ClickListener listener = new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Ray ray = ctx.cameraManager.getCamera().getPickRay(Gdx.input.getX(), Gdx.input.getY());
+				ctx.keyLight.direction.set(ray.direction).scl(-1);
+				ctx.stage.removeCaptureListener(this);
+			}
+		};
+		t.add(UI.trig(skin, "Pick sun position from skybox", ()->{
+			ctx.stage.addCaptureListener(listener);
+		})).row();
+		
+		
 		UI.toggle(t, "HDR", hdrEnabled, value->enableHDR(ctx, value));
 		
 		// TODO propose all tone mapping modes

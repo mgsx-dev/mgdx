@@ -40,10 +40,10 @@ public class IBL implements Disposable
 		public int irdSize = 32;
 	}
 	
-	private Cubemap diffuseCubemap;
-	private Cubemap environmentCubemap;
-	private Cubemap specularCubemap;
-	private Texture brdfLUT;
+	public Cubemap diffuseCubemap;
+	public Cubemap environmentCubemap;
+	public Cubemap specularCubemap;
+	public Texture brdfLUT;
 	
 	public static boolean useKtx2 = true;
 	public static boolean useCompression = true;
@@ -82,7 +82,7 @@ public class IBL implements Disposable
 		
 //		System.out.println(System.currentTimeMillis() - ptime);
 		
-		ibl.brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
+		ibl.loadDefaultLUT();
 		
 		return ibl;
 		
@@ -201,6 +201,12 @@ public class IBL implements Disposable
 		sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
 	}
 	
+	public static void remove(SceneManager sceneManager) {
+		sceneManager.environment.remove(PBRCubemapAttribute.DiffuseEnv);
+		sceneManager.environment.remove(PBRCubemapAttribute.SpecularEnv);
+		sceneManager.environment.remove(PBRTextureAttribute.BRDFLUTTexture);
+	}
+	
 	public void load(String folderPath, String extension){
 		diffuseCubemap = EnvironmentUtil.createCubemap(new InternalFileHandleResolver(), 
 				folderPath + "/diffuse/diffuse_", "." + extension, EnvironmentUtil.FACE_NAMES_NEG_POS);
@@ -211,7 +217,11 @@ public class IBL implements Disposable
 		specularCubemap = EnvironmentUtil.createCubemap(new InternalFileHandleResolver(), 
 				folderPath + "/specular/specular_", "_", "." + extension, 10, EnvironmentUtil.FACE_NAMES_NEG_POS);
 
-		brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
+		loadDefaultLUT();
+	}
+	
+	public void load(FileHandle folder, String extension){
+		load(folder.path(), extension);
 	}
 
 	@Override
@@ -221,4 +231,10 @@ public class IBL implements Disposable
 		specularCubemap.dispose();
 		brdfLUT.dispose();
 	}
+
+	public void loadDefaultLUT() {
+		brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
+	}
+
+	
 }

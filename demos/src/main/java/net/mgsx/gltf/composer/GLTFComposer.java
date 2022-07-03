@@ -110,7 +110,7 @@ public class GLTFComposer extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		Mgdx.inputs.fileDropListener = files->fileDropped(files.first());
+		Mgdx.inputs.fileDropListener = files->filesDropped(files);
 		Gdx.input.setInputProcessor(new InputMultiplexer(ctx.stage, ctx.cameraManager.getInputs()));
 	}
 	
@@ -126,14 +126,18 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.stage.getViewport().update(width, height, true);
 	}
 	
-	public boolean fileDropped(FileHandle file) {
-		for(int i=modules.size-1 ; i>=0 ; i--){
-			if(modules.get(i).handleFile(ctx, file)){
-				return true;
+	public void filesDropped(Array<FileHandle> files) {
+		if(files.size > 1){
+			UI.popup(ctx.stage, ctx.skin, "Error", "multiple files not supported");
+		}else{
+			FileHandle file = files.first();
+			for(int i=modules.size-1 ; i>=0 ; i--){
+				if(modules.get(i).handleFile(ctx, file)){
+					return;
+				}
 			}
+			UI.popup(ctx.stage, ctx.skin, "Error", "file extension not supported");
 		}
-		// TODO display message (not supported)
-		return false;
 	}
 	
 	@Override

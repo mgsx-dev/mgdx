@@ -239,6 +239,13 @@ public class UI {
 		if(texture == null) textures.put(path, texture = new Texture(path));
 		return new TextureRegion(texture, x, y, w, h);
 	}
+	public static void popup(Stage stage, Skin skin, String title, String message) {
+		Dialog dialog = new Dialog(title, skin);
+		Table t = dialog.getContentTable();
+		t.add(message).row();
+		t.add(trig(skin, "OK", ()->dialog.remove()));
+		dialog.show(stage);
+	}
 	
 	
 }
