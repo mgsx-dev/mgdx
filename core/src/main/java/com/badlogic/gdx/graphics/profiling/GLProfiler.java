@@ -103,10 +103,13 @@ public class GLProfiler {
 		}
 		
 		GL30 gl30 = graphics.getGL30();
-		if (gl30 != null)
-			graphics.setGL30(((GL30Interceptor)graphics.getGL30()).gl30);
-		// else
-		graphics.setGL20(((GL20Interceptor)graphics.getGL20()).gl20);
+		if (gl30 != null){
+			GL30 glBase = ((GL30Interceptor)graphics.getGL30()).gl30;
+			graphics.setGL30(glBase);
+			graphics.setGL20(glBase);
+		}else{
+			graphics.setGL20(((GL20Interceptor)graphics.getGL20()).gl20);
+		}
 
 		enabled = false;
 	}
