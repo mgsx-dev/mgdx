@@ -169,10 +169,10 @@ public class UI {
 		if(value != null) slider.setValue(value);
 		return slider;
 	}
-	public static void slider(Table table, String name, float min, float max, float val, Consumer<Float> callback) {
-		slider(table, name, min, max, val, ControlScale.LIN, callback);
+	public static Slider slider(Table table, String name, float min, float max, float val, Consumer<Float> callback) {
+		return slider(table, name, min, max, val, ControlScale.LIN, callback);
 	}
-	public static void slider(Table table, String name, float min, float max, float val, ControlScale scale, Consumer<Float> callback) {
+	public static Slider slider(Table table, String name, float min, float max, float val, ControlScale scale, Consumer<Float> callback) {
 		float width = 200;
 		float stepSize = (max - min) / width;
 		
@@ -197,8 +197,10 @@ public class UI {
 		
 		table.add(t).fill();
 		table.row();
+		
+		return slider;
 	}
-	public static void slideri(Table table, String name, int min, int max, int value, Consumer<Integer> callback) {
+	public static Slider slideri(Table table, String name, int min, int max, int value, Consumer<Integer> callback) {
 		float width = 200;
 		Label number = new Label(String.valueOf(value), table.getSkin());
 		Slider slider = slider((float)min, (float)max, 1f, false, table.getSkin(), (float)value, val->{
@@ -215,6 +217,8 @@ public class UI {
 		
 		table.add(t).fill();
 		table.row();
+		
+		return slider;
 	}
 	private static String round(float value, float steps){
 		int digits = -MathUtils.round((float)Math.log10(steps));

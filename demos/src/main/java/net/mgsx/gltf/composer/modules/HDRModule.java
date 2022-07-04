@@ -11,13 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gfx.ToneMappingShader;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
+import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.composer.utils.UI;
 import net.mgsx.gltf.composer.utils.UI.ControlScale;
+import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 
 public class HDRModule implements GLTFComposerModule
@@ -54,6 +57,12 @@ public class HDRModule implements GLTFComposerModule
 		
 		
 		UI.slider(t, "Key light", 0.01f, 100f, ctx.keyLight.intensity, ControlScale.LOG, value->ctx.keyLight.intensity=value);
+		
+		Array<Integer> shadowSizes = new Array<Integer>();
+		for(int i=8 ; i<=12 ; i++) shadowSizes.add(1<<i);
+		t.add(UI.selector(skin, shadowSizes, ctx.shadowSize, v->v+"x"+v, v->{ctx.shadowSize = v; ComposerUtils.updateShadowSize(ctx);})).row();
+		
+		UI.toggle(t, "Shadows", ctx.shadows, value->{ctx.shadows = value; ComposerUtils.recreateLight(ctx);});
 		
 		// key light orientation picker
 		ClickListener listener = new ClickListener(){
@@ -105,6 +114,12 @@ public class HDRModule implements GLTFComposerModule
 
 	@Override
 	public void render(GLTFComposerContext ctx) {
+		// update shadow light
+		if(ctx.keyLight instanceof DirectionalShadowLight){
+			DirectionalShadowLight shadowLight = (DirectionalShadowLight)ctx.keyLight;
+			shadowLight.setBounds(ctx.sceneBounds);
+		}
+		
 		if(hdrEnabled){
 			ctx.sceneManager.renderShadows();
 			ensureFBO(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());

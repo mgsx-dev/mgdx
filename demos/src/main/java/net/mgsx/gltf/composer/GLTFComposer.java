@@ -1,14 +1,19 @@
 package net.mgsx.gltf.composer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.profiling.GLErrorListener;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -17,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import net.mgsx.gdx.Mgdx;
+import net.mgsx.gdx.MgdxGame.Settings;
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
 import net.mgsx.gdx.scenes.scene2d.ui.TabPane;
 import net.mgsx.gdx.scenes.scene2d.ui.TabPane.TabPaneStyle;
@@ -27,6 +33,7 @@ import net.mgsx.gltf.composer.modules.IBLModule;
 import net.mgsx.gltf.composer.modules.ModelModule;
 import net.mgsx.gltf.composer.modules.SceneModule;
 import net.mgsx.gltf.composer.modules.SkinningModule;
+import net.mgsx.gltf.composer.modules.SystemModule;
 import net.mgsx.gltf.composer.utils.UI;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
@@ -39,8 +46,21 @@ public class GLTFComposer extends ScreenAdapter {
 	public final GLTFComposerContext ctx = new GLTFComposerContext();
 	
 	private TabPane tabPane;
+	
+	private boolean tabOn = true;
 
-	public GLTFComposer() {
+	private Table root;
+
+	private Table content;
+
+	private final SystemModule systemModule;
+
+	public GLTFComposer(Settings settings) {
+		
+		ctx.vsync = settings.useVSync;
+		ctx.fsync = settings.fps > 0;
+		ctx.ffps = settings.fps;
+		
 		Skin skin = ctx.skin = new Skin(Gdx.files.internal("skins/uiskin.json"));
 		
 		// PATCH
@@ -56,8 +76,11 @@ public class GLTFComposer extends ScreenAdapter {
 		skin.add("icon-light", UI.iconRegion("skins/icons.png", 0, 16 * 4, 16, 16), TextureRegion.class);
 		skin.add("icon-orbit", UI.iconRegion("skins/icons.png", 0, 16 * 5, 16, 16), TextureRegion.class);
 		skin.add("icon-camera", UI.iconRegion("skins/icons.png", 0, 16 * 6, 16, 16), TextureRegion.class);
+		skin.add("icon-wrench", UI.iconRegion("skins/icons.png", 0, 16 * 7, 16, 16), TextureRegion.class);
 		
-		
+		ctx.profiler = new GLProfiler(Gdx.graphics);
+		ctx.profiler.setListener(GLErrorListener.LOGGING_LISTENER);
+
 		ctx.stage = new Stage(new ScreenViewport());
 		ctx.cameraManager = new BlenderCamera(Vector3.Zero, 5f);
 		
@@ -74,8 +97,8 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.keyLight.intensity = 3f;
 		ctx.sceneManager.environment.add(ctx.keyLight);
 		
-		Table t = new Table(skin);
-		Table c = new Table(skin);
+		Table t = root = new Table(skin);
+		Table c = content = new Table(skin);
 		float lum = .1f;
 		c.setBackground(skin.newDrawable("white", lum,lum,lum, .8f));
 		c.setTouchable(Touchable.enabled);
@@ -96,6 +119,7 @@ public class GLTFComposer extends ScreenAdapter {
 		addModule(new IBLModule(), "icon-orbit");
 		addModule(new HDRModule(), "icon-light");
 		addModule(new CameraModule(), "icon-camera");
+		addModule(systemModule = new SystemModule(), "icon-wrench");
 		
 		tabPane.setCurrentIndex(0);
 	}
@@ -140,9 +164,36 @@ public class GLTFComposer extends ScreenAdapter {
 		}
 	}
 	
+	private void toggleTab(){
+		tabOn = !tabOn;
+		if(tabOn){
+			root.setVisible(true);
+			root.setFillParent(false);
+			root.setBounds(root.getX(), 0, ctx.stage.getWidth(), ctx.stage.getHeight());
+			root.clearActions();
+			root.addAction(Actions.sequence(
+				Actions.moveTo(0, 0, .3f, Interpolation.pow2Out),
+				Actions.run(()->root.setFillParent(true))));
+		}else{
+			float w = content.getWidth();
+			root.clearActions();
+			root.setFillParent(false);
+			root.addAction(Actions.sequence(
+				Actions.moveTo(-w, 0, .3f, Interpolation.pow2In),
+				Actions.run(()->root.setVisible(false))));
+		}
+	}
+	
 	@Override
 	public void render(float delta) {
+		// TODO which one (N is Blender like)
+		if(Gdx.input.isKeyJustPressed(Input.Keys.TAB) || Gdx.input.isKeyJustPressed(Input.Keys.N)){
+			toggleTab();
+		}
+		
 		ctx.validate();
+		
+		systemModule.beginProfiling(ctx);
 		
 		ctx.cameraManager.update(delta);
 		ctx.sceneManager.camera = ctx.cameraManager.getCamera();
@@ -152,6 +203,8 @@ public class GLTFComposer extends ScreenAdapter {
 		for(int i=modules.size-1 ; i>=0 ; i--){
 			modules.get(i).render(ctx);
 		}
+		
+		systemModule.endProfiling(ctx);
 		
 		ctx.stage.getViewport().apply();
 		ctx.stage.act();

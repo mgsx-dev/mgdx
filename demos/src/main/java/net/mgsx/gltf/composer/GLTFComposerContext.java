@@ -2,6 +2,8 @@ package net.mgsx.gltf.composer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.shaders.DepthShader;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -26,13 +28,19 @@ public class GLTFComposerContext {
 	public SceneSkybox skyBox;
 	public IBL ibl;
 	public DirectionalLightEx keyLight = new DirectionalLightEx();
+	public boolean shadows;
+	public int shadowSize = 2048;
 	
 	public SceneAsset asset;
 	public Scene scene;
+	public final BoundingBox sceneBounds = new BoundingBox();
 	
 	public final Color clearColor = new Color(.2f,.2f,.2f,0f);
 	public BlenderCamera cameraManager;
-
+	
+	public GLProfiler profiler;
+	public boolean vsync, fsync;
+	public int ffps;
 
 	public boolean sceneJustChanged = false;
 

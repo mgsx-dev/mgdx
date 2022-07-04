@@ -1,16 +1,17 @@
 package net.mgsx.gltf.composer.modules;
 
+import java.util.function.Supplier;
+
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
-import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.graphics.g3d.model.Node;
+import com.badlogic.gdx.graphics.g3d.model.NodeAnimation;
+import com.badlogic.gdx.graphics.g3d.model.NodeKeyframe;
 import com.badlogic.gdx.graphics.g3d.model.NodePart;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -18,15 +19,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
-import net.mgsx.gdx.graphics.glutils.ColorUtils;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
+import net.mgsx.gltf.composer.ui.AnimationPanel;
+import net.mgsx.gltf.composer.ui.MaterialPanel;
 import net.mgsx.gltf.composer.utils.UI;
-import net.mgsx.gltf.composer.utils.UI.ControlScale;
+import net.mgsx.gltf.scene3d.animation.NodeAnimationHack;
+import net.mgsx.gltf.scene3d.model.WeightVector;
 import net.mgsx.gltf.scene3d.scene.Scene;
 
 /**
@@ -39,12 +43,23 @@ public class ModelModule implements GLTFComposerModule
 {
 	Table controls;
 	
-	private static class ModelNode extends Tree.Node<ModelNode, ModelNode, Actor> {
+	private class ModelNode extends Tree.Node<ModelNode, ModelNode, Actor> {
 		protected ModelNode addWrapper(String text, Skin skin){
-			return addWrapper(text, true, skin);
+			return addWrapper(text, true, skin, null);
+		}
+		protected ModelNode addWrapper(String text, Skin skin, Supplier<Actor> pane){
+			return addWrapper(text, true, skin, pane);
 		}
 		protected ModelNode addWrapper(String text, boolean enabled, Skin skin){
-			ModelNode wrapper = new ModelNode();
+			return addWrapper(text, enabled, skin, null);
+		}
+		protected ModelNode addWrapper(String text, boolean enabled, Skin skin, Supplier<Actor> pane){
+			ModelNode wrapper = new ModelNode(){
+				@Override
+				public Actor createPane(GLTFComposerContext ctx) {
+					return pane != null ? pane.get() : null;
+				}
+			};
 			Label label = new Label(text, skin);
 			if(!enabled) label.setColor(Color.LIGHT_GRAY);
 			wrapper.setActor(label);
@@ -54,114 +69,115 @@ public class ModelModule implements GLTFComposerModule
 		protected ModelNode addWrapper(String text, int count, Skin skin){
 			return addWrapper(count > 0 ? text + " (" + count + ")" : text, count>0, skin);
 		}
+		public Actor createPane(GLTFComposerContext ctx) {
+			return null;
+		}
 	}
 	
-	private static class AnimNode extends ModelNode {
+	private class NodeAnimNode extends ModelNode {
+		public NodeAnimNode(GLTFComposerContext ctx, NodeAnimation nodeAnimation) {
+			setActor(new Label(nodeAnimation.node.id, ctx.skin));
+			addWrapper("translation", nodeAnimation.translation != null ? nodeAnimation.translation.size : 0, ctx.skin);
+			addWrapper("rotation", nodeAnimation.rotation != null ? nodeAnimation.rotation.size : 0, ctx.skin);
+			addWrapper("scaling", nodeAnimation.scaling != null ? nodeAnimation.scaling.size : 0, ctx.skin);
+			if(nodeAnimation instanceof NodeAnimationHack){
+				Array<NodeKeyframe<WeightVector>> weights = ((NodeAnimationHack) nodeAnimation).weights;
+				addWrapper("weights", weights != null ? weights.size : 0, ctx.skin);
+				
+				// TODO interpolation
+				// ((NodeAnimationHack) nodeAnimation).translationMode == Interpolation.CUBICSPLINE;
+			}
+		}
+		// TODO details panel with keyframe values and time
+	}
+	
+	private class AnimNode extends ModelNode {
+		private Animation animation;
 		public AnimNode(GLTFComposerContext ctx, Animation animation, Skin skin) {
-			Table t = new Table(skin);
-			if(animation != null){
-				t.add(UI.change(new TextButton("play", skin), e->{
-					ctx.scene.animationController.setAnimation(animation.id, -1);
-				}));
-				t.add(animation.id);
-			}else{
-				t.add(UI.change(new TextButton("stop", skin), e->{
-					ctx.scene.animationController.setAnimation(null);
-				}));
+			this.animation = animation;
+			setActor(new Label(animation.id, skin));
+			
+			// TODO display or not ? could be an option... or another module with details ?
+			boolean showNodes = false;
+			if(showNodes){
+				for(NodeAnimation nodeAnim : animation.nodeAnimations){
+					add(new NodeAnimNode(ctx, nodeAnim));
+				}
 			}
 			
-			setActor(t);
+		}
+		@Override
+		public Actor createPane(GLTFComposerContext ctx) {
+			return new AnimationPanel(ctx, animation);
 		}
 	}
 	
-	private static class MaterialNode extends ModelNode {
+	private class MaterialNode extends ModelNode {
 
+		private Material material;
+		
 		public MaterialNode(Material material, Skin skin) {
+			this.material = material;
 			setActor(new Label(material.id, skin));
-			// TODO more use case (textures, etc..)
-			for(Attribute attribute : material){
-				Table t = new Table(skin);
-				if(attribute instanceof FloatAttribute){
-					FloatAttribute fa = (FloatAttribute)attribute;
-					ModelNode n = new ModelNode();
-					UI.slider(t, Attribute.getAttributeAlias(fa.type), 0, 1, fa.value, v->fa.value=v);
-					n.setActor(t);
-					add(n);
-				}
-				else if(attribute instanceof ColorAttribute){
-					ColorAttribute fa = (ColorAttribute)attribute;
-					ModelNode n = new ModelNode();
-					boolean rgb = false;
-					if(rgb){
-						// RGB mode
-						UI.slider(t, Attribute.getAttributeAlias(fa.type) + ".r", 0, 1, fa.color.r, v->fa.color.r=v);
-						UI.slider(t, Attribute.getAttributeAlias(fa.type) + ".g", 0, 1, fa.color.g, v->fa.color.g=v);
-						UI.slider(t, Attribute.getAttributeAlias(fa.type) + ".b", 0, 1, fa.color.b, v->fa.color.b=v);
-					}else{
-						// HSV mode
-						float [] hsv = new float[]{0,0,0,fa.color.a, 1};
-						fa.color.toHsv(hsv);
-						UI.slider(t, Attribute.getAttributeAlias(fa.type) + ".h", 0, 360, hsv[0], v->{hsv[0]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
-						UI.slider(t, Attribute.getAttributeAlias(fa.type) + ".s", 0, 1, hsv[1], v->{hsv[1]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
-						UI.slider(t, Attribute.getAttributeAlias(fa.type) + ".v", 0, 1, hsv[2], v->{hsv[2]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
-						UI.slider(t, Attribute.getAttributeAlias(fa.type) + ".scale", 1e-3f, 1e3f, hsv[4], ControlScale.LOG, v->{hsv[4]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
-					}
-					n.setActor(t);
-					add(n);
-				}
-			}
+		}
+		@Override
+		public Actor createPane(GLTFComposerContext ctx) {
+			return new MaterialPanel(ctx, material);
 		}
 	}
-	private static class PartNode extends ModelNode {
-		public PartNode(NodePart part, Skin skin) {
+	private class PartNode extends ModelNode {
+		public PartNode(GLTFComposerContext ctx, NodePart part, Skin skin) {
 			setActor(new Label(part.meshPart.id, skin));
+			
+			// TODO move that to panel ?
+			
 			addWrapper("size: " + part.meshPart.size, skin);
 			// TODO mapping point, line, triangle, ..etc
 			addWrapper("primitive: " + part.meshPart.primitiveType, skin);
-			addWrapper("material: " + part.material.id, skin);
+			addWrapper("material: " + part.material.id, skin, ()->new MaterialPanel(ctx, part.material));
 
 			{
 				ModelNode control = new ModelNode();
 				control.setActor(UI.toggle(skin, "enabled", part.enabled, value->part.enabled=value));
 				add(control);
 			}
-			// TODO material and mesh part info and bone info
+			// TODO mesh part info and bone info ?
 		}
 	}
-	private static class NodeNode extends ModelNode {
-		public NodeNode(Node node, Skin skin) {
+	private class NodeNode extends ModelNode {
+		public NodeNode(GLTFComposerContext ctx, Node node, Skin skin) {
 			setActor(new Label(node.id, skin));
 			// TODO if some parts have bones : display as bone ? or armature ?
 			if(node.parts.size > 0){
 				ModelNode wrapper = addWrapper("parts", node.parts.size, skin);
 				for(NodePart part : node.parts){
-					wrapper.add(new PartNode(part, skin));
+					wrapper.add(new PartNode(ctx, part, skin));
 				}
 			}
 			if(node.hasChildren()){
-				ModelNode wrapper = addWrapper("nodes", node.getChildCount(), skin);
+				ModelNode wrapper = addWrapper("children", node.getChildCount(), skin);
 				for(Node child : node.getChildren()){
-					wrapper.add(new NodeNode(child, skin));
+					wrapper.add(new NodeNode(ctx, child, skin));
 				}
 			}
 		}
 	}
 	
-	private static class CameraNode extends ModelNode {
+	private class CameraNode extends ModelNode {
 		public CameraNode(Node node, Camera camera, Skin skin) {
 			setActor(new Label(node.id, skin));
 			// TODO set active ?
 		}
 	}
 	
-	private static class LightNode extends ModelNode {
+	private class LightNode extends ModelNode {
 		public LightNode(Node node, BaseLight light, Skin skin) {
 			setActor(new Label(node.id, skin));
 			// TODO controls ?
 		}
 	}
 	
-	private static class MeshNode extends ModelNode
+	private class MeshNode extends ModelNode
 	{
 		public MeshNode(Mesh mesh, Skin skin) {
 			setActor(new Label("mesh", skin));
@@ -176,14 +192,14 @@ public class ModelModule implements GLTFComposerModule
 		}
 	}
 	
-	private static class SceneNode extends ModelNode {
+	private class SceneNode extends ModelNode {
 
 		public SceneNode(GLTFComposerContext ctx, Scene scene, Skin skin) {
 			setActor(new Label("scene", skin));
 			{
 				ModelNode wrapper = addWrapper("nodes", scene.modelInstance.nodes.size, skin);
 				for(Node node : scene.modelInstance.nodes){
-					wrapper.add(new NodeNode(node, skin));
+					wrapper.add(new NodeNode(ctx, node, skin));
 				}
 			}
 			{
@@ -200,9 +216,9 @@ public class ModelModule implements GLTFComposerModule
 			}
 			{
 				ModelNode wrapper = addWrapper("animations", scene.modelInstance.animations.size, skin);
-				if(scene.modelInstance.animations.size > 0){
-					wrapper.add(new AnimNode(ctx, null, skin));
-				}
+//				if(scene.modelInstance.animations.size > 0){
+//					wrapper.add(new AnimNode(ctx, null, skin));
+//				}
 				for(Animation animation: scene.modelInstance.animations){
 					wrapper.add(new AnimNode(ctx, animation, skin));
 				}
@@ -251,6 +267,23 @@ public class ModelModule implements GLTFComposerModule
 			sp.setScrollingDisabled(true, false);
 			sp.setTouchable(Touchable.childrenOnly);
 			controls.add(sp).grow().row();
+			
+			Table infoPane = new Table(ctx.skin);
+			controls.add(infoPane).row();
+			
+			tree.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					if(actor == tree){
+						ModelNode selection = tree.getSelection().getLastSelected();
+						infoPane.clear();
+						if(selection != null){
+							Actor pane = selection.createPane(ctx);
+							if(pane != null) infoPane.add(pane);
+						}
+					}
+				}
+			});
 		}
 	}
 	

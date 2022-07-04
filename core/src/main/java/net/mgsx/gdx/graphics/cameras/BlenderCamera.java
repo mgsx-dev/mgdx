@@ -143,6 +143,15 @@ public class BlenderCamera {
 		public void update(){
 			controller.update();
 		}
+		public void set(Vector3 position, Vector3 target, float near, float far) {
+			camera.position.set(position);
+			camera.up.set(Vector3.Y);
+			camera.lookAt(target);
+			camera.near = near;
+			camera.far = far;
+			camera.update();
+			controller.target.set(target);
+		}
 	}
 	
 	private CameraConfig<PerspectiveCamera> perspective;
@@ -237,5 +246,10 @@ public class BlenderCamera {
 	public void setTarget(float x, float y, float z) {
 		perspective.controller.target.set(x,y,z);
 		orthographic.controller.target.set(x,y,z);
+	}
+
+	public void set(Vector3 position, Vector3 target, float near, float far) {
+		perspective.set(position, target, near, far);
+		orthographic.set(position, target, near, far);
 	}
 }
