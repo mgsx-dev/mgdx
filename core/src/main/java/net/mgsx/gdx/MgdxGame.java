@@ -39,6 +39,13 @@ public abstract class MgdxGame extends Game
 	private DisplayMode defaultDisplayMode;
 	private int lastWndWidth;
 	private int lastWndHeight;
+
+	/**
+	 * automatically set by launcher.
+	 * in case of HDPI, it is recommended for a game to scale its UI by 2.
+	 * window size is automatically scale by 2 as well.
+	 */
+	public boolean hdpiDetected;
 	
 	@Override
 	public void create() {

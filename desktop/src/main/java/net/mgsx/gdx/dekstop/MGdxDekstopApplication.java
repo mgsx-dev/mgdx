@@ -1,6 +1,7 @@
 package net.mgsx.gdx.dekstop;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration.GLEmulation;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GL31;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3GLMax;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.badlogic.gdx.backends.lwjgl3.MgdxLwjgl3Application;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import com.badlogic.gdx.utils.Array;
 
 import net.mgsx.gdx.Mgdx;
@@ -24,11 +26,24 @@ public class MGdxDekstopApplication {
 		config.useVsync(game.settings.useVSync);
 		config.setIdleFPS(game.settings.fps);
 		config.setForegroundFPS(game.settings.fps);
+		
+		
+		DisplayMode display = Lwjgl3ApplicationConfiguration.getDisplayMode();
+		game.hdpiDetected = display.height >= 1440;
+		config.setHdpiMode(HdpiMode.Logical);
+		
+		int wndWidth = game.settings.wndWidth;
+		int wndHeight = game.settings.wndHeight;
+		if(game.hdpiDetected){
+			wndWidth *= 2;
+			wndHeight *= 2;
+		}
+		
 		if(game.settings.fullscreen){
 			// TODO find
 			config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		}else{
-			config.setWindowedMode(game.settings.wndWidth, game.settings.wndHeight);
+			config.setWindowedMode(wndWidth, wndHeight);
 		}
 		if(game.settings.icons != null){
 			config.setWindowIcon(game.settings.icons);

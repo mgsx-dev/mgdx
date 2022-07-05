@@ -76,7 +76,7 @@ public class GLTFComposerContext {
 				sceneManager.setSkyBox(null);
 				skyBox.dispose();
 			}
-			if(ibl != null){
+			if(ibl != null && ibl.environmentCubemap != null){
 				skyBox = new SceneSkybox(ibl.getEnvironmentCubemap(), colorShaderConfig.manualSRGB, colorShaderConfig.manualGammaCorrection);
 				sceneManager.setSkyBox(skyBox);
 			}

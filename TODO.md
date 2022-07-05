@@ -1,9 +1,28 @@
 
 # GLTF Composer
 
+## Use cases
+
+* Create HDRI environment in Blender and export for a game
+	* [ ] How to export from Blender (which formats)
+* Prepare IBL for a game
+	* [ ] export HDRI as cubemaps in various formats
+		* [x] to KTX2
+		* [ ] to EXR
+* Inspect scenes
+	* [x] model browser
+	* [ ] profiling
+* Preview scenes
+	* [x] Load IBLs from HDRI or baked IBLs
+	* [ ] Emissive bloom (emissive boost by tweaking materials)
+	* [ ] test some post processing effects 
+
 ## IBL Composer features
 
-* [ ] UI scale : CTRL +/- to zoom in/out + automatic detection + save to preferences
+* [ ] UI scale
+	* [ ] CTRL +/- to zoom in/out ?
+	* [x] automatic detection
+	* [ ] save to preferences
 * [ ] Copy light code
 * [ ] change light color
 * [ ] load simple model (sphere) with basic material (metal roughness)
@@ -33,7 +52,17 @@
 * [~] proxy based profiler (wip)
 * [ ] F1 to get help, key bindings, etc..
 * [ ] generate skin from GIMP (acting also as example for community)
-
+* [ ] MSAA
+* [ ] FXAA
+* [ ] MSAA frame buffers
+* MRT based effects :
+	* [ ] Deferred lighting
+	* [ ] SSAO
+	* [ ] SSR
+	* [ ] Blender "Cavity"
+* HDR rendering :
+	* [ ] HDR Bloom
+	* [ ] Tone mapping
 
 # Demos fixes
 

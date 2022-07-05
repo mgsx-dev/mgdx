@@ -19,7 +19,7 @@ public class Bloom {
 	public float blurMix, bloomRate;
 	
 	public Bloom() {
-		blur = new BlurCascade(GLFormat.RGB32, 32);
+		blur = new BlurCascade(GLFormat.RGB16, 32);
 		bloomExtract = new BrighnessExtractShader();
 		bloomRate = 1f;
 		blurMix = .3f;

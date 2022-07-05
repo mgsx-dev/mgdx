@@ -40,9 +40,14 @@ public class IBL implements Disposable
 		public int irdSize = 32;
 	}
 	
-	public Cubemap diffuseCubemap;
 	public Cubemap environmentCubemap;
+	
+	/** AKA irradiance map, Lambertian */
+	public Cubemap diffuseCubemap;
+	
+	/** AKA radiance map, GGX */
 	public Cubemap specularCubemap;
+	
 	public Texture brdfLUT;
 	
 	public static boolean useKtx2 = true;
@@ -121,6 +126,10 @@ public class IBL implements Disposable
 		return map;
 	}
 	private static void writeCacheKtx2(Cubemap map, FileHandle file, int size, boolean mipmaps, GLFormat format) {
+		exportToKtx2(map, file, mipmaps, format, useCompression);
+	}
+	public static void exportToKtx2(Cubemap map, FileHandle file, boolean mipmaps, GLFormat format, boolean compression) {
+		int size = map.getWidth(); // assuming all faces are square.
 		int mipmapCount = mipmaps ? RadianceBaker.sizeToPOT(size)+1 : 1;
 		int w = size;
 		int h = size;
@@ -128,16 +137,16 @@ public class IBL implements Disposable
 		GLFormat gpuFormat = format.pack();
 		map.bind();
 		for(int l=0 ; l<mipmapCount ; l++){
-			int bufferSize = w*h*gpuFormat.bppCpu;
+			int bufferSize = w*h*gpuFormat.bppGpu;
 			for(int f=0 ; f<6 ; f++){
 				ByteBuffer buffer = BufferUtils.newByteBuffer(bufferSize);
-				Mgdx.glMax.glGetTexImage(GL20.GL_TEXTURE_CUBE_MAP_POSITIVE_X+f, l, format.format, format.type, buffer);
+				Mgdx.glMax.glGetTexImage(GL20.GL_TEXTURE_CUBE_MAP_POSITIVE_X+f, l, gpuFormat.format, gpuFormat.type, buffer);
 				buffers.add(buffer);
 			}
 			w/=2;
 			h/=2;
 		}
-		KTX2Processor.exportCubemap(file, buffers, size, size, mipmapCount, 1, format.internalFormat, mipmaps ? MipMapMode.RAW : MipMapMode.NONE, useCompression);
+		KTX2Processor.exportCubemap(file, buffers, size, size, mipmapCount, 1, format.internalFormat, mipmaps ? MipMapMode.RAW : MipMapMode.NONE, compression);
 	}
 
 	private static Cubemap fromCacheRaw(FileHandle source, String tag, int size, boolean mipmaps, GLFormat format, boolean enabled, Supplier<Cubemap> baker){
@@ -196,9 +205,15 @@ public class IBL implements Disposable
 	}
 	
 	public void apply(SceneManager sceneManager){
-		sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
-		sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
-		sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
+		if(diffuseCubemap != null){
+			sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
+		}
+		if(specularCubemap != null){
+			sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
+		}
+		if(brdfLUT != null){
+			sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
+		}
 	}
 	
 	public static void remove(SceneManager sceneManager) {
@@ -226,10 +241,18 @@ public class IBL implements Disposable
 
 	@Override
 	public void dispose() {
-		diffuseCubemap.dispose();
-		environmentCubemap.dispose();
-		specularCubemap.dispose();
-		brdfLUT.dispose();
+		if(diffuseCubemap != null){
+			diffuseCubemap.dispose();
+		}
+		if(environmentCubemap != null){
+			environmentCubemap.dispose();
+		}
+		if(specularCubemap != null){
+			specularCubemap.dispose();
+		}
+		if(brdfLUT != null){
+			brdfLUT.dispose();
+		}
 	}
 
 	public void loadDefaultLUT() {

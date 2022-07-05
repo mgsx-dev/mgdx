@@ -15,7 +15,7 @@ public class GLTFComposerApp extends MgdxGame
 	@Override
 	public void create() {
 		super.create();
-		setScreen(new GLTFComposer(settings));
+		setScreen(new GLTFComposer(settings, hdpiDetected));
 	}
 	
 }

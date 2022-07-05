@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntIntMap;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import net.mgsx.gdx.Mgdx;
@@ -30,7 +31,6 @@ import net.mgsx.gltf.composer.modules.CameraModule;
 import net.mgsx.gltf.composer.modules.FileModule;
 import net.mgsx.gltf.composer.modules.HDRModule;
 import net.mgsx.gltf.composer.modules.IBLModule;
-import net.mgsx.gltf.composer.modules.ModelModule;
 import net.mgsx.gltf.composer.modules.SceneModule;
 import net.mgsx.gltf.composer.modules.SkinningModule;
 import net.mgsx.gltf.composer.modules.SystemModule;
@@ -54,8 +54,10 @@ public class GLTFComposer extends ScreenAdapter {
 	private Table content;
 
 	private final SystemModule systemModule;
+	
+	private final IntIntMap moduleToTabIndex = new IntIntMap();
 
-	public GLTFComposer(Settings settings) {
+	public GLTFComposer(Settings settings, boolean hdpiDetected) {
 		
 		ctx.vsync = settings.useVSync;
 		ctx.fsync = settings.fps > 0;
@@ -81,7 +83,9 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.profiler = new GLProfiler(Gdx.graphics);
 		ctx.profiler.setListener(GLErrorListener.LOGGING_LISTENER);
 
-		ctx.stage = new Stage(new ScreenViewport());
+		ScreenViewport viewport = new ScreenViewport();
+		if(hdpiDetected) viewport.setUnitsPerPixel(0.5f);
+		ctx.stage = new Stage(viewport);
 		ctx.cameraManager = new BlenderCamera(Vector3.Zero, 5f);
 		
 		ctx.colorShaderConfig = PBRShaderProvider.createDefaultConfig();
@@ -113,8 +117,7 @@ public class GLTFComposer extends ScreenAdapter {
 		
 		// add modules
 		addModule(new FileModule(), "icon-file");
-		addModule(new ModelModule(), "icon-cube");
-		addModule(new SceneModule(), "icon-file");
+		addModule(new SceneModule(), "icon-cube");
 		addModule(new SkinningModule(), "icon-human");
 		addModule(new IBLModule(), "icon-orbit");
 		addModule(new HDRModule(), "icon-light");
@@ -125,9 +128,11 @@ public class GLTFComposer extends ScreenAdapter {
 	}
 
 	private void addModule(GLTFComposerModule module, String iconName){
+		int index = modules.size;
 		modules.add(module);
 		Actor actor = module.initUI(ctx, ctx.skin);
 		if(actor != null){
+			moduleToTabIndex.put(index, moduleToTabIndex.size);
 			tabPane.addPane(new ImageButton(ctx.skin.getDrawable(iconName)), actor);
 		}
 	}
@@ -157,6 +162,10 @@ public class GLTFComposer extends ScreenAdapter {
 			FileHandle file = files.first();
 			for(int i=modules.size-1 ; i>=0 ; i--){
 				if(modules.get(i).handleFile(ctx, file)){
+					int tabIndex = moduleToTabIndex.get(i, -1);
+					if(tabIndex >= 0){
+						tabPane.setCurrentIndex(tabIndex);
+					}
 					return;
 				}
 			}

@@ -156,7 +156,7 @@ public class HDRModule implements GLTFComposerModule
 			if(fbo != null) fbo.dispose();
 			FrameBufferBuilder builder = new FrameBufferBuilder(width, height);
 			
-			builder.addColorTextureAttachment(GL30.GL_RGBA32F, GL30.GL_RGBA, GL30.GL_FLOAT);
+			builder.addColorTextureAttachment(GL30.GL_RGBA16F, GL30.GL_RGBA, GL30.GL_FLOAT);
 			builder.addDepthRenderBuffer(GL30.GL_DEPTH_COMPONENT24);
 			
 			fbo = builder.build();
