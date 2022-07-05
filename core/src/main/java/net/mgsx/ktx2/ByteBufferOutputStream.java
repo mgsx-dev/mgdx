@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class ByteBufferOutputStream extends FilterOutputStream implements DataOutput {
 
-	private static final int SIZE = 4096;
+	private static final int SIZE = 4 * 1024 * 1024;
 	private byte[] tmp = new byte[SIZE];
 	private ByteBuffer buffer = BufferUtils.newByteBuffer(SIZE);
 	
@@ -33,9 +33,10 @@ public class ByteBufferOutputStream extends FilterOutputStream implements DataOu
 	
 	private void flushCurrentBuffer() {
 		buffer.flip();
-		buffer.get(tmp, 0, buffer.remaining());
+		int length = buffer.remaining();
+		buffer.get(tmp, 0, length);
 		try {
-			out.write(tmp);
+			out.write(tmp, 0, length);
 		} catch (IOException e) {
 			throw new GdxRuntimeException(e);
 		}
@@ -46,12 +47,17 @@ public class ByteBufferOutputStream extends FilterOutputStream implements DataOu
 	}
 	private void writeSafe(byte[] bytes, int offset, int length){
 		int remaining = buffer.capacity() - buffer.position();
-		if(length > remaining){
-			buffer.put(bytes, offset, remaining);
-			flushCurrentBuffer();
-			writeSafe(bytes, offset + remaining, length - remaining);
-		}else{
-			buffer.put(bytes, offset, length);
+		int toWrite = Math.min(length, remaining);
+		while(toWrite > 0){
+			buffer.put(bytes, offset, toWrite);
+			remaining -= toWrite;
+			if(remaining == 0){
+				flushCurrentBuffer();
+				remaining = buffer.capacity();
+			}
+			offset += toWrite;
+			length -= toWrite;
+			toWrite = Math.min(length, remaining);
 		}
 	}
 
