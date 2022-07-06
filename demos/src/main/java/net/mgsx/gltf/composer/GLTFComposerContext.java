@@ -30,6 +30,7 @@ public class GLTFComposerContext {
 	public DirectionalLightEx keyLight = new DirectionalLightEx();
 	public boolean shadows;
 	public int shadowSize = 2048;
+	public float shadowBias = 1f / 255f;
 	
 	public SceneAsset asset;
 	public Scene scene;

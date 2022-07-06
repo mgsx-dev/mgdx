@@ -35,6 +35,7 @@ import net.mgsx.gltf.composer.modules.IBLModule;
 import net.mgsx.gltf.composer.modules.SceneModule;
 import net.mgsx.gltf.composer.modules.SkinningModule;
 import net.mgsx.gltf.composer.modules.SystemModule;
+import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.composer.utils.UI;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
@@ -98,6 +99,8 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.keyLight.baseColor.fromHsv(0, 0f, 1f);
 		ctx.keyLight.intensity = 3f;
 		ctx.sceneManager.environment.add(ctx.keyLight);
+		
+		ComposerUtils.updateShadowBias(ctx, ctx.shadowBias);
 		
 		Table t = root = new Table(skin);
 		Table c = content = new Table(skin);

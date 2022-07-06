@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.mgsx.gdx.graphics.GL32;
 import net.mgsx.gltf.composer.GLTFComposerContext;
+import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 
@@ -57,6 +58,16 @@ public class ComposerUtils {
 		case GL32.GL_PATCHES: return "GL_PATCHES";
 		case GL32.GL_QUADS: return "GL_QUADS";
 		default: return "UNKNOWN";
+		}
+	}
+
+	public static void updateShadowBias(GLTFComposerContext ctx, float value) {
+		ctx.shadowBias = value;
+		PBRFloatAttribute a = ctx.sceneManager.environment.get(PBRFloatAttribute.class, PBRFloatAttribute.ShadowBias);
+		if(a != null){
+			a.value = ctx.shadowBias;
+		}else{
+			 ctx.sceneManager.environment.set(new PBRFloatAttribute(PBRFloatAttribute.ShadowBias, ctx.shadowBias));
 		}
 	}
 }

@@ -58,6 +58,8 @@ public class HDRModule implements GLTFComposerModule
 		
 		UI.toggle(t, "Shadows", ctx.shadows, value->{ctx.shadows = value; ComposerUtils.recreateLight(ctx);});
 		
+		UI.slider(t, "Shadow bias", 1e-3f, 1f, ctx.shadowBias, ControlScale.LOG, value->ComposerUtils.updateShadowBias(ctx, value));
+		
 		// key light orientation picker
 		ClickListener listener = new ClickListener(){
 			@Override
