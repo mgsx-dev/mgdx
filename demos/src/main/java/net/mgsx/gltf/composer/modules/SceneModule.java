@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
+import net.mgsx.gdx.graphics.g3d.ModelUtils;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.ui.AnimationPanel;
@@ -68,6 +69,7 @@ public class SceneModule implements GLTFComposerModule
 					return pane != null ? pane.get() : null;
 				}
 			};
+			// wrapper.setSelectable(false);
 			Label label = new Label(text, skin);
 			if(!enabled) label.setColor(Color.LIGHT_GRAY);
 			wrapper.setActor(label);
@@ -135,20 +137,21 @@ public class SceneModule implements GLTFComposerModule
 	}
 	private class PartNode extends ModelNode {
 		public PartNode(GLTFComposerContext ctx, NodePart part, Skin skin) {
-			setActor(new Label(part.meshPart.id, skin));
-			
+			// setActor(new Label(part.meshPart.id, skin));
+			setActor(UI.toggle(skin, part.meshPart.id, part.enabled, v->part.enabled=v));
 			// TODO move that to panel ?
-			
+			addWrapper("offset: " + part.meshPart.offset, skin);
 			addWrapper("size: " + part.meshPart.size, skin);
-			// TODO mapping point, line, triangle, ..etc
-			addWrapper("primitive: " + part.meshPart.primitiveType, skin);
+			addWrapper("primitive: " + ComposerUtils.primitiveString(part.meshPart.primitiveType), skin);
 			addWrapper("material: " + part.material.id, skin, ()->new MaterialPanel(ctx, part.material));
-
-			{
-				ModelNode control = new ModelNode();
-				control.setActor(UI.toggle(skin, "enabled", part.enabled, value->part.enabled=value));
-				add(control);
+			if(part.bones != null){
+				addWrapper("bones: " + part.bones.length, skin);
 			}
+//			{
+//				ModelNode control = new ModelNode();
+//				control.setActor(UI.toggle(skin, "enabled", part.enabled, value->part.enabled=value));
+//				add(control);
+//			}
 			// TODO mesh part info and bone info ?
 		}
 	}
@@ -211,6 +214,13 @@ public class SceneModule implements GLTFComposerModule
 				}
 			}
 			{
+				Array<NodePart> allParts = ModelUtils.collectNodeParts(scene.modelInstance);
+				ModelNode wrapper = addWrapper("parts", allParts.size, skin);
+				for(NodePart part : allParts){
+					wrapper.add(new PartNode(ctx, part, skin));
+				}
+			}
+			{
 				ModelNode wrapper = addWrapper("meshes", scene.modelInstance.model.meshes.size, skin);
 				for(Mesh mesh : scene.modelInstance.model.meshes){
 					wrapper.add(new MeshNode(mesh, skin));
@@ -224,9 +234,6 @@ public class SceneModule implements GLTFComposerModule
 			}
 			{
 				ModelNode wrapper = addWrapper("animations", scene.modelInstance.animations.size, skin);
-//				if(scene.modelInstance.animations.size > 0){
-//					wrapper.add(new AnimNode(ctx, null, skin));
-//				}
 				for(Animation animation: scene.modelInstance.animations){
 					wrapper.add(new AnimNode(ctx, animation, skin));
 				}

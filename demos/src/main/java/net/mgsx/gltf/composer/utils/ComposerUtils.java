@@ -1,8 +1,10 @@
 package net.mgsx.gltf.composer.utils;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import net.mgsx.gdx.graphics.GL32;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
@@ -40,6 +42,21 @@ public class ComposerUtils {
 	public static void updateShadowSize(GLTFComposerContext ctx) {
 		if(ctx.keyLight instanceof DirectionalShadowLight){
 			((DirectionalShadowLight)ctx.keyLight).setShadowMapSize(ctx.shadowSize, ctx.shadowSize);
+		}
+	}
+
+	public static String primitiveString(int primitiveType) {
+		switch(primitiveType){
+		case GL20.GL_POINTS: return "GL_POINTS";
+		case GL20.GL_LINES: return "GL_LINES";
+		case GL20.GL_LINE_STRIP: return "GL_LINE_STRIP";
+		case GL20.GL_LINE_LOOP: return "GL_LINE_LOOP";
+		case GL20.GL_TRIANGLES: return "GL_TRIANGLES";
+		case GL20.GL_TRIANGLE_STRIP: return "GL_TRIANGLE_STRIP";
+		case GL20.GL_TRIANGLE_FAN: return "GL_TRIANGLE_FAN";
+		case GL32.GL_PATCHES: return "GL_PATCHES";
+		case GL32.GL_QUADS: return "GL_QUADS";
+		default: return "UNKNOWN";
 		}
 	}
 }

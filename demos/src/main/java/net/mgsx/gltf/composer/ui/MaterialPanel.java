@@ -1,13 +1,17 @@
 package net.mgsx.gltf.composer.ui;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.IntAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Scaling;
 
 import net.mgsx.gdx.graphics.glutils.ColorUtils;
@@ -35,12 +39,13 @@ public class MaterialPanel extends Table
 			else if(attribute instanceof ColorAttribute){
 				ColorAttribute fa = (ColorAttribute)attribute;
 				boolean rgb = false;
+				boolean ext = true;
 				if(rgb){
 					// RGB mode
 					UI.slider(table, Attribute.getAttributeAlias(fa.type) + ".r", 0, 1, fa.color.r, v->fa.color.r=v);
 					UI.slider(table, Attribute.getAttributeAlias(fa.type) + ".g", 0, 1, fa.color.g, v->fa.color.g=v);
 					UI.slider(table, Attribute.getAttributeAlias(fa.type) + ".b", 0, 1, fa.color.b, v->fa.color.b=v);
-				}else{
+				}else if(!ext){
 					// HSV mode
 					float [] hsv = new float[]{0,0,0,fa.color.a, 1};
 					fa.color.toHsv(hsv);
@@ -48,6 +53,19 @@ public class MaterialPanel extends Table
 					UI.slider(table, Attribute.getAttributeAlias(fa.type) + ".s", 0, 1, hsv[1], v->{hsv[1]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
 					UI.slider(table, Attribute.getAttributeAlias(fa.type) + ".v", 0, 1, hsv[2], v->{hsv[2]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
 					UI.slider(table, Attribute.getAttributeAlias(fa.type) + ".scale", 1e-3f, 1e3f, hsv[4], ControlScale.LOG, v->{hsv[4]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
+				}else{
+					float [] hsv = new float[]{0,0,0,fa.color.a, 1};
+					fa.color.toHsv(hsv);
+					
+					Table t = new Table(getSkin());
+					t.add(Attribute.getAttributeAlias(fa.type)).minWidth(100);
+					t.defaults().padLeft(UI.DEFAULT_PADDING);
+					
+					Image img = new Image(getSkin().newDrawable("white", fa.color));
+					t.add(img).size(16);
+					UI.slider(t, "scale", 1e-3f, 1e3f, hsv[4], ControlScale.LOG, v->{hsv[4]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
+					
+					table.add(t).row();
 				}
 			}
 			else if(attribute instanceof TextureAttribute){
@@ -56,20 +74,45 @@ public class MaterialPanel extends Table
 				
 				Table t = new Table(getSkin());
 				
+				// TODO will messup when ui is removed (lost attributes)
+				t.add(UI.toggle(getSkin(), Attribute.getAttributeAlias(ta.type), true, v->{
+					if(v) material.set(ta); else material.remove(ta.type);
+				}));
+				
+				t.row();
 				
 				Image img = new Image(texture);
 				img.setScaling(Scaling.fit);
 				t.add(img).size(64);
 				
-				t.add(Attribute.getAttributeAlias(ta.type));
+				table.add(t).row();
+			}
+			else if(attribute instanceof IntAttribute){
+				IntAttribute ia = (IntAttribute)attribute;
 				
-				// TODO will messup when ui is removed (lost attributes)
-				t.add(UI.toggle(getSkin(), "enabled", true, v->{
-					if(v) material.set(ta); else material.remove(ta.type);
-				}));
+				Table t = new Table(getSkin());
+				t.add(Attribute.getAttributeAlias(ia.type));
+				
+				// TODO static
+				IntMap<String> cullingMap = new IntMap<String>();
+				cullingMap.put(GL20.GL_FRONT, "GL_FRONT");
+				cullingMap.put(GL20.GL_BACK, "GL_BACK");
+				cullingMap.put(GL20.GL_FRONT_AND_BACK, "GL_FRONT_AND_BACK");
+				cullingMap.put(GL20.GL_NONE, "GL_NONE");
+				cullingMap.put(-1, "Inherit default");
+				
+				Array<Integer> items = new Array<Integer>();
+				items.addAll(GL20.GL_FRONT, GL20.GL_BACK, GL20.GL_FRONT_AND_BACK, GL20.GL_NONE, -1);
+				
+				t.add(UI.selector(getSkin(), items, ia.value, v->cullingMap.get(v), v->ia.value=v));
+				
 				
 				table.add(t).row();
 				
+			}else{
+				Table t = new Table(getSkin());
+				t.add(Attribute.getAttributeAlias(attribute.type));
+				table.add(t).row();
 			}
 		}
 	}
