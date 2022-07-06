@@ -1,7 +1,7 @@
 apply plugin: 'application'
 
 sourceSets.main.resources.srcDirs += [ 'assets' ]
-mainClassName = 'net.mgsx.gdx.demos.MgdxDemoDesktop'
+mainClassName = 'net.mgsx.gltf.composer.GLTFComposerLauncher'
 eclipse.project.name = appName + '-demos'
 sourceCompatibility = 1.8
 
@@ -26,7 +26,7 @@ run {
 }
 
 jar {
-	archiveBaseName.set(appName)
+	archiveBaseName.set('GLTFComposer')
 	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 	dependsOn configurations.runtimeClasspath
 	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }

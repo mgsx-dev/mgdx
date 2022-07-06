@@ -33,15 +33,15 @@
 
 ## GLTF Composer
 
-A new application that will somehow replace GLTF Demo and IBL Composer.
+A new application that will somehow replace GLTF Demo and IBL Composer, see [work in progress](TODO.md).
 
-Features:
-* [x] Drad drop files (.gltf, .glb, .hdr)
-* [x] Scene structure browser
-* [x] Blender like cameras control
-* [x] HDR mode with post processing (bloom)
-* [ ] IBL export (png, jpg, ktx, ktx2)
-* [ ] ...
+Usage :
+
+* requires JRE 8+
+* F11 : toggle fullscreen
+* F12 : switch between GLTFComposer and Demos test suite (draft)
+* Drop files : *.hdr, *.ktx2, *.gltf, *.glb
+
 
 ## IBL
 

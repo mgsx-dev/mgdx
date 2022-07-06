@@ -2,18 +2,18 @@ eclipse.project.name = appName + '-desktop'
 sourceCompatibility = 1.8
 
 dependencies {
-	implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-	implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-	implementation project(':core')
+	api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+	api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+	api project(':core')
 	
-	implementation "org.lwjgl:lwjgl-tinyexr:$lwjglVersion"
-	implementation "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-linux"
-    implementation "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-linux-arm32"
-    implementation "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-linux-arm64"
-    implementation "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-macos"
-    implementation "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-macos-arm64"
-    implementation "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-windows"
-    implementation "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-windows-x86"
+	api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion"
+	api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-linux"
+    api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-linux-arm32"
+    api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-linux-arm64"
+    api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-macos"
+    api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-macos-arm64"
+    api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-windows"
+    api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-windows-x86"
 }
 
 
