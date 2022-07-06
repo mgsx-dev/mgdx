@@ -51,7 +51,7 @@
 * [x] vsync, FPS, profiler (new system tab)
 * [~] proxy based profiler (wip)
 * [ ] F1 to get help, key bindings, etc..
-* [ ] generate skin from GIMP (acting also as example for community)
+* [x] generate skin from GIMP (acting also as example for community)
 * [ ] MSAA
 * [ ] FXAA
 * [ ] MSAA frame buffers

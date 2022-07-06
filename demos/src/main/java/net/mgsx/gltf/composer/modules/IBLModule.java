@@ -28,7 +28,7 @@ public class IBLModule implements GLTFComposerModule
 	private class HDRBakingDialog extends Dialog
 	{
 		public HDRBakingDialog(GLTFComposerContext ctx, Runnable callback) {
-			super("HDR baking options", ctx.skin);
+			super("HDR baking options", ctx.skin, "dialog");
 			
 			Table t = getContentTable();
 			
@@ -55,7 +55,7 @@ public class IBLModule implements GLTFComposerModule
 			t.add(UI.selector(getSkin(), precisions, bakingOptions.format == GLFormat.RGB32 ? 32 : 16, v->v+" bits", v->bakingOptions.format=v==32 ? GLFormat.RGB32 : GLFormat.RGB16));
 			t.row();
 			
-			t.add(UI.trig(getSkin(), "Bake", ()->{
+			t.add(UI.primary(getSkin(), "Bake", ()->{
 				callback.run();
 				remove();
 			}));
@@ -76,7 +76,7 @@ public class IBLModule implements GLTFComposerModule
 	}
 	private class HDRExportDialog extends Dialog {
 		public HDRExportDialog(GLTFComposerContext ctx, Cubemap map, boolean mipmaps, Runnable callback) {
-			super("HDR export options", ctx.skin);
+			super("HDR export options", ctx.skin, "dialog");
 			Array<Exporter> formats = new Array<Exporter>();
 			formats.add(new Exporter("ktx2", ()->{
 				fileSelector.save(file->{
@@ -98,7 +98,7 @@ public class IBLModule implements GLTFComposerModule
 	private class ImportDialog extends Dialog
 	{
 		public ImportDialog(GLTFComposerContext ctx, Cubemap map) {
-			super("Import cube map", ctx.skin);
+			super("Import cube map", ctx.skin, "dialog");
 			Table t = getContentTable();
 			t.add(UI.trig(getSkin(), "import as environment map (skybox)", ()->{
 				if(ctx.ibl == null){

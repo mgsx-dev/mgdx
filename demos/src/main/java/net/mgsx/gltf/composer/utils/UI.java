@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -63,7 +64,7 @@ public class UI {
 	}
 	
 	public static TextButton toggle(Skin skin, String text, boolean checked, Consumer<Boolean> handler){
-		TextButton bt = new TextButton(text, skin, "toggle");
+		CheckBox bt = new CheckBox(text, skin);
 		bt.setChecked(checked);
 		change(bt, event->handler.accept(bt.isChecked()));
 		return bt;
@@ -73,12 +74,17 @@ public class UI {
 		change(bt, event->handler.run());
 		return bt;
 	}
+	public static TextButton primary(Skin skin, String text, Runnable handler){
+		TextButton bt = new TextButton(text, skin, "primary");
+		change(bt, event->handler.run());
+		return bt;
+	}
 
 	public static void dialog(Stage stage, Skin skin, String title, String message, IOException e) {
 		dialog(stage, skin, title, message + "\n" + e.getClass().getSimpleName() + ": " + e.getMessage());
 	}
 	public static Dialog dialog(Stage stage, Skin skin, String title, String message) {
-		Dialog d = new Dialog(title, skin);
+		Dialog d = new Dialog(title, skin, "dialog");
 		d.pad(130);
 		d.text(message);
 		d.button("OK");
@@ -94,12 +100,12 @@ public class UI {
 	 * @return
 	 */
 	public static Dialog dialogCustom(Stage stage, Skin skin, String title) {
-		Dialog d = new Dialog(title, skin);
+		Dialog d = new Dialog(title, skin, "dialog");
 		d.pad(130);
 		return d;
 	}
 	public static Dialog dialogEmpty(Stage stage, Skin skin, String title, String message) {
-		Dialog d = new Dialog(title, skin);
+		Dialog d = new Dialog(title, skin, "dialog");
 		d.pad(130);
 		d.text(message);
 		d.pack();
@@ -244,10 +250,10 @@ public class UI {
 		return new TextureRegion(texture, x, y, w, h);
 	}
 	public static void popup(Stage stage, Skin skin, String title, String message) {
-		Dialog dialog = new Dialog(title, skin);
+		Dialog dialog = new Dialog(title, skin, "dialog");
 		Table t = dialog.getContentTable();
 		t.add(message).row();
-		t.add(trig(skin, "OK", ()->dialog.remove()));
+		t.add(trig(skin, "OK", ()->dialog.hide()));
 		dialog.show(stage);
 	}
 	

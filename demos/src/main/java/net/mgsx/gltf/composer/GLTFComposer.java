@@ -14,7 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -63,7 +64,7 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.fsync = settings.fps > 0;
 		ctx.ffps = settings.fps;
 		
-		Skin skin = ctx.skin = new Skin(Gdx.files.internal("skins/uiskin.json"));
+		Skin skin = ctx.skin = new Skin(Gdx.files.internal("skins/composer-skin.json"));
 		
 		// PATCH
 		TextureRegion r = skin.getRegion("white");
@@ -71,14 +72,11 @@ public class GLTFComposer extends ScreenAdapter {
 		float v = (r.getV() + r.getV2())/2;
 		r.setRegion(u, v, u, v);
 		
-		skin.add("icon-cube",  UI.iconRegion("skins/icons.png", 0, 16 * 0, 16, 16), TextureRegion.class);
-		skin.add("icon-shade", UI.iconRegion("skins/icons.png", 0, 16 * 1, 16, 16), TextureRegion.class);
-		skin.add("icon-human", UI.iconRegion("skins/icons.png", 0, 16 * 2, 16, 16), TextureRegion.class);
-		skin.add("icon-file",  UI.iconRegion("skins/icons.png", 0, 16 * 3, 16, 16), TextureRegion.class);
-		skin.add("icon-light", UI.iconRegion("skins/icons.png", 0, 16 * 4, 16, 16), TextureRegion.class);
-		skin.add("icon-orbit", UI.iconRegion("skins/icons.png", 0, 16 * 5, 16, 16), TextureRegion.class);
-		skin.add("icon-camera", UI.iconRegion("skins/icons.png", 0, 16 * 6, 16, 16), TextureRegion.class);
-		skin.add("icon-wrench", UI.iconRegion("skins/icons.png", 0, 16 * 7, 16, 16), TextureRegion.class);
+		String[] icons = new String[]{"icon-cube",  "icon-shade", "icon-human", 
+				"icon-file",  "icon-light", "icon-orbit", "icon-camera", "icon-wrench"};
+		for(String icon : icons){
+			skin.add(icon, skin.getRegion(icon + "-16"), TextureRegion.class);
+		}
 		
 		ctx.profiler = new GLProfiler(Gdx.graphics);
 		ctx.profiler.setListener(GLErrorListener.LOGGING_LISTENER);
@@ -103,14 +101,12 @@ public class GLTFComposer extends ScreenAdapter {
 		
 		Table t = root = new Table(skin);
 		Table c = content = new Table(skin);
-		float lum = .1f;
-		c.setBackground(skin.newDrawable("white", lum,lum,lum, .8f));
 		c.setTouchable(Touchable.enabled);
 		TabPaneStyle style = new TabPaneStyle();
-		style.tabButtonStyle = skin.get("toggle", TextButtonStyle.class);
+		style.tabButtonStyle = skin.get("tab", TextButtonStyle.class);
+		style.panesBackground = skin.getDrawable("fade-tabpane-back");
 		tabPane = new TabPane(style);
-		c.add(tabPane).row();
-		c.add().expandY().row();
+		c.add(tabPane).grow().row();
 		t.add(c).growY().expandX().left();
 		t.setFillParent(true);
 		ctx.stage.addActor(t);
@@ -133,7 +129,9 @@ public class GLTFComposer extends ScreenAdapter {
 		Actor actor = module.initUI(ctx, ctx.skin);
 		if(actor != null){
 			moduleToTabIndex.put(index, moduleToTabIndex.size);
-			tabPane.addPane(new ImageButton(ctx.skin.getDrawable(iconName)), actor);
+			Button bt = new Button(ctx.skin, "tab");
+			bt.add(new Image(ctx.skin, iconName)).pad(10);
+			tabPane.addPane(bt, actor);
 		}
 	}
 	
