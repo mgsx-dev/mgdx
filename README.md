@@ -40,7 +40,14 @@ Usage :
 * requires JRE 8+
 * F11 : toggle fullscreen
 * F12 : switch between GLTFComposer and Demos test suite (draft)
+* Tab or N : show/hide menu
 * Drop files : *.hdr, *.ktx2, *.gltf, *.glb
+* Camera control (similar to Blender) :
+	* Left/Middle mouse button to rotate
+	* Shift+Mouse to pan
+	* Wheel orCTRL+mouse to zoom
+	* Numpad rotation
+	* Numpad 5 to switch beween perspective and orthographic (ortho zoom not implemented yet)
 
 
 ## IBL

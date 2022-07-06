@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import net.mgsx.gdx.demos.sketches.BenchmarkFileFormatSketch;
 import net.mgsx.gdx.demos.sketches.DefaultSketch;
-import net.mgsx.gdx.demos.sketches.EXRSketch;
 import net.mgsx.gdx.demos.sketches.GL30Texture3DSketch;
 import net.mgsx.gdx.demos.sketches.GL30TransformFeedbackSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShaderChainSketch;
@@ -28,9 +27,7 @@ import net.mgsx.gdx.demos.sketches.GL32DebugControlSketch;
 import net.mgsx.gdx.demos.sketches.GL32GeometryShaderSketch;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSimpleSketch;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSketch;
-import net.mgsx.gdx.demos.sketches.GLTFHDRRenderingSketch;
 import net.mgsx.gdx.demos.sketches.HDRBlurCascadeSketech;
-import net.mgsx.gdx.demos.sketches.HDRISketch;
 import net.mgsx.gdx.demos.sketches.KTX2Sktech;
 
 public class MgdxSketchSelector extends Dialog
@@ -40,10 +37,10 @@ public class MgdxSketchSelector extends Dialog
 		sketches.addAll(
 			DefaultSketch.class,
 			BenchmarkFileFormatSketch.class,
-			EXRSketch.class,
+			// EXRSketch.class,
 			KTX2Sktech.class,
-			GLTFHDRRenderingSketch.class,
-			HDRISketch.class,
+			// GLTFHDRRenderingSketch.class,
+			// HDRISketch.class,
 			HDRBlurCascadeSketech.class,
 			GL30Texture3DSketch.class,
 			GL30TransformFeedbackSketch.class,
