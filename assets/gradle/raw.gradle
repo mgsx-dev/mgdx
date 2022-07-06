@@ -1,0 +1,24 @@
+buildscript {
+	repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'java'
+
+def gdxRawCopy(src, dst){
+	task "gdxRawCopy_$src"(type: Copy, group: "gdx"){
+		from(src){
+			include "*.png"
+			include "*.jpg"
+		}
+		into dst
+	}
+}
+
+ext {
+    gdxRawCopy = this.&gdxRawCopy
+}
+
+

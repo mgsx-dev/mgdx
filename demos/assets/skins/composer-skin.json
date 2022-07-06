@@ -1,0 +1,62 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: { default-font: { file: composer-default.fnt } },
+com.badlogic.gdx.graphics.Color: {
+	green: { a: 1, b: 0, g: 1, r: 0 },
+	white: { a: 1, b: 1, g: 1, r: 1 },
+	red: { a: 1, b: 0, g: 0, r: 1 },
+	black: { a: 1, b: 0, g: 0, r: 0 },
+	fade: { r: 0, g: 0, b: 0, a: 0.5 },
+	clear: { r: 1, g: 1, b: 1, a: 0.1 },
+	section: {r: 1, g: 1, b: 1, a: 0.8}
+},
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } },
+	fade-tabpane-tab-on: {name: tabpane-tab-on, color: fade}
+	fade-tabpane-tab-off: {name: tabpane-tab-off, color: fade }
+	fade-tabpane-back: {name: tabpane-back, color: fade }
+	clear-pane: {name: white-pad, color: clear}
+},
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: { font: default-font, fontColor: white }
+	section: { font: default-font, fontColor: section, background: clear-pane }
+},
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: { down: default-round-down, up: default-round },
+	primary: { down: primary-round-down, up: primary-round },
+	toggle: { down: default-round-down, checked: default-round-down, up: default-round }
+	tab: { down: fade-tabpane-tab-on, checked: fade-tabpane-tab-on, up: fade-tabpane-tab-off }
+},
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: { down: default-round-down, up: default-round, font: default-font, fontColor: white },
+	primary: { down: primary-round-down, up: primary-round, font: default-font, fontColor: white },
+	toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, downFontColor: white }
+	tab: { down: fade-tabpane-tab-on, checked: fade-tabpane-tab-on, up: fade-tabpane-tab-off, font: default-font, fontColor: white }
+},
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: { vScroll: default-scroll, hScrollKnob: default-round, background: default-rect, hScroll: default-scroll, vScrollKnob: default-round },
+	empty: {  },
+	select: { background: default-rect },
+},
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: default-font, fontColor: white, background: default-select,
+		scrollStyle: select,
+		listStyle: { font: default-font, selection: default-select-selection }
+	}
+},
+com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+	default: { titleFont: default-font, background: default-window, titleFontColor: white },
+	dialog: { titleFont: default-font, background: default-window, titleFontColor: white, stageBackground: dialogDim }
+},
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: { background: default-slider, knob: default-slider-knob },
+	default-vertical: { background: default-slider, knob: default-slider-knob }
+},
+com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
+	default: { minus: tree-minus, plus: tree-plus, selection: default-tree-selection }
+},
+com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }
+},
+
+}

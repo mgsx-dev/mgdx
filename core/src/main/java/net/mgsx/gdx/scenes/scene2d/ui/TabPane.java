@@ -49,7 +49,7 @@ public class TabPane extends Table
 		tabsBack.add(extraTabs = new Table(getSkin())).expandX().right().padBottom(4);
 		row();
 		add(backTable).grow();
-		backTable.add(stack).grow();
+		backTable.add(stack).expand().top();
 	}
 	public Table getExtraTabs() {
 		return extraTabs;
