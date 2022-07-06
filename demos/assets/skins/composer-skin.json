@@ -8,6 +8,7 @@ com.badlogic.gdx.graphics.Color: {
 	fade: { r: 0, g: 0, b: 0, a: 0.5 },
 	clear: { r: 1, g: 1, b: 1, a: 0.1 },
 	section: {r: 1, g: 1, b: 1, a: 0.8}
+	disabled: {r: 0.5, g: 0.5, b: 0.5, a: 1.0}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } },
@@ -15,6 +16,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	fade-tabpane-tab-off: {name: tabpane-tab-off, color: fade }
 	fade-tabpane-back: {name: tabpane-back, color: fade }
 	clear-pane: {name: white-pad, color: clear}
+	default-slider-knob-disabled: {name: default-slider-knob, color: disabled}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: white }
@@ -49,7 +51,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	dialog: { titleFont: default-font, background: default-window, titleFontColor: white, stageBackground: dialogDim }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
-	default-horizontal: { background: default-slider, knob: default-slider-knob },
+	default-horizontal: { background: default-slider, knob: default-slider-knob, disabledKnob: default-slider-knob-disabled },
 	default-vertical: { background: default-slider, knob: default-slider-knob }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {

@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import net.mgsx.gfx.ToneMappingShader;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
@@ -26,28 +25,21 @@ import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 public class HDRModule implements GLTFComposerModule
 {
 	private boolean hdrEnabled = true;
-	private boolean bloomEnabled = true;
-	private Bloom bloom;
-	private ToneMappingShader.Exposure toneMapping;
 	
 	private FrameBuffer fbo;
 	private SpriteBatch batch;
-	private float exposure = 1f;
+	
+	private ToneMappingModule toneMappingModule = new ToneMappingModule();
+	private BloomModule bloomModule = new BloomModule();
 	
 	public HDRModule() {
-		bloom = new Bloom();
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
-		toneMapping = new ToneMappingShader.Exposure(true);
-		
-		// defaults
-		bloom.bloomRate = .5f;
-		bloom.blurMix = .5f;
-		exposure = 1;
 	}
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
+		
 		Table t = UI.table(skin);
 		
 		UI.header(t, "Lights");
@@ -83,13 +75,9 @@ public class HDRModule implements GLTFComposerModule
 		
 		UI.toggle(t, "HDR", hdrEnabled, value->enableHDR(ctx, value));
 		
-		// TODO propose all tone mapping modes
-		UI.slider(t, "Exposure", 0.01f, 100f, exposure, ControlScale.LOG, value->exposure=value);
+		t.add(bloomModule.initUI(ctx, skin)).fill().row();
 		
-		
-		UI.toggle(t, "Bloom", bloomEnabled, value->bloomEnabled=value);
-		UI.slider(t, "Bloom rate", 0, 1, bloom.bloomRate, value->bloom.bloomRate=value);
-		UI.slider(t, "Bloom blur", 0, 1, bloom.blurMix, value->bloom.blurMix=value);
+		t.add(toneMappingModule.initUI(ctx, skin)).fill().row();
 		
 		return t;
 	}
@@ -128,20 +116,11 @@ public class HDRModule implements GLTFComposerModule
 	}
 	
 	private void applyPostProcess(GLTFComposerContext ctx) {
-		// Bloom
-		if(bloomEnabled){
-			bloom.apply(fbo, batch);
-		}
-		toneMapping.bind();
-		toneMapping.setExposure(exposure);
-		batch.setShader(toneMapping);
+		// render bloom
+		bloomModule.render(batch, fbo);
 		
 		// render final with tone mapping (HDR to LDR)
-		batch.disableBlending();
-		batch.begin();
-		batch.draw(fbo.getColorBufferTexture(), 0, 0, 1, 1, 0, 0, 1, 1);
-		batch.end();
-		batch.setShader(null);
+		toneMappingModule.render(batch, fbo.getColorBufferTexture());
 	}
 
 	private void ensureFBO(int width, int height) {

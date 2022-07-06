@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -233,6 +235,60 @@ public class UI {
 		t.defaults().pad(DEFAULT_PADDING);
 		return t;
 	}
+	public static class Frame extends Table {
+
+		private Table titleTable;
+		private Table contentTable;
+
+		public Frame(Actor title, Skin skin) {
+			super(skin);
+			titleTable = new Table(skin);
+			if(title != null) titleTable.add(title);
+			
+			Table titleLeft = new Table(skin);
+			titleLeft.setBackground("frame-top-left");
+			
+			Table titleRight = new Table(skin);
+			titleRight.setBackground("frame-top-right");
+			
+			contentTable = new Table(skin);
+			contentTable.setBackground("frame-bottom");
+			add(titleLeft).bottom();
+			add(titleTable).pad(4);
+			add(titleRight).growX().bottom().row();
+			
+			add(contentTable).colspan(3).grow().row();
+		}
+		public Table getContentTable(){
+			return contentTable;
+		}
+	}
 	
+	public static Frame frame(String title, Skin skin) {
+		Label label = new Label(title, skin);
+		label.setColor(Color.LIGHT_GRAY);
+		return new Frame(label, skin);
+	}
+	public static Frame frameToggle(String title, Skin skin, boolean checked, Consumer<Boolean> callback) {
+		Frame frame = new Frame(null, skin);
+		Actor bt = toggle(skin, title, checked, v->{
+			callback.accept(v);
+			enableRecursive(frame.contentTable, v);
+		});
+		enableRecursive(frame.contentTable, checked);
+		frame.titleTable.add(bt);
+		return frame;
+	}
+	public static void enableRecursive(Actor actor, boolean enabled) {
+		if(actor instanceof Disableable){
+			((Disableable) actor).setDisabled(!enabled);
+		}
+		if(actor instanceof Group){
+			Group g = (Group)actor;
+			for(Actor child : g.getChildren()){
+				enableRecursive(child, enabled);
+			}
+		}
+	}
 	
 }
