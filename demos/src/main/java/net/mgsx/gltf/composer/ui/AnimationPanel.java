@@ -19,12 +19,14 @@ public class AnimationPanel  extends Table
 
 	public AnimationPanel(GLTFComposerContext ctx, Animation animation) {
 		super(ctx.skin);
+		defaults().pad(UI.DEFAULT_PADDING);
+
 		this.ctx = ctx;
 		this.animation = animation;
 		
 		Table table = this;
 		
-		table.add("Animation: " + animation.id).row();
+		UI.header(table, "Animation: " + animation.id);
 		
 		AnimationController control = ctx.scene.animationController;
 		AnimationDesc current = control.current;

@@ -48,7 +48,9 @@ public class HDRModule implements GLTFComposerModule
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		Table t = new Table(skin);
+		Table t = UI.table(skin);
+		
+		UI.header(t, "Lights");
 		
 		UI.slider(t, "Ambiant", 0, 1, 1, value->ctx.sceneManager.setAmbientLight(value));
 		
@@ -77,6 +79,7 @@ public class HDRModule implements GLTFComposerModule
 			ctx.stage.addCaptureListener(listener);
 		})).row();
 		
+		UI.header(t, "Post processing");
 		
 		UI.toggle(t, "HDR", hdrEnabled, value->enableHDR(ctx, value));
 		
@@ -88,20 +91,6 @@ public class HDRModule implements GLTFComposerModule
 		UI.slider(t, "Bloom rate", 0, 1, bloom.bloomRate, value->bloom.bloomRate=value);
 		UI.slider(t, "Bloom blur", 0, 1, bloom.blurMix, value->bloom.blurMix=value);
 		
-		/*
-		UI.slider(t, "Emissive", 0.001f, 1000, 1f, ControlScale.LOG, value->{
-			if(ctx.scene != null) GLTFMaterialUtils.forceEmissiveTextureFactor(ctx.scene, value);
-		});
-		
-		UI.slider(t, "Metallic", 0, 1, .5f, value->{
-			if(ctx.scene != null) GLTFMaterialUtils.forceMetallic(ctx.scene, value);
-		});
-		
-		UI.slider(t, "Roughness", 0, 1, .5f, value->{
-			if(ctx.scene != null) GLTFMaterialUtils.forceRoughness(ctx.scene, value);
-		});
-		*/
-		
 		return t;
 	}
 	
@@ -110,6 +99,10 @@ public class HDRModule implements GLTFComposerModule
 		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
 		ctx.colorShaderConfig.manualGammaCorrection = !hdrEnabled;
 		ctx.invalidateShaders();
+		if(fbo != null){
+			fbo.dispose();
+			fbo = null;
+		}
 	}
 
 	@Override
@@ -156,7 +149,11 @@ public class HDRModule implements GLTFComposerModule
 			if(fbo != null) fbo.dispose();
 			FrameBufferBuilder builder = new FrameBufferBuilder(width, height);
 			
-			builder.addColorTextureAttachment(GL30.GL_RGBA16F, GL30.GL_RGBA, GL30.GL_FLOAT);
+			if(hdrEnabled){
+				builder.addColorTextureAttachment(GL30.GL_RGBA16F, GL30.GL_RGBA, GL30.GL_FLOAT);
+			}else{
+				builder.addColorTextureAttachment(GL30.GL_RGBA8, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE);
+			}
 			builder.addDepthRenderBuffer(GL30.GL_DEPTH_COMPONENT24);
 			
 			fbo = builder.build();

@@ -248,7 +248,7 @@ public class SceneModule implements GLTFComposerModule
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		controls = new Table(skin);
+		controls = UI.table(skin);
 		controls.add("no model loaded");
 	
 		return controls;
@@ -259,7 +259,6 @@ public class SceneModule implements GLTFComposerModule
 		if(ctx.sceneJustChanged){
 			// update UI
 			controls.clear();
-			controls.defaults().pad(10);
 			
 			// TODO options (show selected only)
 			// zoom to selected / zoom to scene (auto adjust)
@@ -274,7 +273,7 @@ public class SceneModule implements GLTFComposerModule
 			ScrollPane sp = new ScrollPane(tree);
 			sp.setScrollingDisabled(true, false);
 			sp.setTouchable(Touchable.childrenOnly);
-			controls.add(sp).grow().row();
+			controls.add(sp).growY().expandX().left().row();
 			
 			Table infoPane = new Table(ctx.skin);
 			controls.add(infoPane).row();

@@ -62,8 +62,12 @@ public class TabPane extends Table
 	public void addPane(Button tab, Actor content){
 		group.setMinCheckCount(0);
 		tabs.add(tab);
-		stack.add(content);
-		content.setVisible(false);
+		
+		Table t = new Table();
+		t.add(content).expandY().top().growX();
+		
+		stack.add(t);
+		t.setVisible(false);
 		group.add(tab);
 		group.setMinCheckCount(1);
 		tab.addListener(new ChangeListener() {

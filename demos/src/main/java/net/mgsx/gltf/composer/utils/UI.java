@@ -1,6 +1,5 @@
 package net.mgsx.gltf.composer.utils;
 
-import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -37,6 +36,7 @@ public class UI {
 	public enum ControlScale{
 		LIN, LOG
 	}
+	public static final float DEFAULT_PADDING = 4;
 	
 	public static <T extends Actor> T change(T actor, Consumer<ChangeEvent> handler){
 		actor.addListener(new ChangeListener() {
@@ -80,38 +80,6 @@ public class UI {
 		return bt;
 	}
 
-	public static void dialog(Stage stage, Skin skin, String title, String message, IOException e) {
-		dialog(stage, skin, title, message + "\n" + e.getClass().getSimpleName() + ": " + e.getMessage());
-	}
-	public static Dialog dialog(Stage stage, Skin skin, String title, String message) {
-		Dialog d = new Dialog(title, skin, "dialog");
-		d.pad(130);
-		d.text(message);
-		d.button("OK");
-		d.pack();
-		d.show(stage);
-		return d;
-	}
-	/**
-	 * create empty dialog for custom content, caller is responsible for packing and showing
-	 * @param stage
-	 * @param skin
-	 * @param title
-	 * @return
-	 */
-	public static Dialog dialogCustom(Stage stage, Skin skin, String title) {
-		Dialog d = new Dialog(title, skin, "dialog");
-		d.pad(130);
-		return d;
-	}
-	public static Dialog dialogEmpty(Stage stage, Skin skin, String title, String message) {
-		Dialog d = new Dialog(title, skin, "dialog");
-		d.pad(130);
-		d.text(message);
-		d.pack();
-		d.show(stage);
-		return d;
-	}
 	public static Table colored(Cell<? extends Actor> cell, Color color) {
 		cell.getActor().setColor(color);
 		return cell.getTable();
@@ -252,9 +220,18 @@ public class UI {
 	public static void popup(Stage stage, Skin skin, String title, String message) {
 		Dialog dialog = new Dialog(title, skin, "dialog");
 		Table t = dialog.getContentTable();
+		t.defaults().pad(DEFAULT_PADDING);
 		t.add(message).row();
 		t.add(trig(skin, "OK", ()->dialog.hide()));
 		dialog.show(stage);
+	}
+	public static void header(Table table, String text) {
+		table.add(new Label(text, table.getSkin(), "section")).growX().row();
+	}
+	public static Table table(Skin skin) {
+		Table t = new Table(skin);
+		t.defaults().pad(DEFAULT_PADDING);
+		return t;
 	}
 	
 	

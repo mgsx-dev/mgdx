@@ -16,7 +16,7 @@ public class CameraModule implements GLTFComposerModule {
 
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		controls = new Table(skin);
+		controls = UI.table(skin);
 		buildUI(ctx);
 		return controls;
 	}

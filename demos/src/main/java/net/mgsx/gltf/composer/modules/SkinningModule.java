@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
+import net.mgsx.gltf.composer.utils.UI;
 
 public class SkinningModule implements GLTFComposerModule
 {
@@ -13,7 +14,7 @@ public class SkinningModule implements GLTFComposerModule
 
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		Table t = controls = new Table(skin);
+		Table t = controls = UI.table(skin);
 		controls.add("no skeleton found");
 		return t;
 	}
@@ -25,7 +26,6 @@ public class SkinningModule implements GLTFComposerModule
 		if(ctx.sceneJustChanged){
 			Table t = controls;
 			t.clear();
-			t.defaults().pad(10);
 			
 			// TODO find bones
 			

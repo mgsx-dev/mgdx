@@ -19,10 +19,11 @@ public class MaterialPanel extends Table
 {
 	public MaterialPanel(GLTFComposerContext ctx, Material material) {
 		super(ctx.skin);
+		defaults().pad(UI.DEFAULT_PADDING);
 		
 		Table table = this;
 		
-		table.add("Material: " + material.id).row();
+		UI.header(table, "Material: " + material.id);
 		
 		// TODO more use case (textures, etc..)
 		

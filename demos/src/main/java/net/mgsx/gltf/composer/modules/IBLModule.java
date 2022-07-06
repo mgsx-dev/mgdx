@@ -31,6 +31,7 @@ public class IBLModule implements GLTFComposerModule
 			super("HDR baking options", ctx.skin, "dialog");
 			
 			Table t = getContentTable();
+			t.defaults().pad(UI.DEFAULT_PADDING);
 			
 			// from 1x1 to 4k
 			Array<Integer> resolutions = new Array<Integer>();
@@ -85,6 +86,8 @@ public class IBLModule implements GLTFComposerModule
 			}));
 			
 			Table t = getContentTable();
+			t.defaults().pad(UI.DEFAULT_PADDING);
+			
 			SelectBox<Exporter> selector = UI.selector(ctx.skin, formats, formats.first(), f->f.name, f->{});
 			t.add(selector).row();
 			
@@ -100,6 +103,8 @@ public class IBLModule implements GLTFComposerModule
 		public ImportDialog(GLTFComposerContext ctx, Cubemap map) {
 			super("Import cube map", ctx.skin, "dialog");
 			Table t = getContentTable();
+			t.defaults().pad(UI.DEFAULT_PADDING);
+			
 			t.add(UI.trig(getSkin(), "import as environment map (skybox)", ()->{
 				if(ctx.ibl == null){
 					ctx.ibl = new IBL();
@@ -221,7 +226,7 @@ public class IBLModule implements GLTFComposerModule
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		controls = new Table(skin);
+		controls = UI.table(skin);
 		
 		Array<String> builtins = new Array<String>();
 		builtins.add("None", "Outdoor", "Indoor");

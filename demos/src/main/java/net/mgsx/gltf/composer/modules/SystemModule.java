@@ -36,7 +36,7 @@ public class SystemModule implements GLTFComposerModule
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		controls = new Table(skin);
+		controls = UI.table(skin);
 		
 		// Options
 		
@@ -60,11 +60,11 @@ public class SystemModule implements GLTFComposerModule
 		// GPU memory
 		{
 			Table t = new Table(skin);
-			t.add("GPU memory :");
+			t.add("GPU memory: ").padRight(UI.DEFAULT_PADDING);
 			if(GpuUtils.hasMemoryInfo()){
 				memoryMaxKB = GpuUtils.getMaxMemoryKB();
 				memoryLabel = t.add("").getActor();
-				t.add("/ " + (memoryMaxKB / 1024) + " MB");
+				t.add(" / " + (memoryMaxKB / 1024) + " MB");
 			}else{
 				t.add("unknown");
 			}
@@ -75,7 +75,8 @@ public class SystemModule implements GLTFComposerModule
 			if(!ctx.profiler.isEnabled()) ctx.profiler.enable(); else ctx.profiler.disable();
 		});
 		
-		Table stats = new Table(skin);
+		Table stats = UI.table(skin);
+		
 		controls.add(stats).row();
 		labelDC = entry(stats, "draw calls");
 		labelCS = entry(stats, "calls");
