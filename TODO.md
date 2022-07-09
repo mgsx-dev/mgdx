@@ -48,7 +48,9 @@
 ## New features
 
 * [x] Skybox rotation
+* [ ] IBL rotation
 * [x] Skybox blur
+* [ ] better skybox blur (gaussian mipmaps generation)
 * [x] Blender like cameras control
 * [x] Scene structure browser
 * [x] pickup skybox to configure key light direction
