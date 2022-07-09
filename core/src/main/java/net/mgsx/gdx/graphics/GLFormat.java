@@ -13,6 +13,10 @@ public class GLFormat {
 	public static final GLFormat RGBA16 = new GLFormat(GL30.GL_RGBA16F, GL20.GL_RGBA, GL20.GL_FLOAT);
 	public static final GLFormat RGBA32 = new GLFormat(GL30.GL_RGBA32F, GL20.GL_RGBA, GL20.GL_FLOAT);
 	
+	public static final GLFormat DEPTH16 = new GLFormat(GL30.GL_DEPTH_COMPONENT16, GL20.GL_DEPTH_COMPONENT, GL20.GL_UNSIGNED_SHORT);
+	public static final GLFormat DEPTH24 = new GLFormat(GL30.GL_DEPTH_COMPONENT24, GL20.GL_DEPTH_COMPONENT, GL20.GL_UNSIGNED_INT);
+	public static final GLFormat DEPTH32 = new GLFormat(GL30.GL_DEPTH_COMPONENT32F, GL20.GL_DEPTH_COMPONENT, GL20.GL_FLOAT);
+	
 	public int internalFormat, format, type;
 	public final int bppGpu, bppCpu, numComponents;
 
@@ -44,6 +48,10 @@ public class GLFormat {
 		case GL30.GL_RGBA16F: return 8;
 		case GL30.GL_RGBA32F: return 16;
 		
+		case GL20.GL_DEPTH_COMPONENT16: return 2;
+		case GL30.GL_DEPTH_COMPONENT24: return 3;
+		case GL30.GL_DEPTH_COMPONENT32F: return 4;
+		
 		default: throw new GdxRuntimeException("unknown");
 		}
 	}
@@ -54,6 +62,7 @@ public class GLFormat {
 		case GL30.GL_RGB: return 3;
 		case GL30.GL_RG: return 2;
 		case GL30.GL_RED: return 1;
+		case GL20.GL_DEPTH_COMPONENT: return 1;
 		default: throw new GdxRuntimeException("unknown");
 		}
 	}
