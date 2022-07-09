@@ -1,4 +1,4 @@
-package net.mgsx.gltf.composer.utils;
+package net.mgsx.gdx.scenes.scene2d.ui;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -126,6 +127,13 @@ public class UI {
 		
 		return selectBox;
 	}
+	public static SelectBox<String> selector(Skin skin, String[] items, int defaultItem, Consumer<Integer> handler) {
+		SelectBox<String> selectBox = new SelectBox<String>(skin);
+		selectBox.setItems(new Array<String>(items));
+		change(selectBox, event->handler.accept(selectBox.getSelectedIndex()));
+		if(defaultItem >= 0) selectBox.setSelectedIndex(defaultItem);
+		return selectBox;
+	}
 	public static SelectBox<String> selector(Skin skin, String ...items) {
 		SelectBox<String> selectBox = new SelectBox<String>(skin);
 		selectBox.setItems(items);
@@ -136,44 +144,76 @@ public class UI {
 	}
 	public static Slider slider(float min, float max, float stepSize, boolean vertical, Skin skin, Float value, Consumer<Float> change, Consumer<Float> complete) {
 		Slider slider = new Slider(min, max, stepSize, vertical, skin);
+		if(value != null) slider.setValue(value);
 		if(change != null) change(slider, e->{
 			e.stop();
 			//e.cancel();
 			change.accept(slider.getValue());
 		});
 		if(complete != null) changeCompleted(slider, e->complete.accept(slider.getValue()));
-		if(value != null) slider.setValue(value);
 		return slider;
 	}
 	public static Slider slider(Table table, String name, float min, float max, float val, Consumer<Float> callback) {
 		return slider(table, name, min, max, val, ControlScale.LIN, callback);
 	}
-	public static Slider slider(Table table, String name, float min, float max, float val, ControlScale scale, Consumer<Float> callback) {
+	
+	public static Slider sliderTable(Table table, String name, float min, float max, float value, ControlScale scale, Consumer<Float> setter) {
 		float width = 200;
 		float stepSize = (max - min) / width;
 		
 		float sMin = scale == ControlScale.LOG ? (float)Math.log10(min) : min;
 		float sMax = scale == ControlScale.LOG ? (float)Math.log10(max) : max;
-		float sVal = scale == ControlScale.LOG ? (float)Math.log10(val) : val;
+		float sVal = scale == ControlScale.LOG ? (float)Math.log10(value) : value;
 		float sStep = scale == ControlScale.LOG ? .01f : stepSize;
 
 		Label number = new Label(round(sVal, sStep), table.getSkin());
 		
-		Slider slider = slider(sMin, sMax, sStep, false, table.getSkin(), sVal, value->{
-			float nVal = scale == ControlScale.LOG ? (float)Math.pow(10, value) : value;
-			callback.accept(nVal);
+		Slider slider = slider(sMin, sMax, sStep, false, table.getSkin(), sVal, val->{
+			float nVal = scale == ControlScale.LOG ? (float)Math.pow(10, val) : val;
+			setter.accept(nVal);
 			number.setText(round(nVal, sStep));
 		});
-		Table t = new Table(table.getSkin());
-		t.defaults().pad(2);
 		
-		t.add(name).left();
-		t.add(slider).width(width);
-		t.add(number).width(50);
+		table.add(name).left();
+		table.add(slider).width(width);
+		table.add(number).width(50);
 		
-		table.add(t).fill();
 		table.row();
 		
+		return slider;
+	}
+	public static Slider slider(Table table, String name, float min, float max, float val, ControlScale scale, Consumer<Float> callback) {
+//		float width = 200;
+//		float stepSize = (max - min) / width;
+//		
+//		float sMin = scale == ControlScale.LOG ? (float)Math.log10(min) : min;
+//		float sMax = scale == ControlScale.LOG ? (float)Math.log10(max) : max;
+//		float sVal = scale == ControlScale.LOG ? (float)Math.log10(val) : val;
+//		float sStep = scale == ControlScale.LOG ? .01f : stepSize;
+//
+//		Label number = new Label(round(sVal, sStep), table.getSkin());
+//		
+//		Slider slider = slider(sMin, sMax, sStep, false, table.getSkin(), sVal, value->{
+//			float nVal = scale == ControlScale.LOG ? (float)Math.pow(10, value) : value;
+//			callback.accept(nVal);
+//			number.setText(round(nVal, sStep));
+//		});
+//		Table t = new Table(table.getSkin());
+//		t.defaults().pad(2);
+//		
+//		t.add(name).left();
+//		t.add(slider).width(width);
+//		t.add(number).width(50);
+//		
+//		table.add(t).fill();
+//		table.row();
+//		
+//		return slider;
+		Table t = new Table(table.getSkin());
+		t.defaults().pad(2);
+		Slider slider = sliderTable(t, name, min, max, val, scale, callback);
+		table.add(t).fill();
+		table.row();
 		return slider;
 	}
 	public static Slider slideri(Table table, String name, int min, int max, int value, Consumer<Integer> callback) {
@@ -239,6 +279,7 @@ public class UI {
 
 		private Table titleTable;
 		private Table contentTable;
+		private Table client;
 
 		public Frame(Actor title, Skin skin) {
 			super(skin);
@@ -251,16 +292,27 @@ public class UI {
 			Table titleRight = new Table(skin);
 			titleRight.setBackground("frame-top-right");
 			
-			contentTable = new Table(skin);
-			contentTable.setBackground("frame-bottom");
-			add(titleLeft).bottom();
-			add(titleTable).pad(4);
-			add(titleRight).growX().bottom().row();
+			Table headerTable = new Table(skin);
 			
-			add(contentTable).colspan(3).grow().row();
+			contentTable = new Table(skin);
+			headerTable.add(titleLeft).bottom();
+			headerTable.add(titleTable).pad(4);
+			headerTable.add(titleRight).growX().bottom();
+			
+			client = new Table(skin);
+			client.setBackground("frame-bottom");
+			client.add(contentTable).grow();
+			
+			add(headerTable).growX().row();
+			add(client).grow().row();
 		}
 		public Table getContentTable(){
 			return contentTable;
+		}
+		public void showContent(boolean enabled) {
+			client.clear();
+			if(enabled) client.add(contentTable).grow();
+			// else client.add("a").grow();
 		}
 	}
 	
@@ -270,13 +322,22 @@ public class UI {
 		return new Frame(label, skin);
 	}
 	public static Frame frameToggle(String title, Skin skin, boolean checked, Consumer<Boolean> callback) {
+		boolean collapseMode = true; // TODO option ?
 		Frame frame = new Frame(null, skin);
 		Actor bt = toggle(skin, title, checked, v->{
 			callback.accept(v);
-			enableRecursive(frame.contentTable, v);
+			if(collapseMode)
+				frame.showContent(v);
+			else
+				enableRecursive(frame.contentTable, v);
 		});
-		enableRecursive(frame.contentTable, checked);
+		if(collapseMode)
+			frame.showContent(checked);
+		else
+			enableRecursive(frame.contentTable, checked);
+		
 		frame.titleTable.add(bt);
+		frame.getContentTable().defaults().pad(DEFAULT_PADDING);
 		return frame;
 	}
 	public static void enableRecursive(Actor actor, boolean enabled) {
@@ -290,5 +351,29 @@ public class UI {
 			}
 		}
 	}
+	public static Actor colorBox(Skin skin, Color color, boolean alpha, Consumer<Float> callback) {
+		Image img = new Image(skin, "white");
+		img.setScaling(Scaling.fill);
+		
+		Button bt = new Button(skin);
+		
+		bt.add(img).size(32);
+		
+		img.setColor(new Color(color.r, color.g, color.b, 1));
+		
+		Table t = new Table(skin);
+		t.add(bt);
+		
+		return t;
+	}
+	public static Dialog dialog(Actor content, String title, Skin skin) {
+		Dialog dialog = new Dialog(title, skin, "dialog");
+		dialog.getContentTable().add(content).row();
+		// dialog.getContentTable().add(trig(skin, "Close", ()->dialog.hide()));
+		dialog.getTitleTable().add(UI.change(new Button(skin), e->dialog.hide())).pad(0).size(16, 16);
+		
+		return dialog;
+	}
+	
 	
 }
