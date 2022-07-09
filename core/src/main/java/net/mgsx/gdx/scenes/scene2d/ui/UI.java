@@ -166,7 +166,7 @@ public class UI {
 		float sVal = scale == ControlScale.LOG ? (float)Math.log10(value) : value;
 		float sStep = scale == ControlScale.LOG ? .01f : stepSize;
 
-		Label number = new Label(round(sVal, sStep), table.getSkin());
+		Label number = new Label(round(value, sStep), table.getSkin());
 		
 		Slider slider = slider(sMin, sMax, sStep, false, table.getSkin(), sVal, val->{
 			float nVal = scale == ControlScale.LOG ? (float)Math.pow(10, val) : val;
@@ -183,32 +183,6 @@ public class UI {
 		return slider;
 	}
 	public static Slider slider(Table table, String name, float min, float max, float val, ControlScale scale, Consumer<Float> callback) {
-//		float width = 200;
-//		float stepSize = (max - min) / width;
-//		
-//		float sMin = scale == ControlScale.LOG ? (float)Math.log10(min) : min;
-//		float sMax = scale == ControlScale.LOG ? (float)Math.log10(max) : max;
-//		float sVal = scale == ControlScale.LOG ? (float)Math.log10(val) : val;
-//		float sStep = scale == ControlScale.LOG ? .01f : stepSize;
-//
-//		Label number = new Label(round(sVal, sStep), table.getSkin());
-//		
-//		Slider slider = slider(sMin, sMax, sStep, false, table.getSkin(), sVal, value->{
-//			float nVal = scale == ControlScale.LOG ? (float)Math.pow(10, value) : value;
-//			callback.accept(nVal);
-//			number.setText(round(nVal, sStep));
-//		});
-//		Table t = new Table(table.getSkin());
-//		t.defaults().pad(2);
-//		
-//		t.add(name).left();
-//		t.add(slider).width(width);
-//		t.add(number).width(50);
-//		
-//		table.add(t).fill();
-//		table.row();
-//		
-//		return slider;
 		Table t = new Table(table.getSkin());
 		t.defaults().pad(2);
 		Slider slider = sliderTable(t, name, min, max, val, scale, callback);
