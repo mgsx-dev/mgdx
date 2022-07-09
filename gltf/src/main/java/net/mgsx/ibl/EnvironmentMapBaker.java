@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Cubemap;
 import com.badlogic.gdx.graphics.Cubemap.CubemapSide;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.glutils.FrameBufferCubemap;
 import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferCubemapBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -59,7 +60,7 @@ public class EnvironmentMapBaker implements Disposable
 		fboEnv.end();
 		Cubemap texture = fboEnv.getTextureAttachments().removeIndex(0);
 		fboEnv.dispose();
-		
+		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		return texture;
 	}
 	
