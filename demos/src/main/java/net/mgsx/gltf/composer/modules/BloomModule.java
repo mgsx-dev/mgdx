@@ -10,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
-import net.mgsx.gdx.scenes.scene2d.ui.UI.Frame;
 import net.mgsx.gfx.BlurCascade;
 import net.mgsx.gfx.BlurCascade.BlurMixMode;
 import net.mgsx.gfx.BrighnessExtractShader;

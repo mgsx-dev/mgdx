@@ -230,51 +230,12 @@ public class UI {
 		t.defaults().pad(DEFAULT_PADDING);
 		return t;
 	}
-	public static class Frame extends Table {
-
-		private Table titleTable;
-		private Table contentTable;
-		private Table client;
-
-		public Frame(Actor title, Skin skin) {
-			super(skin);
-			titleTable = new Table(skin);
-			if(title != null) titleTable.add(title);
-			
-			Table titleLeft = new Table(skin);
-			titleLeft.setBackground("frame-top-left");
-			
-			Table titleRight = new Table(skin);
-			titleRight.setBackground("frame-top-right");
-			
-			Table headerTable = new Table(skin);
-			
-			contentTable = new Table(skin);
-			headerTable.add(titleLeft).bottom();
-			headerTable.add(titleTable).pad(4);
-			headerTable.add(titleRight).growX().bottom();
-			
-			client = new Table(skin);
-			client.setBackground("frame-bottom");
-			client.add(contentTable).grow();
-			
-			add(headerTable).growX().row();
-			add(client).grow().row();
-		}
-		public Table getContentTable(){
-			return contentTable;
-		}
-		public void showContent(boolean enabled) {
-			client.clear();
-			if(enabled) client.add(contentTable).grow();
-			// else client.add("a").grow();
-		}
-	}
-	
 	public static Frame frame(String title, Skin skin) {
 		Label label = new Label(title, skin);
 		label.setColor(Color.LIGHT_GRAY);
-		return new Frame(label, skin);
+		Frame frame = new Frame(label, skin);
+		frame.getContentTable().setSkin(skin);
+		return frame;
 	}
 	public static Frame frameToggle(String title, Skin skin, boolean checked, Consumer<Boolean> callback) {
 		boolean collapseMode = true; // TODO option ?
@@ -284,15 +245,16 @@ public class UI {
 			if(collapseMode)
 				frame.showContent(v);
 			else
-				enableRecursive(frame.contentTable, v);
+				enableRecursive(frame.getContentTable(), v);
 		});
 		if(collapseMode)
 			frame.showContent(checked);
 		else
-			enableRecursive(frame.contentTable, checked);
+			enableRecursive(frame.getContentTable(), checked);
 		
-		frame.titleTable.add(bt);
+		frame.getTitleTable().add(bt);
 		frame.getContentTable().defaults().pad(DEFAULT_PADDING);
+		frame.getContentTable().setSkin(skin);
 		return frame;
 	}
 	public static void enableRecursive(Actor actor, boolean enabled) {

@@ -27,6 +27,7 @@ import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.MgdxGame.Settings;
 import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
+import net.mgsx.gdx.scenes.scene2d.ui.Frame.FrameStyle;
 import net.mgsx.gdx.scenes.scene2d.ui.TabPane;
 import net.mgsx.gdx.scenes.scene2d.ui.TabPane.TabPaneStyle;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
@@ -69,6 +70,12 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.ffps = settings.fps;
 		
 		Skin skin = ctx.skin = new Skin(Gdx.files.internal("skins/composer-skin.json"));
+		
+		FrameStyle frameStyle = new FrameStyle();
+		frameStyle.headerBackgroundLeft = skin.getDrawable("frame-top-left");
+		frameStyle.headerBackgroundRight = skin.getDrawable("frame-top-right");
+		frameStyle.bodyBackground = skin.getDrawable("frame-bottom");
+		skin.add("default", frameStyle, FrameStyle.class);
 		
 		// PATCH
 		TextureRegion r = skin.getRegion("white");
