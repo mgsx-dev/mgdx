@@ -4,8 +4,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -27,10 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Scaling;
 
 // TODO cleanup
@@ -218,20 +213,6 @@ public class UI {
 		float factor = (float)Math.pow(10, digits);
 		float adj = MathUtils.round(value * factor) / factor;
 		return String.valueOf(adj);
-	}
-	public static ObjectMap<String, Texture> textures = new ObjectMap<String, Texture>();
-	public static Actor icon(String path, int x, int y, int w, int h) {
-		Image img = new Image(iconRegion(path, x, y, w, h));
-		img.setScaling(Scaling.none);
-		return img;
-	}
-	public static Drawable iconDrawable(String path, int x, int y, int w, int h) {
-		return new TextureRegionDrawable(iconRegion(path, x, y, w, h));
-	}
-	public static TextureRegion iconRegion(String path, int x, int y, int w, int h) {
-		Texture texture = textures.get(path);
-		if(texture == null) textures.put(path, texture = new Texture(path));
-		return new TextureRegion(texture, x, y, w, h);
 	}
 	public static void popup(Stage stage, Skin skin, String title, String message) {
 		Dialog dialog = new Dialog(title, skin, "dialog");
