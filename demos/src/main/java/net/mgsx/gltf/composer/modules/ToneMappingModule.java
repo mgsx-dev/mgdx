@@ -7,12 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
+import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
+import net.mgsx.gdx.scenes.scene2d.ui.UI.Frame;
 import net.mgsx.gfx.ToneMappingShader;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
-import net.mgsx.gltf.composer.utils.UI;
-import net.mgsx.gltf.composer.utils.UI.ControlScale;
-import net.mgsx.gltf.composer.utils.UI.Frame;
 
 public class ToneMappingModule implements GLTFComposerModule
 {

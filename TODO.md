@@ -47,6 +47,8 @@
 
 ## New features
 
+* [x] Skybox rotation
+* [x] Skybox blur
 * [x] Blender like cameras control
 * [x] Scene structure browser
 * [x] pickup skybox to configure key light direction

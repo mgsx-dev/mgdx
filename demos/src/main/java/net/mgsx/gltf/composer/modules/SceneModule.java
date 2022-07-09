@@ -26,12 +26,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 import net.mgsx.gdx.graphics.g3d.ModelUtils;
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.ui.AnimationPanel;
 import net.mgsx.gltf.composer.ui.MaterialPanel;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
-import net.mgsx.gltf.composer.utils.UI;
 import net.mgsx.gltf.loaders.exceptions.GLTFIllegalException;
 import net.mgsx.gltf.loaders.exceptions.GLTFRuntimeException;
 import net.mgsx.gltf.loaders.exceptions.GLTFUnsupportedException;
@@ -262,7 +262,7 @@ public class SceneModule implements GLTFComposerModule
 	}
 	
 	@Override
-	public void render(GLTFComposerContext ctx) {
+	public void update(GLTFComposerContext ctx, float delta) {
 		if(ctx.sceneJustChanged){
 			// update UI
 			controls.clear();

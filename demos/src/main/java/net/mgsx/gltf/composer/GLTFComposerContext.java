@@ -8,11 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
+import net.mgsx.gltf.scene.PBRRenderTargets;
+import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
-import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
@@ -25,12 +26,15 @@ public class GLTFComposerContext {
 	public PBRShaderConfig colorShaderConfig;
 	public DepthShader.Config depthShaderConfig;
 	public SceneManager sceneManager;
-	public SceneSkybox skyBox;
+	public Skybox skyBox;
+	public boolean skyBoxEnabled = true;
 	public IBL ibl;
 	public DirectionalLightEx keyLight = new DirectionalLightEx();
 	public boolean shadows;
 	public int shadowSize = 2048;
 	public float shadowBias = 1f / 255f;
+	
+	public PBRRenderTargets fbo;
 	
 	public SceneAsset asset;
 	public Scene scene;
@@ -46,12 +50,21 @@ public class GLTFComposerContext {
 	public boolean sceneJustChanged = false;
 
 	private boolean shadersValid = false;
+	private boolean fboValid = false;
 	
 	public void invalidateShaders(){
 		shadersValid = false;
 	}
+	public void invalidateFBO(){
+		fboValid = false;
+	}
 	
 	public void validate(){
+		if(!fboValid){
+			invalidateShaders();
+			fboValid = true;
+			fbo.reset();
+		}
 		if(!shadersValid){
 			shadersValid = true;
 
@@ -67,6 +80,8 @@ public class GLTFComposerContext {
 				depthShaderConfig.numBones = 0;
 			}
 			
+			fbo.configure(colorShaderConfig);
+			
 			sceneManager.setShaderProvider(new PBRShaderProvider(colorShaderConfig));
 			sceneManager.setDepthShaderProvider(new PBRDepthShaderProvider(depthShaderConfig));
 					
@@ -77,8 +92,8 @@ public class GLTFComposerContext {
 				sceneManager.setSkyBox(null);
 				skyBox.dispose();
 			}
-			if(ibl != null && ibl.environmentCubemap != null){
-				skyBox = new SceneSkybox(ibl.getEnvironmentCubemap(), colorShaderConfig.manualSRGB, colorShaderConfig.manualGammaCorrection);
+			if(ibl != null && ibl.environmentCubemap != null && skyBoxEnabled){
+				skyBox = new Skybox(ibl.getEnvironmentCubemap(), colorShaderConfig.manualSRGB, colorShaderConfig.manualGammaCorrection);
 				sceneManager.setSkyBox(skyBox);
 			}
 		}

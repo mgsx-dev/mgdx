@@ -10,14 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
+import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
+import net.mgsx.gdx.scenes.scene2d.ui.UI.Frame;
 import net.mgsx.gfx.BlurCascade;
 import net.mgsx.gfx.BlurCascade.BlurMixMode;
 import net.mgsx.gfx.BrighnessExtractShader;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
-import net.mgsx.gltf.composer.utils.UI;
-import net.mgsx.gltf.composer.utils.UI.ControlScale;
-import net.mgsx.gltf.composer.utils.UI.Frame;
 
 public class BloomModule implements GLTFComposerModule
 {
@@ -54,7 +54,7 @@ public class BloomModule implements GLTFComposerModule
 	}
 
 	
-	private boolean enabled = true;
+	private boolean enabled = false;
 	
 	private Bloom bloom = new Bloom();
 	

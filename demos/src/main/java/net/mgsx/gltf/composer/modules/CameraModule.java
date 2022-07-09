@@ -4,11 +4,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
+import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
-import net.mgsx.gltf.composer.utils.UI;
-import net.mgsx.gltf.composer.utils.UI.ControlScale;
 
 public class CameraModule implements GLTFComposerModule {
 
@@ -22,7 +22,7 @@ public class CameraModule implements GLTFComposerModule {
 	}
 	
 	@Override
-	public void render(GLTFComposerContext ctx) {
+	public void update(GLTFComposerContext ctx, float delta) {
 		if(ctx.sceneJustChanged){
 			buildUI(ctx);
 		}

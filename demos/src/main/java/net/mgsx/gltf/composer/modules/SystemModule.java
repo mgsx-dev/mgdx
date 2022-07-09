@@ -10,10 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
 import net.mgsx.gdx.graphics.glutils.GpuUtils;
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.utils.AdvancedProfiler;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
-import net.mgsx.gltf.composer.utils.UI;
 
 public class SystemModule implements GLTFComposerModule
 {
@@ -97,7 +97,7 @@ public class SystemModule implements GLTFComposerModule
 	}
 
 	@Override
-	public void render(GLTFComposerContext ctx) {
+	public void update(GLTFComposerContext ctx, float delta) {
 		if(memoryLabel != null){
 			memoryLabel.setText((memoryMaxKB - GpuUtils.getAvailableMemoryKB()) / 1024);
 		}

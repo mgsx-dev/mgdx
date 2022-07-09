@@ -25,18 +25,21 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.MgdxGame.Settings;
+import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
 import net.mgsx.gdx.scenes.scene2d.ui.TabPane;
 import net.mgsx.gdx.scenes.scene2d.ui.TabPane.TabPaneStyle;
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.modules.CameraModule;
 import net.mgsx.gltf.composer.modules.FileModule;
 import net.mgsx.gltf.composer.modules.HDRModule;
 import net.mgsx.gltf.composer.modules.IBLModule;
+import net.mgsx.gltf.composer.modules.MiscModule;
 import net.mgsx.gltf.composer.modules.SceneModule;
 import net.mgsx.gltf.composer.modules.SkinningModule;
 import net.mgsx.gltf.composer.modules.SystemModule;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
-import net.mgsx.gltf.composer.utils.UI;
+import net.mgsx.gltf.scene.PBRRenderTargets;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
@@ -95,6 +98,12 @@ public class GLTFComposer extends ScreenAdapter {
 		
 		ctx.sceneManager = new SceneManager();
 		
+		// basic
+		ctx.fbo = new PBRRenderTargets();
+		ctx.fbo.addColors();
+		ctx.fbo.setDepth(GLFormat.DEPTH24);
+		ctx.invalidateFBO();
+		
 		ctx.keyLight.direction.set(1, -2, 1);
 		ctx.keyLight.baseColor.fromHsv(0, 0f, 1f);
 		ctx.keyLight.intensity = 3f;
@@ -119,8 +128,9 @@ public class GLTFComposer extends ScreenAdapter {
 		addModule(new SceneModule(), "icon-cube");
 		addModule(new SkinningModule(), "icon-human");
 		addModule(new IBLModule(), "icon-orbit");
-		addModule(new HDRModule(), "icon-light");
+		addModule(new HDRModule(ctx), "icon-light");
 		addModule(new CameraModule(), "icon-camera");
+		addModule(new MiscModule(ctx), "icon-shade");
 		addModule(systemModule = new SystemModule(), "icon-wrench");
 		
 		tabPane.setCurrentIndex(0);
@@ -210,7 +220,11 @@ public class GLTFComposer extends ScreenAdapter {
 		
 		ctx.sceneManager.update(delta);
 		
-		for(int i=modules.size-1 ; i>=0 ; i--){
+		for(int i=0 ; i<modules.size ; i++){
+			modules.get(i).update(ctx, delta);
+		}
+		
+		for(int i=0 ; i<modules.size ; i++){
 			modules.get(i).render(ctx);
 		}
 		

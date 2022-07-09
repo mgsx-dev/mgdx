@@ -15,9 +15,10 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Scaling;
 
 import net.mgsx.gdx.graphics.glutils.ColorUtils;
+import net.mgsx.gdx.scenes.scene2d.ui.ColorBox;
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
+import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
 import net.mgsx.gltf.composer.GLTFComposerContext;
-import net.mgsx.gltf.composer.utils.UI;
-import net.mgsx.gltf.composer.utils.UI.ControlScale;
 
 public class MaterialPanel extends Table
 {
@@ -54,6 +55,7 @@ public class MaterialPanel extends Table
 					UI.slider(table, Attribute.getAttributeAlias(fa.type) + ".v", 0, 1, hsv[2], v->{hsv[2]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
 					UI.slider(table, Attribute.getAttributeAlias(fa.type) + ".scale", 1e-3f, 1e3f, hsv[4], ControlScale.LOG, v->{hsv[4]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
 				}else{
+					// TODO fix HDR color management (color picker option to support HDR colors)
 					float [] hsv = new float[]{0,0,0,fa.color.a, 1};
 					fa.color.toHsv(hsv);
 					
@@ -61,8 +63,7 @@ public class MaterialPanel extends Table
 					t.add(Attribute.getAttributeAlias(fa.type)).minWidth(100);
 					t.defaults().padLeft(UI.DEFAULT_PADDING);
 					
-					Image img = new Image(getSkin().newDrawable("white", fa.color));
-					t.add(img).size(16);
+					t.add(new ColorBox(Attribute.getAttributeAlias(fa.type), fa.color, true, getSkin()));
 					UI.slider(t, "scale", 1e-3f, 1e3f, hsv[4], ControlScale.LOG, v->{hsv[4]=v; ColorUtils.hdrScale(fa.color.fromHsv(hsv), hsv[4]);});
 					
 					table.add(t).row();

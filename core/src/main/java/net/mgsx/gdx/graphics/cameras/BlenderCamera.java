@@ -206,6 +206,13 @@ public class BlenderCamera {
 		orthographic.resize(width, height);
 	}
 	public void update(float delta){
+		
+		if(current == orthographic){
+			float d = orthographic.controller.target.dst(orthographic.camera.position);
+			orthographic.camera.zoom = d / orthographic.camera.viewportHeight;
+			orthographic.camera.update();
+		}
+		
 		if(Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_5)){
 			if(current == perspective){
 				switchTo(orthographic);

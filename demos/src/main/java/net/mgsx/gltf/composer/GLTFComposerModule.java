@@ -15,12 +15,14 @@ public interface GLTFComposerModule extends Disposable {
 		return false;
 	}
 	
+	default void update(GLTFComposerContext ctx, float delta){
+	}
+	
 	default void render(GLTFComposerContext ctx){
 	}
 	
 	@Override
 	default void dispose() {
 	}
-
 
 }

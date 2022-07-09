@@ -70,4 +70,13 @@ public class ComposerUtils {
 			 ctx.sceneManager.environment.set(new PBRFloatAttribute(PBRFloatAttribute.ShadowBias, ctx.shadowBias));
 		}
 	}
+
+	public static void enabledSkybox(GLTFComposerContext ctx, boolean enabled) {
+		ctx.skyBoxEnabled = enabled;
+		if(enabled){
+			ctx.sceneManager.setSkyBox(ctx.skyBox);
+		}else{
+			ctx.sceneManager.setSkyBox(null);
+		}
+	}
 }

@@ -19,7 +19,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.mgsx.gdx.MgdxGame;
 import net.mgsx.gdx.dekstop.MGdxDekstopApplication;
 import net.mgsx.gdx.scenes.scene2d.StageScreen;
-import net.mgsx.gltf.composer.utils.UI;
+import net.mgsx.gdx.scenes.scene2d.ui.ColorBox;
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
 
 public class SkinText extends MgdxGame
 {
@@ -72,6 +73,8 @@ public class SkinText extends MgdxGame
 					"lorem ipsum\nlorem ipsum\nlorem ipsum" + "lorem ipsum\nlorem ipsum\nlorem ipsum";
 			ScrollPane sp = new ScrollPane(new Label(bigText, skin), skin);
 			root.add(sp).size(100, 100);
+			
+			root.add(new ColorBox("Emissive color", new Color(Color.CYAN), true, skin));
 		}
 		@Override
 		public void render(float delta) {

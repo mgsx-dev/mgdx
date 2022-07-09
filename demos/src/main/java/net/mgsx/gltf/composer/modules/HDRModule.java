@@ -1,40 +1,43 @@
 package net.mgsx.gltf.composer.modules;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferBuilder;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gdx.scenes.scene2d.ui.ColorBox;
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
+import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
-import net.mgsx.gltf.composer.utils.ComposerUtils;
-import net.mgsx.gltf.composer.utils.UI;
-import net.mgsx.gltf.composer.utils.UI.ControlScale;
+import net.mgsx.gltf.scene.PBRRenderTargets;
+import net.mgsx.gltf.scene.RenderTargets;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 
 public class HDRModule implements GLTFComposerModule
 {
-	private boolean hdrEnabled = true;
+	private boolean hdrEnabled = true, mrtEnabled = true;
 	
-	private FrameBuffer fbo;
 	private SpriteBatch batch;
 	
 	private ToneMappingModule toneMappingModule = new ToneMappingModule();
 	private BloomModule bloomModule = new BloomModule();
+	private ShadowModule ShadowModule = new ShadowModule();
 	
-	public HDRModule() {
+	private CavityModule cavityModule;
+	
+	public HDRModule(GLTFComposerContext ctx) {
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
+		cavityModule = new CavityModule(ctx);
+		enableHDR(ctx, hdrEnabled);
 	}
 	
 	@Override
@@ -47,18 +50,13 @@ public class HDRModule implements GLTFComposerModule
 		UI.slider(t, "Ambiant", 0, 1, 1, value->ctx.sceneManager.setAmbientLight(value));
 		
 		// TODO fill light and back light (rim light)
-		// TODO add shadow map option
 		
+		t.add(new ColorBox("Key light", ()->ctx.keyLight.baseColor, false, skin)).row();
 		
 		UI.slider(t, "Key light", 0.01f, 100f, ctx.keyLight.intensity, ControlScale.LOG, value->ctx.keyLight.intensity=value);
 		
-		Array<Integer> shadowSizes = new Array<Integer>();
-		for(int i=8 ; i<=12 ; i++) shadowSizes.add(1<<i);
-		t.add(UI.selector(skin, shadowSizes, ctx.shadowSize, v->v+"x"+v, v->{ctx.shadowSize = v; ComposerUtils.updateShadowSize(ctx);})).row();
-		
-		UI.toggle(t, "Shadows", ctx.shadows, value->{ctx.shadows = value; ComposerUtils.recreateLight(ctx);});
-		
-		UI.slider(t, "Shadow bias", 1e-3f, 1f, ctx.shadowBias, ControlScale.LOG, value->ComposerUtils.updateShadowBias(ctx, value));
+		// Shadows
+		t.add(ShadowModule.initUI(ctx, skin)).growX().row();
 		
 		// key light orientation picker
 		ClickListener listener = new ClickListener(){
@@ -77,6 +75,8 @@ public class HDRModule implements GLTFComposerModule
 		
 		UI.toggle(t, "HDR", hdrEnabled, value->enableHDR(ctx, value));
 		
+		t.add(cavityModule.initUI(ctx, skin)).fill().row();
+		
 		t.add(bloomModule.initUI(ctx, skin)).fill().row();
 		
 		t.add(toneMappingModule.initUI(ctx, skin)).fill().row();
@@ -89,10 +89,8 @@ public class HDRModule implements GLTFComposerModule
 		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
 		ctx.colorShaderConfig.manualGammaCorrection = !hdrEnabled;
 		ctx.invalidateShaders();
-		if(fbo != null){
-			fbo.dispose();
-			fbo = null;
-		}
+		ctx.fbo.replaceLayer(RenderTargets.COLORS, hdrEnabled ? GLFormat.RGB16 : GLFormat.RGB8);
+		ctx.invalidateFBO();
 	}
 
 	@Override
@@ -103,13 +101,13 @@ public class HDRModule implements GLTFComposerModule
 			shadowLight.setBounds(ctx.sceneBounds);
 		}
 		
-		if(hdrEnabled){
+		if(hdrEnabled || mrtEnabled){
 			ctx.sceneManager.renderShadows();
-			ensureFBO(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
-			fbo.begin();
+			ctx.fbo.ensureScreenSize();
+			ctx.fbo.begin();
 			ScreenUtils.clear(ctx.clearColor, true);
 			ctx.sceneManager.renderColors();
-			fbo.end();
+			ctx.fbo.end();
 			applyPostProcess(ctx);
 		}else{
 			ScreenUtils.clear(ctx.clearColor, true);
@@ -118,26 +116,16 @@ public class HDRModule implements GLTFComposerModule
 	}
 	
 	private void applyPostProcess(GLTFComposerContext ctx) {
+
+		cavityModule.render(batch, ctx.fbo);
+		
+		// TODO need to render to first layer only ! or need another FBO and compose later with tone mapping ?
 		// render bloom
-		bloomModule.render(batch, fbo);
+		bloomModule.render(batch, ctx.fbo.getFrameBuffer());
 		
 		// render final with tone mapping (HDR to LDR)
-		toneMappingModule.render(batch, fbo.getColorBufferTexture());
+		toneMappingModule.render(batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
+		
 	}
 
-	private void ensureFBO(int width, int height) {
-		if(fbo == null || fbo.getWidth() != width || fbo.getHeight() != height){
-			if(fbo != null) fbo.dispose();
-			FrameBufferBuilder builder = new FrameBufferBuilder(width, height);
-			
-			if(hdrEnabled){
-				builder.addColorTextureAttachment(GL30.GL_RGBA16F, GL30.GL_RGBA, GL30.GL_FLOAT);
-			}else{
-				builder.addColorTextureAttachment(GL30.GL_RGBA8, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE);
-			}
-			builder.addDepthRenderBuffer(GL30.GL_DEPTH_COMPONENT24);
-			
-			fbo = builder.build();
-		}
-	}
 }
