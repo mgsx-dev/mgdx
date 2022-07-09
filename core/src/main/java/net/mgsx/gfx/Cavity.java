@@ -98,6 +98,9 @@ public class Cavity implements Disposable
 			cavityMixShader.setUniformf("u_mix", screenRidge / 2 * (screenEnabled ? 1 : 0), screenValley / 2 * (screenEnabled ? 1 : 0), worldRidge / 2 * (worldEnabled ? 1 : 0), worldValley / 2 * (worldEnabled ? 1 : 0));
 			
 			FrameBufferUtils.blit(batch, baseColor, output, cavityMixShader);
+			
+			// restore
+			batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		}
 	}
 	

@@ -23,12 +23,15 @@ public class GLTFModuleSwitch implements GLTFComposerModule
 	private Table controls;
 	private Cell cell;
 	
-	public void addSubModule(GLTFComposerModule module, String name){
+	public void addSubModule(GLTFComposerContext ctx, GLTFComposerModule module, String name){
 		SubModule s = new SubModule();
 		s.module = module;
 		s.name = name;
 		modules.add(s);
-		if(current == null) current = s;
+		if(current == null) {
+			current = s;
+			current.module.show(ctx);
+		}
 	}
 	
 	@Override
@@ -44,6 +47,11 @@ public class GLTFModuleSwitch implements GLTFComposerModule
 	}
 	
 	@Override
+	public void update(GLTFComposerContext ctx, float delta) {
+		current.module.update(ctx, delta);
+	}
+	
+	@Override
 	public void render(GLTFComposerContext ctx) {
 		current.module.render(ctx);
 	}
@@ -54,14 +62,17 @@ public class GLTFModuleSwitch implements GLTFComposerModule
 		for(SubModule subModule : modules){
 			subModule.ui = subModule.module.initUI(ctx, skin);
 		}
-		controls.add(UI.selector(skin, modules, current, m->m.name, m->setCurrent(m))).row();
+		controls.add(UI.selector(skin, modules, current, m->m.name, m->setCurrent(ctx, m))).row();
 		cell = controls.add(current.ui);
 		controls.row();
 		return controls;
 	}
 
-	private void setCurrent(SubModule m) {
+	private void setCurrent(GLTFComposerContext ctx, SubModule m) {
+		if(m == current) return;
+		if(current != null) current.module.hide(ctx);
 		current = m;
+		if(current != null) current.module.show(ctx);
 		cell.setActor(current.ui);
 	}
 }

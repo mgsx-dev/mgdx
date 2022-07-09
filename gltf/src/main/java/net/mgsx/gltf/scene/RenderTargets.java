@@ -164,4 +164,10 @@ public class RenderTargets implements Disposable {
 	public Texture getColorBufferTexture() {
 		return getTexture(COLORS);
 	}
+	
+	public void clear() {
+		reset();
+		layers.clear();
+		depthFormat = stencilFormat = null;
+	}
 }

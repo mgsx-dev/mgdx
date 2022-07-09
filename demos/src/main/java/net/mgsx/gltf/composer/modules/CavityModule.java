@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gdx.graphics.GLFormat;
-import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gfx.Cavity;
@@ -16,6 +16,7 @@ import net.mgsx.gfx.NoiseCache;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.scene.PBRRenderTargets;
+import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 
 public class CavityModule implements GLTFComposerModule
 {
@@ -24,49 +25,73 @@ public class CavityModule implements GLTFComposerModule
 	private final static int MODE_WORLD = 2;
 	private final static int MODE_BOTH = 3;
 	private int mode = MODE_BOTH;
-	private boolean enabled;
 	
 	private Cavity cavity = new Cavity();
 	private FrameBuffer noise;
+	private SpriteBatch batch;
 	
-	public CavityModule(GLTFComposerContext ctx) {
-		enable(ctx, false);
-	}
-	private void enable(GLTFComposerContext ctx, boolean enabled) {
-		this.enabled = enabled;
-		if(enabled){
-			ctx.fbo.replaceLayer(PBRRenderTargets.BASE_COLOR, GLFormat.RGBA8);
-			ctx.fbo.replaceLayer(PBRRenderTargets.GLOBAL_POSITION, GLFormat.RGB16);
-			ctx.fbo.replaceLayer(PBRRenderTargets.NORMAL, GLFormat.RGB16);
-			ctx.invalidateFBO();
-		}
+	public CavityModule() {
+		batch = new SpriteBatch();
 	}
 	
-	public void render(SpriteBatch batch, PBRRenderTargets fbo) {
+	@Override
+	public void show(GLTFComposerContext ctx) {
+		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
+		ctx.colorShaderConfig.manualGammaCorrection = true;
+		ctx.invalidateShaders();
+
+		ctx.fbo.clear();
+		ctx.fbo.setDepth(false);
+		ctx.fbo.replaceLayer(PBRRenderTargets.COLORS, GLFormat.RGBA8);
+		// ctx.fbo.replaceLayer(PBRRenderTargets.BASE_COLOR, GLFormat.RGBA8);
+		ctx.fbo.replaceLayer(PBRRenderTargets.GLOBAL_POSITION, GLFormat.RGB16);
+		ctx.fbo.replaceLayer(PBRRenderTargets.NORMAL, GLFormat.RGB16);
+		ctx.invalidateFBO();
+	}
+	
+	@Override
+	public void render(GLTFComposerContext ctx) {
+		
+		ctx.sceneManager.renderShadows();
+		ctx.fbo.ensureScreenSize();
+		ctx.fbo.begin();
+		ctx.sceneManager.setSkyBox(null);
+		ScreenUtils.clear(0,0,0,0, true);
+		ctx.sceneManager.renderColors();
+		ctx.sceneManager.setSkyBox(ctx.skyBox);
+		ctx.fbo.end();
+
+		// post process
+		ScreenUtils.clear(ctx.clearColor, true);
+		
 		cavity.screenEnabled = (mode & MODE_SCREEN) != 0;
 		cavity.worldEnabled = (mode & MODE_WORLD) != 0;
-		if(mode != MODE_NONE && enabled){
+		if(mode != MODE_NONE){
 			if(noise == null){
 				noise = new FrameBuffer(Format.RGBA8888, 1024, 1024, false);
 				NoiseCache.createGradientNoise(batch, noise, 1f);
 			}
-			cavity.render(batch, fbo.getFrameBuffer(),
-					fbo.getTexture(PBRRenderTargets.BASE_COLOR),
-					fbo.getTexture(PBRRenderTargets.GLOBAL_POSITION),
-					fbo.getTexture(PBRRenderTargets.NORMAL),
+			// TODO need another FBO to avoid drawing inputs to the same output...
+			// BASE_COLOR should be used for calculation
+			// and COLORS to be mixed over
+			
+			cavity.render(batch, ctx.fbo.getFrameBuffer(),
+					ctx.fbo.getTexture(PBRRenderTargets.COLORS),
+					ctx.fbo.getTexture(PBRRenderTargets.GLOBAL_POSITION),
+					ctx.fbo.getTexture(PBRRenderTargets.NORMAL),
 					noise.getColorBufferTexture());
 			
-			FrameBufferUtils.blit(batch, noise.getColorBufferTexture());
-			
+			FrameBufferUtils.blit(batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
+		}else{
+			FrameBufferUtils.blit(batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
 		}
 	}
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		Frame frame = UI.frameToggle("Cavity", skin, enabled, v->enable(ctx, v));
-		Table table = frame.getContentTable();
+		Table table = UI.table(skin);
 		
-		table.add(UI.selector(skin, new String[]{"Screen", "World", "Both"}, mode-1, v->mode = v+1)).row();
+		table.add(UI.selector(skin, new String[]{"None", "Screen", "World", "Both"}, mode, v->mode = v)).row();
 		
 		UI.slider(table, "Screen Ridge", 0f, 2f, cavity.screenRidge, value->cavity.screenRidge = value);
 		UI.slider(table, "Screen Valley",0f, 2f, cavity.screenValley, value->cavity.screenValley = value);
@@ -76,9 +101,7 @@ public class CavityModule implements GLTFComposerModule
 		UI.slider(table, "World Distance",0f, 1f, cavity.worldDistance, value->cavity.worldDistance = value);
 		UI.slider(table, "World Attenuation",0f, 100f, cavity.worldAttenuation, value->cavity.worldAttenuation = value);
 
-		UI.enableRecursive(table, enabled);
-		
-		return frame;
+		return table;
 	}
 
 	
