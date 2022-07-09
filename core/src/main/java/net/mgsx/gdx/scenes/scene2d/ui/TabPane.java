@@ -3,6 +3,7 @@ package net.mgsx.gdx.scenes.scene2d.ui;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -16,6 +17,13 @@ public class TabPane extends Table
 		public Drawable panesBackground;
 		public Drawable tabsBackground;
 		public TextButtonStyle tabButtonStyle;
+		public TabPaneStyle() {
+		}
+		public TabPaneStyle(TextButtonStyle tabButtonStyle) {
+			super();
+			this.tabButtonStyle = tabButtonStyle;
+		}
+		
 	}
 	
 	private Stack stack;
@@ -25,6 +33,9 @@ public class TabPane extends Table
 	private Table extraTabs;
 	private TabPaneStyle style;
 
+	public TabPane(Skin skin, String tabButtonStyle){
+		this(new TabPaneStyle(skin.get(tabButtonStyle, TextButtonStyle.class)));
+	}
 	public TabPane(TabPaneStyle style) {
 		super();
 		this.style = style;
