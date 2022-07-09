@@ -24,7 +24,7 @@
 	* [x] automatic detection
 	* [ ] save to preferences
 * [ ] Copy light code
-* [ ] change light color
+* [x] change light color
 * [ ] load simple model (sphere) with basic material (metal roughness)
 * [x] GPU memory statistics
 * [~] Export IBL to files (png, jpg, ktx2, ktx, exr?)
@@ -36,7 +36,7 @@
 * [x] import other formats (glb)
 * [ ] change shader : PBR, Gouraud, Ceil shading
 * [ ] fog
-* [ ] skybox on/off, skybox rotation
+* [x] skybox on/off
 * [ ] outlines
 * [x] shadows
 * [ ] use scene camera (with animations)
@@ -44,6 +44,7 @@
 * [x] material textures (on/off, etc..)
 * [ ] show only selected node
 * [x] fit to scene on loading
+* [ ] starts with a default IBL
 
 ## New features
 
@@ -65,11 +66,30 @@
 	* [ ] Deferred lighting
 	* [ ] SSAO
 	* [ ] SSR
-	* [ ] Blender "Cavity"
+	* [x] Blender "Cavity"
 * HDR rendering :
 	* [~] HDR Bloom
 		* [ ] fix blur artifacts
 	* [x] Tone mapping
+	* [x] HDR particles
+
+## Users feedback
+
+* [ ] minimize window crash FBO construction.
+* [ ] center camera to visible area when UI is on
+* [ ] Blender camera : allow both middle mouse button and left button
+* [ ] Model tree cutted out on the right (scroll pane bug ?)
+* [ ] display scroll bars when using scroll pane (model browser)
+* [ ] condense material view when there is a lot of textures
+* [ ] add a scroll pane to the material view
+* [ ] UI freeze for some heavy process :
+	* [ ] IBL import/baking freeze the UI : use thread (AssetManager ?) at least to load files
+	* [ ] Big model loading
+	* [ ] IBL export : use threads to avoid UI freeze
+* [ ] animation play/stop should be off when seeking in the animation
+* [ ] animation speed range a bit too high (0.1 to 50 could be enough)
+* [ ] move first tab content to a help popup (F1 + button)
+* [ ] HDPI : text is blurry, would need an HDPI font (HDPI skin ?)
 
 # Demos fixes
 
@@ -90,3 +110,7 @@ https://stackoverflow.com/questions/6432838/what-is-the-correct-file-extension-f
 Lwjgl3Graphics#setGL30 should set gl20 as well (like lwjgl2 backend)
 Lwjgl3Window#makeCurrent is called before app enabing GLProfiler, so interceptors are not fully set
 for the current frame !
+
+## Decals
+
+DecalMaterial missing a getter for texture.
