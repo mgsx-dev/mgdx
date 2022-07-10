@@ -34,7 +34,10 @@
 
 * [ ] save to file ?
 * [x] import other formats (glb)
-* [ ] change shader : PBR, Gouraud, Ceil shading
+* [ ] change shader
+	* [x] PBR
+	* [ ] Gouraud
+	* [x] Ceil shading
 * [ ] fog
 * [x] skybox on/off
 * [ ] outlines
@@ -49,8 +52,8 @@
 ## New features
 
 * [x] Skybox rotation
-* [ ] IBL rotation
-* [ ] Ambient strenth and skybox opacity
+* [x] IBL rotation
+* [x] Ambient strenth and skybox opacity
 * [x] Skybox blur
 * [ ] better skybox blur (gaussian mipmaps generation)
 * [x] Blender like cameras control
