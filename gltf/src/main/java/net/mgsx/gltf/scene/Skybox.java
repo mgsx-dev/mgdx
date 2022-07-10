@@ -19,20 +19,18 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ShaderProvider;
 import com.badlogic.gdx.graphics.glutils.ShaderStage;
-import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
+import net.mgsx.gltf.scene3d.attributes.PBRMatrixAttribute;
 import net.mgsx.gltf.scene3d.scene.SceneRenderableSorter;
 import net.mgsx.gltf.scene3d.scene.SceneSkybox;
+import net.mgsx.gltf.scene3d.shaders.PBRShader;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 
 public class Skybox extends SceneSkybox
 {
-	public final Matrix4 mat4 = new Matrix4();
-	public final Matrix3 mat3 = new Matrix3();
 	private final Matrix4 directionInverse = new Matrix4();
 	public float lod;
 	private Model quadModel;
@@ -40,11 +38,10 @@ public class Skybox extends SceneSkybox
 	private ShaderProvider myShaderProvider;
 	public final Environment environment = new Environment();
 	
+	// override to create special shader and special mesh
 	public Skybox(Cubemap cubemap, SRGB manualSRGB, boolean gammaCorrection) {
 		super(cubemap, manualSRGB, gammaCorrection);
 		myShaderProvider = createShaderProvider(manualSRGB, gammaCorrection ? 2.2f : null);
-		mat4.idt();
-		mat3.set(mat4);
 		lod = 0;
 		createQuad(cubemap);
 	}
@@ -75,6 +72,7 @@ public class Skybox extends SceneSkybox
 		quad.material.set(new DepthTestAttribute(false));
 	}
 	
+	// override to get the quad environement instead of box
 	@Override
 	public SceneSkybox set(Cubemap cubemap){
 		super.set(cubemap);
@@ -82,6 +80,7 @@ public class Skybox extends SceneSkybox
 		return this;
 	}
 	
+	// override to compute quad transform
 	@Override
 	public void update(Camera camera, float delta){
 		super.update(camera, delta);
@@ -104,7 +103,9 @@ public class Skybox extends SceneSkybox
 		if(gammaCorrection != null){
 			prefix += "#define GAMMA_CORRECTION " + gammaCorrection + "\n";
 		}
-		// prefix = "#version 330\n" +  prefix;
+		
+		// TODO should be conditional
+		prefix += "#define ENV_LOD\n";
 		
 		Config shaderConfig = new Config();
 		String basePathName = "shaders/skybox-screen";
@@ -114,59 +115,90 @@ public class Skybox extends SceneSkybox
 			@Override
 			protected Shader createShader(Renderable renderable) {
 				String old = ShaderStage.fragment.prependCode;
+				
+				// TODO make the GLSL code compatible
 				ShaderStage.fragment.prependCode = "#version 330\n";
-				DefaultShader s = new DefaultShader(renderable, config){
-					private int u_rotation;
-					private int u_lod;
-					private int u_diffuse;
-
-					@Override
-					public void init() {
-						super.init();
-						u_rotation = Gdx.gl.glGetUniformLocation(program.getHandle(), "u_envRotation");
-						u_lod = Gdx.gl.glGetUniformLocation(program.getHandle(), "u_lod");
-						u_diffuse = Gdx.gl.glGetUniformLocation(program.getHandle(), "u_diffuseColor");
-					}
+				
+				String shaderPrefix = DefaultShader.createPrefix(renderable, this.config);
+				
+				if(renderable.environment.has(PBRMatrixAttribute.EnvRotation)){
+					shaderPrefix += "#define ENV_ROTATION\n";
+				}
+				
+				SkyboxShader s = new SkyboxShader(renderable, config, shaderPrefix);
 					
-					@Override
-					protected void bindMaterial(Attributes attributes) {
-						super.bindMaterial(attributes);
-						if(u_rotation >= 0) program.setUniformMatrix(u_rotation, mat3);
-						if(u_lod >= 0) program.setUniformf(u_lod, lod);
-						if(u_diffuse >= 0){
-							ColorAttribute diffuseColor = attributes.get(ColorAttribute.class, ColorAttribute.Diffuse);
-							if(diffuseColor != null){
-								program.setUniformf(u_diffuse, diffuseColor.color.r, diffuseColor.color.g, diffuseColor.color.b, diffuseColor.color.a);
-							}else{
-								program.setUniformf(u_diffuse, 1,1,1,1);
-							}
-						}
-					}
-				};
 				ShaderStage.fragment.prependCode = old;
 				return s;
 			}
 		};
 	}
-
-
-	public void setRotationDeg(float azymuth) {
-		mat4.setToRotation(Vector3.Y, azymuth);
-		mat3.set(mat4);
+	
+	private class SkyboxShader extends DefaultShader {
+		private int u_lod;
+		private int u_diffuse;
+		
+		public SkyboxShader(Renderable renderable, Config config, String prefix) {
+			super(renderable, config, prefix);
+			register(PBRShader.envRotationUniform, PBRShader.envRotationSetter);
+		}
+		
+		@Override
+		public void init() {
+			super.init();
+			u_lod = Gdx.gl.glGetUniformLocation(program.getHandle(), "u_lod");
+			u_diffuse = Gdx.gl.glGetUniformLocation(program.getHandle(), "u_diffuseColor");
+		}
+		
+		@Override
+		protected void bindMaterial(Attributes attributes) {
+			super.bindMaterial(attributes);
+			if(u_lod >= 0) program.setUniformf(u_lod, lod);
+			if(u_diffuse >= 0){
+				ColorAttribute diffuseColor = attributes.get(ColorAttribute.class, ColorAttribute.Diffuse);
+				if(diffuseColor != null){
+					program.setUniformf(u_diffuse, diffuseColor.color.r, diffuseColor.color.g, diffuseColor.color.b, diffuseColor.color.a);
+				}else{
+					program.setUniformf(u_diffuse, 1,1,1,1);
+				}
+			}
+		}
 	}
-
 
 	public void setLod(float value) {
 		lod = value;
 	}
 	
+	// override to set the quad shader instead of box
 	@Override
 	public void getRenderables(Array<Renderable> renderables, Pool<Renderable> pool) {
 		// late shader creation in order to let user change some environment attributes.
-		if(quad.shader == null){
-			// assign shader
-			quad.shader = myShaderProvider.getShader(quad);
-		}
+		quad.shader = myShaderProvider.getShader(quad);
 		renderables.add(quad);
+	}
+
+	// override to get the quad environement instead of box
+	@Override
+	public void setRotation(float azymuthAngleDegree) {
+		PBRMatrixAttribute attribute = quad.environment.get(PBRMatrixAttribute.class, PBRMatrixAttribute.EnvRotation);
+		if(attribute != null){
+			attribute.set(azymuthAngleDegree);
+		}else{
+			quad.environment.set(PBRMatrixAttribute.createEnvRotation(azymuthAngleDegree));
+		}
+	}
+	
+	// override to get the quad environement instead of box
+	@Override
+	public void setRotation(Matrix4 envRotation) {
+		PBRMatrixAttribute attribute = quad.environment.get(PBRMatrixAttribute.class, PBRMatrixAttribute.EnvRotation);
+		if(envRotation != null){
+			if(attribute != null){
+				attribute.matrix.set(envRotation);
+			}else{
+				quad.environment.set(PBRMatrixAttribute.createEnvRotation(envRotation));
+			}
+		}else if(attribute != null){
+			quad.environment.remove(PBRMatrixAttribute.EnvRotation);
+		}
 	}
 }

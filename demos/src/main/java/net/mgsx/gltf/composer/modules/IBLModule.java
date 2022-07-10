@@ -304,8 +304,8 @@ public class IBLModule implements GLTFComposerModule
 	}
 	@Override
 	public void update(GLTFComposerContext ctx, float delta) {
+		ctx.sceneManager.setEnvironmentRotation(ctx.envRotation);
 		if(ctx.skyBox != null){
-			ctx.skyBox.setRotationDeg(ctx.envRotation);
 			ctx.skyBox.setLod(skyboxBlur);
 		}
 	}

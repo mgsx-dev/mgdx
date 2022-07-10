@@ -20,9 +20,13 @@ uniform samplerCube u_environmentCubemap;
 uniform vec4 u_diffuseColor;
 #endif
 
+#ifdef ENV_ROTATION
 uniform mat3 u_envRotation;
+#endif
 
+#ifdef ENV_LOD
 uniform float u_lod;
+#endif
 
 vec4 SRGBtoLINEAR(vec4 srgbIn)
 {
@@ -44,7 +48,16 @@ uniform mat4 u_worldTrans;
 void main() {
 	vec4 tr = u_worldTrans * v_position;
 	vec3 dir = normalize(tr.xyz);
-	vec4 color = SRGBtoLINEAR(textureLod(u_environmentCubemap, u_envRotation * dir, u_lod));
+#ifdef ENV_ROTATION
+	dir = u_envRotation * dir;
+#endif
+
+#ifdef ENV_LOD
+	vec4 color = SRGBtoLINEAR(textureLod(u_environmentCubemap, dir, u_lod));
+#else
+	vec4 color = SRGBtoLINEAR(texture(u_environmentCubemap, dir));
+#endif
+
 #ifdef diffuseColorFlag
 	color *= u_diffuseColor;
 #endif
