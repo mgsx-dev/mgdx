@@ -21,8 +21,6 @@ public class LightingModule implements GLTFComposerModule
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		Table t = UI.table(skin);
 		
-		UI.slider(t, "Ambiant", 0, 1, 1, value->ctx.sceneManager.setAmbientLight(value));
-		
 		// TODO fill light and back light (rim light)
 		
 		t.add(new ColorBox("Key light", ()->ctx.keyLight.baseColor, false, skin)).row();

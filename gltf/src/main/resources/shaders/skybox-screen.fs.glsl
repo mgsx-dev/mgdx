@@ -39,24 +39,18 @@ vec4 SRGBtoLINEAR(vec4 srgbIn)
     #endif //MANUAL_SRGB
 }
 
-// Conversion from right-handed to left-handed coordinate system, required to access cubemaps
-// since they follow the Renderman specification which is left handed.
-#define RHtoLH(v) vec3(v.x, v.y, -v.z)
-
 uniform mat4 u_worldTrans;
 
-
 void main() {
-
-	vec4 tr = u_worldTrans * v_position; // normalize(v_position);
-	vec3 dir = normalize(tr.xyz / tr.w);
+	vec4 tr = u_worldTrans * v_position;
+	vec3 dir = normalize(tr.xyz);
 	vec4 color = SRGBtoLINEAR(textureLod(u_environmentCubemap, u_envRotation * dir, u_lod));
 #ifdef diffuseColorFlag
 	color *= u_diffuseColor;
 #endif
 #ifdef GAMMA_CORRECTION
-	gl_FragColor = vec4(pow(color.rgb, vec3(1.0/GAMMA_CORRECTION)), 1.0);
+	gl_FragColor = vec4(pow(color.rgb, vec3(1.0/GAMMA_CORRECTION)), color.a);
 #else
-	gl_FragColor = vec4(color.rgb, 1.0);
+	gl_FragColor = vec4(color.rgb, color.a);
 #endif
 }

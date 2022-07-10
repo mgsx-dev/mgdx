@@ -2,7 +2,6 @@ package net.mgsx.gltf.scene;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cubemap;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Attributes;
@@ -39,6 +38,8 @@ public class Skybox extends SceneSkybox
 	private Model quadModel;
 	private Renderable quad;
 	private ShaderProvider myShaderProvider;
+	public final Environment environment = new Environment();
+	
 	public Skybox(Cubemap cubemap, SRGB manualSRGB, boolean gammaCorrection) {
 		super(cubemap, manualSRGB, gammaCorrection);
 		myShaderProvider = createShaderProvider(manualSRGB, gammaCorrection ? 2.2f : null);
@@ -63,21 +64,15 @@ public class Skybox extends SceneSkybox
 		quad = quadModel.nodes.first().parts.first().setRenderable(new Renderable());
 		
 		// assign environment
-		Environment env = new Environment();
-		env.set(new CubemapAttribute(CubemapAttribute.EnvironmentMap, cubemap));
-		env.set(new ColorAttribute(ColorAttribute.AmbientLight, Color.WHITE));
-		quad.environment = env;
+		environment.set(new CubemapAttribute(CubemapAttribute.EnvironmentMap, cubemap));
+		quad.environment = environment;
 		
 		// set hint to render last but before transparent ones
 		quad.userData = SceneRenderableSorter.Hints.OPAQUE_LAST;
 		
 		// set material options : preserve background depth
-		quad.material = new Material(ColorAttribute.createDiffuse(Color.WHITE));
+		quad.material = new Material();
 		quad.material.set(new DepthTestAttribute(false));
-		
-		
-		// assign shader
-		quad.shader = myShaderProvider.getShader(quad);
 	}
 	
 	@Override
@@ -123,12 +118,14 @@ public class Skybox extends SceneSkybox
 				DefaultShader s = new DefaultShader(renderable, config){
 					private int u_rotation;
 					private int u_lod;
+					private int u_diffuse;
 
 					@Override
 					public void init() {
 						super.init();
 						u_rotation = Gdx.gl.glGetUniformLocation(program.getHandle(), "u_envRotation");
 						u_lod = Gdx.gl.glGetUniformLocation(program.getHandle(), "u_lod");
+						u_diffuse = Gdx.gl.glGetUniformLocation(program.getHandle(), "u_diffuseColor");
 					}
 					
 					@Override
@@ -136,6 +133,14 @@ public class Skybox extends SceneSkybox
 						super.bindMaterial(attributes);
 						if(u_rotation >= 0) program.setUniformMatrix(u_rotation, mat3);
 						if(u_lod >= 0) program.setUniformf(u_lod, lod);
+						if(u_diffuse >= 0){
+							ColorAttribute diffuseColor = attributes.get(ColorAttribute.class, ColorAttribute.Diffuse);
+							if(diffuseColor != null){
+								program.setUniformf(u_diffuse, diffuseColor.color.r, diffuseColor.color.g, diffuseColor.color.b, diffuseColor.color.a);
+							}else{
+								program.setUniformf(u_diffuse, 1,1,1,1);
+							}
+						}
 					}
 				};
 				ShaderStage.fragment.prependCode = old;
@@ -146,7 +151,7 @@ public class Skybox extends SceneSkybox
 
 
 	public void setRotationDeg(float azymuth) {
-		mat4.setToScaling(1, 1, 1).rotate(Vector3.Y, azymuth);
+		mat4.setToRotation(Vector3.Y, azymuth);
 		mat3.set(mat4);
 	}
 
@@ -157,6 +162,11 @@ public class Skybox extends SceneSkybox
 	
 	@Override
 	public void getRenderables(Array<Renderable> renderables, Pool<Renderable> pool) {
+		// late shader creation in order to let user change some environment attributes.
+		if(quad.shader == null){
+			// assign shader
+			quad.shader = myShaderProvider.getShader(quad);
+		}
 		renderables.add(quad);
 	}
 }

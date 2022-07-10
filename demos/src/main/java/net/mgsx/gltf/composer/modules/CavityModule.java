@@ -36,9 +36,6 @@ public class CavityModule implements GLTFComposerModule
 	
 	@Override
 	public void show(GLTFComposerContext ctx) {
-		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
-		ctx.colorShaderConfig.manualGammaCorrection = true;
-		ctx.invalidateShaders();
 
 		ctx.fbo.clear();
 		ctx.fbo.setDepth(false);
@@ -47,6 +44,11 @@ public class CavityModule implements GLTFComposerModule
 		ctx.fbo.replaceLayer(PBRRenderTargets.GLOBAL_POSITION, GLFormat.RGB16);
 		ctx.fbo.replaceLayer(PBRRenderTargets.NORMAL, GLFormat.RGB16);
 		ctx.invalidateFBO();
+
+		ctx.fbo.configure(ctx.colorShaderConfig);
+		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
+		ctx.colorShaderConfig.manualGammaCorrection = true;
+		ctx.invalidateShaders();
 	}
 	
 	@Override

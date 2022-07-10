@@ -10,4 +10,12 @@ public class ColorUtils {
 		color.a *= scale;
 		return color;
 	}
+
+	public static Color hdrSet(Color dst, Color src) {
+		dst.r = src.r;
+		dst.g = src.g;
+		dst.b = src.b;
+		dst.a = src.a;
+		return dst;
+	}
 }

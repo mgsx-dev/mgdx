@@ -21,7 +21,6 @@ import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.ibl.io.AWTFileSelector;
 import net.mgsx.gltf.ibl.io.FileSelector;
-import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 import net.mgsx.ibl.IBL;
 import net.mgsx.ibl.IBL.IBLBakingOptions;
@@ -157,7 +156,6 @@ public class IBLModule implements GLTFComposerModule
 	private final IBLBakingOptions bakingOptions = new IBLBakingOptions();
 	private Table controls;
 	private FileSelector fileSelector = new AWTFileSelector();
-	private float skyboxAzymuth;
 	private float skyboxBlur;
 	
 	@Override
@@ -222,7 +220,7 @@ public class IBLModule implements GLTFComposerModule
 		ctx.ibl.apply(ctx.sceneManager);
 		if(ctx.ibl.environmentCubemap != null){
 			if(ctx.skyBox == null){
-				ctx.skyBox = new Skybox(ctx.ibl.getEnvironmentCubemap(), ctx.colorShaderConfig.manualSRGB, ctx.colorShaderConfig.manualGammaCorrection);
+				ctx.createSkybox();
 				ctx.sceneManager.setSkyBox(ctx.skyBox);
 			}else{
 				ctx.skyBox.set(ctx.ibl.getEnvironmentCubemap());
@@ -242,9 +240,14 @@ public class IBLModule implements GLTFComposerModule
 		
 		Frame sbFrame = UI.frameToggle("Skybox", skin, true, v->ComposerUtils.enabledSkybox(ctx, v));
 		Table sbTable = sbFrame.getContentTable();
-		UI.slider(sbTable, "rotation", 0, 360, skyboxAzymuth, v->skyboxAzymuth = v);
+		UI.slider(sbTable, "rotation", 0, 360, ctx.envRotation, v->ctx.envRotation = v);
 		UI.slider(sbTable, "blur", -10, 10, skyboxBlur, v->skyboxBlur=v);
+		UI.slider(sbTable, "Opacity", 0, 1, 1, value->ComposerUtils.setSkyboxOpacity(ctx, value));
 		controls.add(sbFrame).growX().row();
+		
+		UI.slider(controls, "Ambiant strength", 0, 3, 1, value->ComposerUtils.setAmbientFactor(ctx, value));
+
+		UI.colorBox(controls, "Background", ctx.clearColor, false);
 		
 		Array<String> builtins = new Array<String>();
 		builtins.add("None", "Outdoor", "Indoor");
@@ -302,7 +305,7 @@ public class IBLModule implements GLTFComposerModule
 	@Override
 	public void update(GLTFComposerContext ctx, float delta) {
 		if(ctx.skyBox != null){
-			ctx.skyBox.setRotationDeg(skyboxAzymuth);
+			ctx.skyBox.setRotationDeg(ctx.envRotation);
 			ctx.skyBox.setLod(skyboxBlur);
 		}
 	}

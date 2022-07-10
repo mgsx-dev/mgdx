@@ -64,3 +64,5 @@ gwt-unitCache/
 .DS_Store
 
 /demos/cache/
+
+*.blend1

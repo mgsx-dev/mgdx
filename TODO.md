@@ -50,6 +50,7 @@
 
 * [x] Skybox rotation
 * [ ] IBL rotation
+* [ ] Ambient strenth and skybox opacity
 * [x] Skybox blur
 * [ ] better skybox blur (gaussian mipmaps generation)
 * [x] Blender like cameras control
@@ -90,6 +91,10 @@
 * [ ] animation speed range a bit too high (0.1 to 50 could be enough)
 * [ ] move first tab content to a help popup (F1 + button)
 * [ ] HDPI : text is blurry, would need an HDPI font (HDPI skin ?)
+
+## cleanup
+
+* [ ] remove cubemap-make.fs/vs.glsl they are the same as the one in ibl-composer
 
 # Demos fixes
 

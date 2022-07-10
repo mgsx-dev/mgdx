@@ -21,13 +21,7 @@ uniform float u_exposure;
 
 void main() {
 	vec3 dir = (u_mat * vec4(0.5 - v_position.x, 0.5 - v_position.y, 0.5, 1.0)).xyz;
-
-// FIXME prototype of left/right handed conversion
-#ifdef HANDED_CONVERSION
-	dir = normalize(vec3(dir.x, dir.y, -dir.z));
-#else
 	dir = normalize(dir);
-#endif
 	vec2 v_uv = vec2(0.0, 0.0);
 	v_uv.x = 0.5 * atan(dir.z, dir.x) / PI + 0.5;
 	v_uv.y = asin(dir.y) / PI + 0.5;

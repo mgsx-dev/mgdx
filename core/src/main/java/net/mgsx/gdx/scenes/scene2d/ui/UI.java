@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -26,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Scaling;
 
 // TODO cleanup
 public class UI {
@@ -268,21 +266,6 @@ public class UI {
 			}
 		}
 	}
-	public static Actor colorBox(Skin skin, Color color, boolean alpha, Consumer<Float> callback) {
-		Image img = new Image(skin, "white");
-		img.setScaling(Scaling.fill);
-		
-		Button bt = new Button(skin);
-		
-		bt.add(img).size(32);
-		
-		img.setColor(new Color(color.r, color.g, color.b, 1));
-		
-		Table t = new Table(skin);
-		t.add(bt);
-		
-		return t;
-	}
 	public static Dialog dialog(Actor content, String title, Skin skin) {
 		Dialog dialog = new Dialog(title, skin, "dialog");
 		dialog.getContentTable().add(content).row();
@@ -290,6 +273,12 @@ public class UI {
 		dialog.getTitleTable().add(UI.change(new Button(skin), e->dialog.hide())).pad(0).size(16, 16);
 		
 		return dialog;
+	}
+	public static void colorBox(Table table, String name, Color colorModel, boolean alpha) {
+		Table t = table(table.getSkin());
+		t.add(name);
+		t.add(new ColorBox(name, colorModel, alpha, table.getSkin()));
+		table.add(t).row();
 	}
 	
 	

@@ -14,6 +14,7 @@ public class LDRModule implements GLTFComposerModule
 	public void show(GLTFComposerContext ctx) {
 		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
 		ctx.colorShaderConfig.manualGammaCorrection = true;
+		ctx.colorShaderConfig.fragmentShader = null;
 		ctx.invalidateShaders();
 
 		ctx.fbo.clear();

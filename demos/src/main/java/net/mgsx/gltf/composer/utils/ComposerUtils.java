@@ -1,10 +1,13 @@
 package net.mgsx.gltf.composer.utils;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.mgsx.gdx.graphics.GL32;
+import net.mgsx.gdx.graphics.glutils.ColorUtils;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
@@ -13,6 +16,14 @@ import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 public class ComposerUtils {
 	public static void fitCameraToScene(GLTFComposerContext ctx){
 		
+		
+		if(ctx.scene == null){
+			// default camera
+			ctx.cameraManager.set(Vector3.Zero, new Vector3(0,0,1), .1f, 100f);
+			
+			return;
+		}
+
 		Vector3 position = ctx.cameraManager.getCamera().position.cpy();
 		
 		BoundingBox box = ctx.sceneBounds;
@@ -77,6 +88,29 @@ public class ComposerUtils {
 			ctx.sceneManager.setSkyBox(ctx.skyBox);
 		}else{
 			ctx.sceneManager.setSkyBox(null);
+		}
+	}
+
+	public static void setAmbientFactor(GLTFComposerContext ctx, float value) {
+		Color c = ctx.sceneManager.environment.get(ColorAttribute.class, ColorAttribute.AmbientLight).color;
+		c.r = c.g = c.b = value;
+		// apply also to skybox
+		syncSkyboxAmbientFactor(ctx);
+	}
+	public static void setSkyboxOpacity(GLTFComposerContext ctx, float value) {
+		Color c = ctx.sceneManager.environment.get(ColorAttribute.class, ColorAttribute.AmbientLight).color;
+		c.a = value;
+		// apply also to skybox
+		syncSkyboxAmbientFactor(ctx);
+	}
+	public static void syncSkyboxAmbientFactor(GLTFComposerContext ctx) {
+		if(ctx.skyBox != null){
+			ColorAttribute diffuseAttribute = ctx.skyBox.environment.get(ColorAttribute.class, ColorAttribute.Diffuse);
+			if(diffuseAttribute != null){
+				ColorUtils.hdrSet(
+					diffuseAttribute.color,
+					ctx.sceneManager.environment.get(ColorAttribute.class, ColorAttribute.AmbientLight).color);
+			}
 		}
 	}
 }
