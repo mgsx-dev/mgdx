@@ -90,17 +90,11 @@ public class GLTFComposerContext {
 				depthShaderConfig.numBones = 0;
 			}
 			
-			// TODO some models reports bad maxBones
-			boolean forceBones = false;
-			if(forceBones){
-				colorShaderConfig.numBones = 
-				depthShaderConfig.numBones = 60;
-			}
-			
 			
 			if(colorShaderConfig.fragmentShader == null){
 				colorShaderConfig.glslVersion = null;
-				colorShaderConfig.fragmentShader = Gdx.files.classpath("net/mgsx/gltf/shaders/gdx-pbr.fs.glsl").readString();
+//				colorShaderConfig.fragmentShader = Gdx.files.classpath("net/mgsx/gltf/shaders/gdx-pbr.fs.glsl").readString();
+				colorShaderConfig.fragmentShader = Gdx.files.classpath("shaders/gdx-pbr-patch-hdr.fs.glsl").readString();
 			}
 			
 			sceneManager.setShaderProvider(new PBRShaderProvider(colorShaderConfig));

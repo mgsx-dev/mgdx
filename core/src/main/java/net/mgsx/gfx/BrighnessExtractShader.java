@@ -13,6 +13,7 @@ public class BrighnessExtractShader extends ShaderProgram
 	 */
 	public static final Vector3 realisticThreashold = new Vector3(0.2126f, 0.7152f, 0.0722f);
 	private int u_threshold;
+	private int u_falloff;
 	
 	/**
 	 * @param scale default is 1.0
@@ -25,11 +26,18 @@ public class BrighnessExtractShader extends ShaderProgram
 		setUniformf(u_threshold, r, g, b);
 	}
 	
-	public BrighnessExtractShader() {
+	public void setFalloff(float value){
+		if(u_falloff >= 0){
+			setUniformf(u_falloff, value);
+		}
+	}
+	
+	public BrighnessExtractShader(boolean smooth) {
 		super(Gdx.files.classpath("shaders/sprite-batch.vs.glsl").readString(), 
-			"#define EXPOSURE\n" +
+			(smooth ? "#define SMOOTH\n" : "") +
 			Gdx.files.classpath("shaders/bloom-extract.fs.glsl").readString());
 		ShaderProgramUtils.check(this);
 		u_threshold = getUniformLocation("u_threshold");
+		u_falloff = getUniformLocation("u_falloff");
 	}
 }

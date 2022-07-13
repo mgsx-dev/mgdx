@@ -13,8 +13,7 @@ import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
-import net.mgsx.gfx.BlurCascade;
-import net.mgsx.gfx.BlurCascade.BlurMixMode;
+import net.mgsx.gfx.BlurCascadeGaussian;
 import net.mgsx.gfx.BrighnessExtractShader;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
@@ -23,14 +22,16 @@ public class BloomModule implements GLTFComposerModule
 {
 	// TODO move to core ?
 	private static class Bloom {
-		private final BlurCascade blur;
+		private final BlurCascadeGaussian blur;
 		private final BrighnessExtractShader bloomExtract;
 		
 		public float blurMix, bloomRate, threshold;
 		
+		public int stages = 7;
+		
 		public Bloom() {
-			blur = new BlurCascade(GLFormat.RGB16, 32);
-			bloomExtract = new BrighnessExtractShader();
+			blur = new BlurCascadeGaussian(GLFormat.RGB16);
+			bloomExtract = new BrighnessExtractShader(false);
 			bloomRate = 1f;
 			blurMix = .3f;
 			threshold = 1;
@@ -39,8 +40,9 @@ public class BloomModule implements GLTFComposerModule
 		public void apply(FrameBuffer fbo, SpriteBatch batch){
 			bloomExtract.bind();
 			bloomExtract.setThresholdRealistic(threshold);
-			blur.setMixFunc(BlurMixMode.ADD, blurMix);
-			Texture bloomTexture = blur.render(fbo.getColorBufferTexture(), Integer.MAX_VALUE, bloomExtract);
+
+			blur.blurMix = blurMix;
+			Texture bloomTexture = blur.render(fbo.getColorBufferTexture(), stages, bloomExtract);
 			
 			fbo.begin();
 			batch.enableBlending();
@@ -50,6 +52,10 @@ public class BloomModule implements GLTFComposerModule
 			batch.draw(bloomTexture, 0, 0, 1, 1, 0, 0, 1, 1);
 			batch.end();
 			fbo.end();
+			
+			// restore
+			batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			Gdx.gl.glBlendColor(0,0,0,0);
 		}
 	}
 
@@ -59,8 +65,7 @@ public class BloomModule implements GLTFComposerModule
 	private Bloom bloom = new Bloom();
 	
 	public BloomModule() {
-		bloom.bloomRate = .5f;
-		bloom.blurMix = .5f;
+		bloom.bloomRate = 1f;
 	}
 	
 	@Override
@@ -69,8 +74,9 @@ public class BloomModule implements GLTFComposerModule
 		Table t = frame.getContentTable();
 		
 		UI.slider(t, "threshold", 1e-3f, 1e2f, bloom.threshold, ControlScale.LOG, value->bloom.threshold=value);
+		UI.slideri(t, "stages", 0, 12, bloom.stages, value->bloom.stages=value);
 		UI.slider(t, "blur size", 0, 1, bloom.blurMix, value->bloom.blurMix=value);
-		UI.slider(t, "mix rate", 0, 1, bloom.bloomRate, value->bloom.bloomRate=value);
+		UI.slider(t, "mix rate", .001f, 10, bloom.bloomRate, ControlScale.LOG, value->bloom.bloomRate=value);
 
 		return frame;
 	}
