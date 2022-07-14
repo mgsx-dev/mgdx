@@ -25,22 +25,24 @@ public class BloomModule implements GLTFComposerModule
 		private final BlurCascadeGaussian blur;
 		private final BrighnessExtractShader bloomExtract;
 		
-		public float blurMix, bloomRate, threshold;
+		public float blurMix, bloomRate, threshold, maxBrightness;
 		
-		public int stages = 7;
+		public float stages = 7.5f;
 		
 		public Bloom() {
 			blur = new BlurCascadeGaussian(GLFormat.RGB16);
-			bloomExtract = new BrighnessExtractShader(false);
+			bloomExtract = new BrighnessExtractShader(false, true);
 			bloomRate = 1f;
-			blurMix = .3f;
+			blurMix = .5f;
 			threshold = 1;
+			maxBrightness = 30f;
 		}
 		
 		public void apply(FrameBuffer fbo, SpriteBatch batch){
 			bloomExtract.bind();
 			bloomExtract.setThresholdRealistic(threshold);
-
+			bloomExtract.setMaxBrightness(maxBrightness);
+			
 			blur.blurMix = blurMix;
 			Texture bloomTexture = blur.render(fbo.getColorBufferTexture(), stages, bloomExtract);
 			
@@ -74,7 +76,8 @@ public class BloomModule implements GLTFComposerModule
 		Table t = frame.getContentTable();
 		
 		UI.slider(t, "threshold", 1e-3f, 1e2f, bloom.threshold, ControlScale.LOG, value->bloom.threshold=value);
-		UI.slideri(t, "stages", 0, 12, bloom.stages, value->bloom.stages=value);
+		UI.slider(t, "clip", 1f, 1e3f, bloom.maxBrightness, ControlScale.LOG, value->bloom.maxBrightness=value);
+		UI.slider(t, "stages", 0, 12, bloom.stages, value->bloom.stages=value);
 		UI.slider(t, "blur size", 0, 1, bloom.blurMix, value->bloom.blurMix=value);
 		UI.slider(t, "mix rate", .001f, 10, bloom.bloomRate, ControlScale.LOG, value->bloom.bloomRate=value);
 

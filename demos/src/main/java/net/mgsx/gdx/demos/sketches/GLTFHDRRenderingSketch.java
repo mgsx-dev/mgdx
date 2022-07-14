@@ -64,7 +64,7 @@ public class GLTFHDRRenderingSketch extends ScreenAdapter
 		// post processing
 		toneMapping = new ToneMappingShader.Exposure(true);
 		blur = new BlurCascade(GLFormat.RGB32, 32);
-		bloomExtract = new BrighnessExtractShader(false);
+		bloomExtract = new BrighnessExtractShader(false, false);
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
 

@@ -5,6 +5,9 @@ uniform vec3 u_threshold;
 #ifdef SMOOTH
 uniform float u_falloff;
 #endif
+#ifdef CLIP
+uniform float u_max;
+#endif
 
 void main() {
 
@@ -12,6 +15,10 @@ void main() {
 
     float brightness = dot(color.rgb, u_threshold); // vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0){
+#ifdef CLIP
+    	color.rgb = color.rgb * min(u_max, brightness) / brightness;
+#endif
+
     	gl_FragColor = vec4(color.rgb, 1.0);
     }
     else{

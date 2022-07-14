@@ -167,7 +167,7 @@ public class UI {
 			number.setText(round(nVal, sStep));
 		});
 		
-		table.add(name).left();
+		table.add(name).expandX().right();
 		table.add(slider).width(width);
 		table.add(number).width(50);
 		

@@ -9,8 +9,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gdx.graphics.GLFormat;
@@ -23,6 +25,7 @@ public class BlurCascadeGaussian implements Disposable
 	private SpriteBatch batch;
 	public float blurMix;
 	private FrameBuffer bloomStack;
+	private FloatArray weights = new FloatArray();
 
 	public BlurCascadeGaussian(GLFormat format) {
 		this.format = format;
@@ -30,8 +33,9 @@ public class BlurCascadeGaussian implements Disposable
 		batch = new SpriteBatch();
 	}
 	
-	public Texture render(Texture inputTexture, int requestedStages, ShaderProgram initialShader){
-		ensureFBOs(inputTexture, requestedStages);
+	public Texture render(Texture inputTexture, float requestedStages, ShaderProgram initialShader){
+		
+		ensureFBOs(inputTexture);
 		
 		inputTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
@@ -53,9 +57,13 @@ public class BlurCascadeGaussian implements Disposable
 		
 		Texture last = fbos.first().getColorBufferTexture();
 		
-		float blurWidth = 2;
+		float blurWidth = 1;
 		
-		for(int i=0 ; i < fbos.size-1 ; i+=2){
+		float stages = Math.min(requestedStages, fbos.size / 2);
+		
+		int passes = MathUtils.ceil(stages) * 2;
+		
+		for(int i=0 ; i<passes && i <= fbos.size-2 ; i+=2){
 			
 			{
 				Texture src = fbos.get(i).getColorBufferTexture();
@@ -74,7 +82,7 @@ public class BlurCascadeGaussian implements Disposable
 				Texture src = fbos.get(i+1).getColorBufferTexture();
 				FrameBuffer dst = fbos.get(i+2);
 				
-				float dirY = blurWidth / dst.getHeight();
+				float dirY = blurWidth / src.getHeight();
 				blur.setDirection(0, dirY);
 				
 				dst.begin();
@@ -94,20 +102,30 @@ public class BlurCascadeGaussian implements Disposable
 		batch.setBlendFunction(GL20.GL_CONSTANT_ALPHA, GL20.GL_ONE);
 		batch.setShader(null);
 		
-		for(int i=2 ; i<fbos.size ; i+=2){
-			
-			float t = (float)(i-2) / (float)(fbos.size);
+//		for(int i=2 ; i<fbos.size ; i+=2){
 
-
-			// TODO parameter to control small/big layer ratio
+		float e2 = 1;
+		float e1 = 1; // MathUtils.lerp(1, 4, blurMix);
+		
+		e1 = blurMix * 4;
+		e2 = 1;
+		
+		float rateSum = 0;
+		weights.clear();
+		for(float stage = 1 ; stage <= stages ; stage++){
+			// TODO doesn't work as expected, there are still some jumps...
+			float t = (stage) / (stages + 1); // range from 0+ to 1-, ensure equation is never zero
+			float rate = (float)(Math.pow(t, e1) * Math.pow(1-t, e2) * Math.pow(2, e1 + e2));
+			rateSum += rate;
+			weights.add(rate);
+		}
+		
+		for(int stage=0 ; stage<weights.size ; stage++){
+			float rate = weights.get(stage);
+			int fboIndex = (stage + 1) * 2;
 			
-			float mix = (1 - t) * (1 - t) * t * 4;
-			
-			mix = (1-t) * t * 4;
-			
-			
-			Gdx.gl.glBlendColor(0,0,0, mix / requestedStages);
-			Texture src = fbos.get(i).getColorBufferTexture();
+			Gdx.gl.glBlendColor(0,0,0, rate / rateSum);
+			Texture src = fbos.get(fboIndex).getColorBufferTexture();
 			batch.draw(src, 0, 0, 1, 1, 0, 0, 1, 1);
 			batch.flush();
 		}
@@ -121,20 +139,18 @@ public class BlurCascadeGaussian implements Disposable
 		return last;
 	}
 
-	private void ensureFBOs(Texture inputTexture, int requestedStages) {
+	private void ensureFBOs(Texture inputTexture) {
 		if(fbos.size == 0){
-			createFBOs(inputTexture, requestedStages);
-		}
-		FrameBuffer top = fbos.first();
-		if(top.getWidth() != inputTexture.getWidth() || top.getHeight() != inputTexture.getHeight()){
-			createFBOs(inputTexture, requestedStages);
-		}
-		if(fbos.size != requestedStages*2+1){
-			createFBOs(inputTexture, requestedStages);
+			createFBOs(inputTexture);
+		}else{
+			FrameBuffer top = fbos.first();
+			if(top.getWidth() != inputTexture.getWidth() || top.getHeight() != inputTexture.getHeight()){
+				createFBOs(inputTexture);
+			}
 		}
 	}
 
-	private void createFBOs(Texture inputTexture, int requestedStages) {
+	private void createFBOs(Texture inputTexture) {
 		disposeFBOs();
 		
 		int width = inputTexture.getWidth();
@@ -157,7 +173,7 @@ public class BlurCascadeGaussian implements Disposable
 			bloomStack = fbo;
 		}
 		
-		for(int i=0 ; i<requestedStages ; i++){
+		while(width>0 && height>0){
 			for(int j=0 ; j<2 ; j++){
 				FrameBufferBuilder b = new FrameBufferBuilder(width, height);
 				b.addColorTextureAttachment(format.internalFormat, format.format, format.type);
@@ -167,7 +183,6 @@ public class BlurCascadeGaussian implements Disposable
 			}
 			width /= 2;
 			height /= 2;
-			if(width < 1 || height < 1) break;
 		}
 		
 	}
