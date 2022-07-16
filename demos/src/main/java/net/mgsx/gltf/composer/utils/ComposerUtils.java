@@ -119,4 +119,14 @@ public class ComposerUtils {
 			}
 		}
 	}
+
+	public static void setEmissiveIntensity(GLTFComposerContext ctx, float value) {
+		ctx.compo.emissiveIntensity = value;
+		PBRFloatAttribute emissive = ctx.sceneManager.environment.get(PBRFloatAttribute.class, PBRFloatAttribute.EmissiveIntensity);
+		if(emissive == null){
+			ctx.sceneManager.environment.set(PBRFloatAttribute.createEmissiveIntensity(value));
+		}else{
+			emissive.value = value;
+		}
+	}
 }

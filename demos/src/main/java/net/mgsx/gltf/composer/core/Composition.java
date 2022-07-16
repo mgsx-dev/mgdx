@@ -53,6 +53,7 @@ public class Composition {
 	public float skyboxBlur = 0;
 	public Color skyBoxColor = new Color(1,1,1,1);
 	public float ambiantStrength = 1;
+	public float emissiveIntensity = 1;
 	
 	public static class LightConfig {
 		public Color color = new Color(Color.WHITE);
