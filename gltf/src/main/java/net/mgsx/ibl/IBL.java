@@ -259,5 +259,24 @@ public class IBL implements Disposable
 		brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
 	}
 
-	
+	public static IBL load(FileHandle envFile, FileHandle diffuseFile, FileHandle specularFile) {
+		IBL ibl = new IBL();
+		ibl.environmentCubemap = loadCubemap(envFile, false);
+		ibl.diffuseCubemap = loadCubemap(diffuseFile, false);
+		ibl.specularCubemap = loadCubemap(specularFile, true);
+		ibl.loadDefaultLUT();
+		return ibl;
+	}
+
+	private static Cubemap loadCubemap(FileHandle file, boolean mipmaps) {
+		KTX2TextureData data = new KTX2TextureData(file);
+		data.prepare();
+		Cubemap map = new Cubemap(data);
+		if(mipmaps){
+			map.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		}else{
+			map.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		}
+		return map;
+	}
 }

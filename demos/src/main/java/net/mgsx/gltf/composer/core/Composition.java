@@ -1,5 +1,6 @@
 package net.mgsx.gltf.composer.core;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
@@ -14,6 +15,8 @@ import net.mgsx.ibl.IBL.IBLBakingOptions;
 
 public class Composition {
 
+	public transient FileHandle file;
+	
 	// linked scenes
 	public transient final Array<SceneAsset> sceneAssets = new Array<SceneAsset>();
 	public Array<String> scenesPath = new Array<String>();
@@ -21,6 +24,7 @@ public class Composition {
 	// linked IBL and skybox
 	public String hdrPath;
 	public IBLBakingOptions iblBaking = new IBLBakingOptions();
+	public String envPath, diffusePath, specularPath;
 	
 	public transient IBL ibl;
 	
@@ -92,6 +96,5 @@ public class Composition {
 	}
 	public CameraConfig camera = new CameraConfig();
 	public ObjectMap<String, CameraConfig> views = new ObjectMap<String, Composition.CameraConfig>();
-	
 	
 }

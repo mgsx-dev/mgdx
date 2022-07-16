@@ -267,37 +267,40 @@ public class SceneModule implements GLTFComposerModule
 			// update UI
 			controls.clear();
 			
-			// TODO options (show selected only)
-			// zoom to selected / zoom to scene (auto adjust)
-			
-			Tree<ModelNode, ModelNode> tree = new Tree<>(ctx.skin);
-			SceneNode sceneNode = new SceneNode(ctx, ctx.scene, ctx.skin);
-			tree.getRootNodes().add(sceneNode);
-			tree.updateRootNodes();
-			
-			sceneNode.setExpanded(true);
-			
-			ScrollPane sp = new ScrollPane(tree);
-			sp.setScrollingDisabled(true, false);
-			sp.setTouchable(Touchable.childrenOnly);
-			controls.add(sp).growY().expandX().left().row();
-			
-			Table infoPane = new Table(ctx.skin);
-			controls.add(infoPane).row();
-			
-			tree.addListener(new ChangeListener() {
-				@Override
-				public void changed(ChangeEvent event, Actor actor) {
-					if(actor == tree){
-						ModelNode selection = tree.getSelection().getLastSelected();
-						infoPane.clear();
-						if(selection != null){
-							Actor pane = selection.createPane(ctx);
-							if(pane != null) infoPane.add(pane);
+			if(ctx.scene != null){
+				
+				// TODO options (show selected only)
+				// zoom to selected / zoom to scene (auto adjust)
+				
+				Tree<ModelNode, ModelNode> tree = new Tree<>(ctx.skin);
+				SceneNode sceneNode = new SceneNode(ctx, ctx.scene, ctx.skin);
+				tree.getRootNodes().add(sceneNode);
+				tree.updateRootNodes();
+				
+				sceneNode.setExpanded(true);
+				
+				ScrollPane sp = new ScrollPane(tree);
+				sp.setScrollingDisabled(true, false);
+				sp.setTouchable(Touchable.childrenOnly);
+				controls.add(sp).growY().expandX().left().row();
+				
+				Table infoPane = new Table(ctx.skin);
+				controls.add(infoPane).row();
+				
+				tree.addListener(new ChangeListener() {
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						if(actor == tree){
+							ModelNode selection = tree.getSelection().getLastSelected();
+							infoPane.clear();
+							if(selection != null){
+								Actor pane = selection.createPane(ctx);
+								if(pane != null) infoPane.add(pane);
+							}
 						}
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 	

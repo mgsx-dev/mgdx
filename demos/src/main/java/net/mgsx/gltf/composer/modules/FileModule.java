@@ -40,9 +40,34 @@ public class FileModule implements GLTFComposerModule
 		ctx.compo.keyLight.set(ctx.keyLight);
 		ctx.compo.camera.set(ctx.cameraManager.getPerspectiveCamera(), ctx.cameraManager.getPerspectiveTarget());
 		
-		ctx.fileSelector.save(file->file.writeString(new Json().prettyPrint(ctx.compo), false));
+		ctx.fileSelector.save(file->saveComposition(ctx, file));
 	}
 
+	private void saveComposition(GLTFComposerContext ctx, FileHandle file){
+		ctx.compo.file = file;
+		
+		// make all path relatives if possible
+		String base = file.parent().path() + "/";
+		ctx.compo.hdrPath = relativePath(base, ctx.compo.hdrPath);
+		ctx.compo.envPath = relativePath(base, ctx.compo.envPath);
+		ctx.compo.diffusePath = relativePath(base, ctx.compo.diffusePath);
+		ctx.compo.specularPath = relativePath(base, ctx.compo.specularPath);
+		for(int i=0 ; i<ctx.compo.scenesPath.size ; i++){
+			ctx.compo.scenesPath.set(i, relativePath(base, ctx.compo.scenesPath.get(i)));
+		}
+		
+		file.writeString(new Json().prettyPrint(ctx.compo), false);
+	}
+	
+	private String relativePath(String base, String path){
+		if(path != null){
+			if(path.startsWith(base)){
+				path = path.substring(base.length());
+			}
+		}
+		return path;
+	}
+	
 	@Override
 	public boolean handleFile(GLTFComposerContext ctx, FileHandle file) {
 		if(file.extension().toLowerCase().equals("json")){

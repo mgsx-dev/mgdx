@@ -62,6 +62,7 @@ public class CompositionAssetLoader extends AsynchronousAssetLoader<Composition,
 	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file,
 			AssetLoaderParameters<Composition> parameter) {
 		compo = new Json().fromJson(Composition.class, file);
+		compo.file = file;
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 		for(String path : compo.scenesPath){
 			AssetDescriptor desc = new AssetDescriptor<>(sceneFile(file, path), SceneAsset.class);

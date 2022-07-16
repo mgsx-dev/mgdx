@@ -12,11 +12,15 @@ public class CompositionLoader {
 
 	public Composition load(FileHandle file){
 		Composition compo = new Json().fromJson(Composition.class, file);
+		compo.file = file;
 		for(String path : compo.scenesPath){
 			SceneAsset sceneAsset = new GLTFLoader().load(path.startsWith("/") ? Gdx.files.absolute(path) : file.sibling(path));
 			compo.sceneAssets.add(sceneAsset);
 		}
-		if(compo.hdrPath != null){
+		if(compo.envPath != null && compo.diffusePath != null && compo.specularPath != null){
+			compo.ibl = IBL.load(file.sibling(compo.envPath), file.sibling(compo.diffusePath), file.sibling(compo.specularPath));
+		}
+		else if(compo.hdrPath != null){
 			// load and bake
 			compo.ibl = IBL.fromHDR(compo.hdrPath.startsWith("/") ? Gdx.files.absolute(compo.hdrPath) : file.sibling(compo.hdrPath), compo.iblBaking, false);
 		}

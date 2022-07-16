@@ -1,5 +1,8 @@
 package net.mgsx.gltf.composer.modules;
 
+import java.util.function.Consumer;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Cubemap;
 import com.badlogic.gdx.graphics.GL30;
@@ -74,12 +77,46 @@ public class IBLModule implements GLTFComposerModule
 		}
 	}
 	private class HDRExportDialog extends Dialog {
-		public HDRExportDialog(GLTFComposerContext ctx, Cubemap map, boolean mipmaps, Runnable callback) {
+		public HDRExportDialog(GLTFComposerContext ctx, Cubemap map, boolean mipmaps, Consumer<FileHandle> callback) {
 			super("HDR export options", ctx.skin, "dialog");
 			Array<Exporter> formats = new Array<Exporter>();
 			formats.add(new Exporter("ktx2", ()->{
 				ctx.fileSelector.save(file->{
 					IBL.exportToKtx2(map, file, mipmaps, GLFormat.RGB16, true);
+					callback.accept(file);
+				});
+			}));
+			
+			Table t = getContentTable();
+			t.defaults().pad(UI.DEFAULT_PADDING);
+			
+			SelectBox<Exporter> selector = UI.selector(ctx.skin, formats, formats.first(), f->f.name, f->{});
+			t.add(selector).row();
+			
+			t.add(UI.trig(getSkin(), "Export", ()->{
+				selector.getSelected().callback.run();
+				remove();
+			})).row();
+		}
+	}
+	
+	private class HDRExportAllDialog extends Dialog {
+		public HDRExportAllDialog(GLTFComposerContext ctx) {
+			super("HDR export options", ctx.skin, "dialog");
+			Array<Exporter> formats = new Array<Exporter>();
+			formats.add(new Exporter("ktx2", ()->{
+				ctx.fileSelector.save(file->{
+					FileHandle envFile = file.sibling(file.nameWithoutExtension() + "-env.ktx2");
+					FileHandle difFile = file.sibling(file.nameWithoutExtension() + "-dif.ktx2");
+					FileHandle speFile = file.sibling(file.nameWithoutExtension() + "-spe.ktx2");
+					
+					IBL.exportToKtx2(ctx.ibl.environmentCubemap, envFile, false, GLFormat.RGB16, true);
+					IBL.exportToKtx2(ctx.ibl.diffuseCubemap, difFile, false, GLFormat.RGB16, true);
+					IBL.exportToKtx2(ctx.ibl.specularCubemap, speFile, true, GLFormat.RGB16, true);
+					
+					ctx.compo.envPath = envFile.path();
+					ctx.compo.diffusePath = difFile.path();
+					ctx.compo.specularPath = speFile.path();
 				});
 			}));
 			
@@ -98,7 +135,7 @@ public class IBLModule implements GLTFComposerModule
 	
 	private class ImportDialog extends Dialog
 	{
-		public ImportDialog(GLTFComposerContext ctx, Cubemap map) {
+		public ImportDialog(GLTFComposerContext ctx, FileHandle file, Cubemap map) {
 			super("Import cube map", ctx.skin, "dialog");
 			Table t = getContentTable();
 			t.defaults().pad(UI.DEFAULT_PADDING);
@@ -114,6 +151,9 @@ public class IBLModule implements GLTFComposerModule
 				ctx.ibl.environmentCubemap = map;
 				ctx.ibl.environmentCubemap.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 				ctx.applyIBL();
+				
+				ctx.compo.envPath = file.path();
+				
 				remove();
 			})).row();
 			
@@ -128,6 +168,9 @@ public class IBLModule implements GLTFComposerModule
 				ctx.ibl.specularCubemap = map;
 				ctx.ibl.specularCubemap.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 				ctx.applyIBL();
+				
+				ctx.compo.specularPath = file.path();
+				
 				remove();
 			})).row();
 			
@@ -142,6 +185,9 @@ public class IBLModule implements GLTFComposerModule
 				ctx.ibl.diffuseCubemap = map;
 				ctx.ibl.diffuseCubemap.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 				ctx.applyIBL();
+				
+				ctx.compo.diffusePath = file.path();
+				
 				remove();
 			})).row();
 		}
@@ -181,7 +227,7 @@ public class IBLModule implements GLTFComposerModule
 				KTX2TextureData data = new KTX2TextureData(file);
 				data.prepare();
 				if(data.getTarget() == GL30.GL_TEXTURE_CUBE_MAP){
-					new ImportDialog(ctx, new Cubemap(data)).show(ctx.stage);
+					new ImportDialog(ctx, file, new Cubemap(data)).show(ctx.stage);
 					return true;
 				}
 				// TODO return true and display an error popup : cubemap expected...
@@ -267,16 +313,30 @@ public class IBLModule implements GLTFComposerModule
 		controls.add("Supported files: *.hdr, png folder").row();
 		
 		controls.add(UI.trig(skin, "Export environment map (skybox)", ()->{
-			new HDRExportDialog(ctx, ctx.ibl.environmentCubemap, false, ()->{}).show(ctx.stage);
+			new HDRExportDialog(ctx, ctx.ibl.environmentCubemap, false, file->ctx.compo.envPath=file.path()).show(ctx.stage);
 		})).row();
 		
 		controls.add(UI.trig(skin, "Export radiance map (specular)", ()->{
-			new HDRExportDialog(ctx, ctx.ibl.specularCubemap, true, ()->{}).show(ctx.stage);
+			new HDRExportDialog(ctx, ctx.ibl.specularCubemap, true, file->ctx.compo.specularPath=file.path()).show(ctx.stage);
 		})).row();
 		
 		controls.add(UI.trig(skin, "Export irradiance map (diffuse)", ()->{
-			new HDRExportDialog(ctx, ctx.ibl.diffuseCubemap, false, ()->{}).show(ctx.stage);
+			new HDRExportDialog(ctx, ctx.ibl.diffuseCubemap, false, file->ctx.compo.diffusePath=file.path()).show(ctx.stage);
 		})).row();
+		
+		controls.add(UI.trig(skin, "Export all", ()->{
+			new HDRExportAllDialog(ctx).show(ctx.stage);
+		})).row();
+		
+		if(ctx.compo.hdrPath != null){
+			controls.add(UI.trig(skin, "Bake again", ()->{
+				HDRBakingDialog dialog = new HDRBakingDialog(ctx, ()->{
+					FileHandle file = ctx.compo.hdrPath.startsWith("/") ? Gdx.files.absolute(ctx.compo.hdrPath) : ctx.compo.file.sibling(ctx.compo.hdrPath);
+					replaceIBL(ctx, IBL.fromHDR(file, ctx.compo.iblBaking, false));
+				});
+				dialog.show(ctx.stage);
+			})).row();
+		}
 		
 	}
 	@Override
