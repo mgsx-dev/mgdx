@@ -116,7 +116,7 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.keyLight.intensity = 3f;
 		ctx.sceneManager.environment.add(ctx.keyLight);
 		
-		ComposerUtils.updateShadowBias(ctx, ctx.shadowBias);
+		ComposerUtils.updateShadowBias(ctx, ctx.compo.shadowBias);
 		
 		Table t = root = new Table(skin);
 		Table c = content = new Table(skin);
@@ -242,6 +242,7 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.stage.draw();
 		
 		ctx.sceneJustChanged = false;
+		ctx.compositionJustChanged = false;
 	}
 
 	

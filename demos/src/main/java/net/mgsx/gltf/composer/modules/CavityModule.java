@@ -64,7 +64,7 @@ public class CavityModule implements GLTFComposerModule
 		ctx.fbo.end();
 
 		// post process
-		ScreenUtils.clear(ctx.clearColor, true);
+		ScreenUtils.clear(ctx.compo.clearColor, true);
 		
 		cavity.screenEnabled = (mode & MODE_SCREEN) != 0;
 		cavity.worldEnabled = (mode & MODE_WORLD) != 0;

@@ -19,11 +19,8 @@ import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
-import net.mgsx.gltf.ibl.io.AWTFileSelector;
-import net.mgsx.gltf.ibl.io.FileSelector;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 import net.mgsx.ibl.IBL;
-import net.mgsx.ibl.IBL.IBLBakingOptions;
 import net.mgsx.ktx2.KTX2TextureData;
 
 public class IBLModule implements GLTFComposerModule
@@ -41,22 +38,22 @@ public class IBLModule implements GLTFComposerModule
 			for(int i=0 ; i<=12 ; i++) resolutions.add(1 << i);
 			
 			t.add("Skybox map");
-			t.add(UI.selector(getSkin(), resolutions, bakingOptions.envSize, v->v+"x"+v, v->bakingOptions.envSize=v));
+			t.add(UI.selector(getSkin(), resolutions, ctx.compo.iblBaking.envSize, v->v+"x"+v, v->ctx.compo.iblBaking.envSize=v));
 			t.row();
 			
 			t.add("Radiance map");
-			t.add(UI.selector(getSkin(), resolutions, bakingOptions.radSize, v->v+"x"+v, v->bakingOptions.radSize=v));
+			t.add(UI.selector(getSkin(), resolutions, ctx.compo.iblBaking.radSize, v->v+"x"+v, v->ctx.compo.iblBaking.radSize=v));
 			t.row();
 			
 			t.add("Irradiance map");
-			t.add(UI.selector(getSkin(), resolutions, bakingOptions.irdSize, v->v+"x"+v, v->bakingOptions.irdSize=v));
+			t.add(UI.selector(getSkin(), resolutions, ctx.compo.iblBaking.irdSize, v->v+"x"+v, v->ctx.compo.iblBaking.irdSize=v));
 			t.row();
 			
 			Array<Integer> precisions = new Array<Integer>();
 			precisions.add(16, 32);
 			
 			t.add("Precision");
-			t.add(UI.selector(getSkin(), precisions, bakingOptions.format == GLFormat.RGB32 ? 32 : 16, v->v+" bits", v->bakingOptions.format=v==32 ? GLFormat.RGB32 : GLFormat.RGB16));
+			t.add(UI.selector(getSkin(), precisions, ctx.compo.iblBaking.format == GLFormat.RGB32 ? 32 : 16, v->v+" bits", v->ctx.compo.iblBaking.format=v==32 ? GLFormat.RGB32 : GLFormat.RGB16));
 			t.row();
 			
 			t.add(UI.primary(getSkin(), "Bake", ()->{
@@ -83,7 +80,7 @@ public class IBLModule implements GLTFComposerModule
 			super("HDR export options", ctx.skin, "dialog");
 			Array<Exporter> formats = new Array<Exporter>();
 			formats.add(new Exporter("ktx2", ()->{
-				fileSelector.save(file->{
+				ctx.fileSelector.save(file->{
 					IBL.exportToKtx2(map, file, mipmaps, GLFormat.RGB16, true);
 				});
 			}));
@@ -153,10 +150,7 @@ public class IBLModule implements GLTFComposerModule
 	}
 	
 	// TODO env map only option
-	private final IBLBakingOptions bakingOptions = new IBLBakingOptions();
 	private Table controls;
-	private FileSelector fileSelector = new AWTFileSelector();
-	private float skyboxBlur;
 	
 	@Override
 	public boolean handleFile(GLTFComposerContext ctx, FileHandle file) {
@@ -177,8 +171,9 @@ public class IBLModule implements GLTFComposerModule
 			String ext = file.extension().toLowerCase();
 			// TODO exr format ?
 			if(ext.equals("hdr")){
+				ctx.compo.hdrPath = file.path();
 				HDRBakingDialog dialog = new HDRBakingDialog(ctx, ()->{
-					replaceIBL(ctx, IBL.fromHDR(file, bakingOptions, false));
+					replaceIBL(ctx, IBL.fromHDR(file, ctx.compo.iblBaking, false));
 				});
 				dialog.show(ctx.stage);
 				return true;
@@ -240,14 +235,14 @@ public class IBLModule implements GLTFComposerModule
 		
 		Frame sbFrame = UI.frameToggle("Skybox", skin, true, v->ComposerUtils.enabledSkybox(ctx, v));
 		Table sbTable = sbFrame.getContentTable();
-		UI.slider(sbTable, "rotation", 0, 360, ctx.envRotation, v->ctx.envRotation = v);
-		UI.slider(sbTable, "blur", -10, 10, skyboxBlur, v->skyboxBlur=v);
+		UI.slider(sbTable, "rotation", 0, 360, ctx.compo.envRotation, v->ctx.compo.envRotation = v);
+		UI.slider(sbTable, "blur", -10, 10, ctx.compo.skyboxBlur, v->ctx.compo.skyboxBlur=v);
 		UI.slider(sbTable, "Opacity", 0, 1, 1, value->ComposerUtils.setSkyboxOpacity(ctx, value));
 		controls.add(sbFrame).growX().row();
 		
 		UI.slider(controls, "Ambiant strength", 0, 3, 1, value->ComposerUtils.setAmbientFactor(ctx, value));
 
-		UI.colorBox(controls, "Background", ctx.clearColor, false);
+		UI.colorBox(controls, "Background", ctx.compo.clearColor, false);
 		
 		Array<String> builtins = new Array<String>();
 		builtins.add("None", "Outdoor", "Indoor");
@@ -274,9 +269,9 @@ public class IBLModule implements GLTFComposerModule
 			}
 			if(builder != null){
 				IBL ibl = new IBL();
-				ibl.environmentCubemap = builder.buildEnvMap(bakingOptions.envSize);
+				ibl.environmentCubemap = builder.buildEnvMap(ctx.compo.iblBaking.envSize);
 				ibl.specularCubemap = builder.buildRadianceMap(9); // TODO size to mips
-				ibl.diffuseCubemap = builder.buildIrradianceMap(bakingOptions.irdSize);
+				ibl.diffuseCubemap = builder.buildIrradianceMap(ctx.compo.iblBaking.irdSize);
 				ibl.loadDefaultLUT();
 				builder.dispose();
 				
@@ -304,9 +299,9 @@ public class IBLModule implements GLTFComposerModule
 	}
 	@Override
 	public void update(GLTFComposerContext ctx, float delta) {
-		ctx.sceneManager.setEnvironmentRotation(ctx.envRotation);
+		ctx.sceneManager.setEnvironmentRotation(ctx.compo.envRotation);
 		if(ctx.skyBox != null){
-			ctx.skyBox.setLod(skyboxBlur);
+			ctx.skyBox.setLod(ctx.compo.skyboxBlur);
 		}
 	}
 }

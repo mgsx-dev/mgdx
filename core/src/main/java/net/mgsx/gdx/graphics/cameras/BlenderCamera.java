@@ -259,4 +259,20 @@ public class BlenderCamera {
 		perspective.set(position, target, near, far);
 		orthographic.set(position, target, near, far);
 	}
+
+	public Vector3 getPerspectiveTarget() {
+		return perspective.controller.target;
+	}
+
+	public void switchTo(boolean perspective) {
+		if(perspective){
+			switchTo(this.perspective);
+		}else{
+			switchTo(orthographic);
+		}
+	}
+
+	public void setTarget(Vector3 target) {
+		setTarget(target.x, target.y, target.z);
+	}
 }

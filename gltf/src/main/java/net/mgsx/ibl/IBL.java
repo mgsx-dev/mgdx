@@ -63,7 +63,7 @@ public class IBL implements Disposable
 //		long ptime = System.currentTimeMillis();
 		
 		ibl.environmentCubemap = fromCache(hdrFile, "env", options.envSize, false, options.format, useCache, ()->{
-			Texture hdri = new HDRILoader().load(hdrFile, GLFormat.RGB32);
+			Texture hdri = new HDRILoader().load(hdrFile, GLFormat.RGB32); // TODO 16 or 32 ??
 			EnvironmentMapBaker envBaker = new EnvironmentMapBaker(hdri);
 			Cubemap map = envBaker.createEnvMap(options.envSize, options.format, true);
 			envBaker.dispose();

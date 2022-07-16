@@ -41,8 +41,8 @@ public class ComposerUtils {
 	public static void recreateLight(GLTFComposerContext ctx) {
 		ctx.sceneManager.environment.remove(ctx.keyLight);
 		DirectionalLightEx oldLight = ctx.keyLight;
-		if(ctx.shadows){
-			ctx.keyLight = new DirectionalShadowLight(ctx.shadowSize, ctx.shadowSize);
+		if(ctx.compo.shadows){
+			ctx.keyLight = new DirectionalShadowLight(ctx.compo.shadowSize, ctx.compo.shadowSize);
 		}else{
 			ctx.keyLight = new DirectionalLightEx();
 		}
@@ -53,7 +53,7 @@ public class ComposerUtils {
 
 	public static void updateShadowSize(GLTFComposerContext ctx) {
 		if(ctx.keyLight instanceof DirectionalShadowLight){
-			((DirectionalShadowLight)ctx.keyLight).setShadowMapSize(ctx.shadowSize, ctx.shadowSize);
+			((DirectionalShadowLight)ctx.keyLight).setShadowMapSize(ctx.compo.shadowSize, ctx.compo.shadowSize);
 		}
 	}
 
@@ -73,17 +73,17 @@ public class ComposerUtils {
 	}
 
 	public static void updateShadowBias(GLTFComposerContext ctx, float value) {
-		ctx.shadowBias = value;
+		ctx.compo.shadowBias = value;
 		PBRFloatAttribute a = ctx.sceneManager.environment.get(PBRFloatAttribute.class, PBRFloatAttribute.ShadowBias);
 		if(a != null){
-			a.value = ctx.shadowBias;
+			a.value = ctx.compo.shadowBias;
 		}else{
-			 ctx.sceneManager.environment.set(new PBRFloatAttribute(PBRFloatAttribute.ShadowBias, ctx.shadowBias));
+			 ctx.sceneManager.environment.set(new PBRFloatAttribute(PBRFloatAttribute.ShadowBias, ctx.compo.shadowBias));
 		}
 	}
 
 	public static void enabledSkybox(GLTFComposerContext ctx, boolean enabled) {
-		ctx.skyBoxEnabled = enabled;
+		ctx.compo.skyBoxEnabled = enabled;
 		if(enabled){
 			ctx.sceneManager.setSkyBox(ctx.skyBox);
 		}else{

@@ -308,9 +308,13 @@ public class SceneModule implements GLTFComposerModule
 		try{
 			if(ext.equals("gltf")){
 				newAsset = new GLTFLoader().load(file);
+				ctx.compo.scenesPath.clear();
+				ctx.compo.scenesPath.add(file.path());
 			}
 			else if(ext.equals("glb")){
 				newAsset = new GLBLoader().load(file);
+				ctx.compo.scenesPath.clear();
+				ctx.compo.scenesPath.add(file.path());
 			}
 		}catch(GLTFUnsupportedException e){
 			UI.popup(ctx.stage, ctx.skin, "Not supported", e.getMessage());
@@ -323,16 +327,8 @@ public class SceneModule implements GLTFComposerModule
 			return true;
 		}
 		if(newAsset != null){
-			if(ctx.scene != null) ctx.sceneManager.removeScene(ctx.scene);
-			if(ctx.asset != null){
-				ctx.asset.dispose();
-			}
-			ctx.asset = newAsset;
-			ctx.scene = new Scene(ctx.asset.scene);
-			ctx.sceneManager.addScene(ctx.scene);
+			ctx.setScene(newAsset);
 			
-			// compute boundary box
-			ctx.scene.modelInstance.calculateBoundingBox(ctx.sceneBounds);
 			ComposerUtils.fitCameraToScene(ctx);
 			
 			ctx.sceneJustChanged = true;

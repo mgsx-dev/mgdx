@@ -56,7 +56,7 @@ public class HDRModule implements GLTFComposerModule
 		ctx.sceneManager.renderShadows();
 		ctx.fbo.ensureScreenSize();
 		ctx.fbo.begin();
-		ScreenUtils.clear(ctx.clearColor, true);
+		ScreenUtils.clear(ctx.compo.clearColor, true);
 		ctx.sceneManager.renderColors();
 		ctx.fbo.end();
 		
@@ -64,10 +64,10 @@ public class HDRModule implements GLTFComposerModule
 		
 		// TODO need to render to first layer only ! or need another FBO and compose later with tone mapping ?
 		// render bloom
-		bloomModule.render(batch, ctx.fbo.getFrameBuffer());
+		bloomModule.render(ctx, batch, ctx.fbo.getFrameBuffer());
 		
 		// render final with tone mapping (HDR to LDR)
-		toneMappingModule.render(batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
+		toneMappingModule.render(ctx, batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
 	}
 
 }

@@ -27,7 +27,7 @@ public class ToonModule implements GLTFComposerModule
 	
 	@Override
 	public void render(GLTFComposerContext ctx) {
-		ScreenUtils.clear(ctx.clearColor, true);
+		ScreenUtils.clear(ctx.compo.clearColor, true);
 		ctx.sceneManager.render();
 	}
 }

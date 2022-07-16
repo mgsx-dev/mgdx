@@ -2,6 +2,7 @@ package net.mgsx.gdx.scenes.scene2d.ui;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -25,6 +27,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 // TODO cleanup
 public class UI {
@@ -279,6 +283,79 @@ public class UI {
 		t.add(name);
 		t.add(new ColorBox(name, colorModel, alpha, table.getSkin()));
 		table.add(t).row();
+	}
+	public static <T> Table editor(Skin skin, ObjectMap<String, T> map, String selected, Supplier<T> factory, Consumer<T> callback) {
+		Array<String> items = new Array<String>();
+		for(Entry<String, T> e : map.entries()){
+			items.add(e.key);
+		}
+		items.sort();
+		SelectBox<String> selector = selector(skin, items, selected, item->item, item->{
+			if(map.size > 0){
+				callback.accept(map.get(item));
+			}else{
+				callback.accept(null);
+			}
+		});
+		Table t = table(skin);
+		t.add(selector);
+		t.add(trig(skin, "-", ()->{
+			if(selector.getItems().size > 0){
+				items.removeValue(selector.getSelected(), false);
+				map.remove(selector.getSelected());
+				selector.setItems(items);
+			}
+		}));
+		t.add(trig(skin, "+", ()->{
+			String baseName = "new name";
+			String name = baseName;
+			for(int i=1 ;  ; i++){
+				if(!map.containsKey(name)){
+					map.put(name, factory.get());
+					items.add(name);
+					break;
+				}
+				name = baseName + " " + i;
+			}
+			selector.setItems(items);
+			selector.setSelected(name);
+		}));
+		t.add(trig(skin, "update", ()->{
+			if(selector.getItems().size > 0){
+				map.put(selector.getSelected(), factory.get());
+			}
+		}));
+		t.add(trig(skin, "rename", ()->{
+			if(selector.getItems().size > 0){
+				Label typer = new Label("", skin);
+				Dialog dialog = dialog(typer, "Rename " + selector.getSelected(), skin).show(selector.getStage());
+				selector.getStage().setKeyboardFocus(typer);
+				InputListener listener = new InputListener(){
+					@Override
+					public boolean keyTyped(InputEvent event, char character) {
+						Label label = (Label)event.getListenerActor();
+						if(character == '\n'){
+							String key = selector.getSelected();
+							String newKey = label.getText().toString();
+							T object = map.get(key);
+							map.remove(key);
+							int index = items.indexOf(key, false);
+							items.set(index, newKey);
+							map.put(newKey, object);
+							selector.setItems(items);
+							selector.setSelected(newKey);
+							selector.getStage().setKeyboardFocus(null);
+							dialog.hide();
+						}else{
+							label.setText(label.getText() + String.valueOf(character));
+						}
+						return true;
+					};
+				};
+				typer.addListener(listener);
+			}
+		}));
+		return t;
 	}
 	
 	

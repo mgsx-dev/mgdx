@@ -1,0 +1,107 @@
+{
+scenesPath: [
+	models/basic-sphere.gltf
+]
+hdrPath: hdri/demo-lowres.hdr
+iblBaking: {}
+toneMapping: {}
+bloomEnabled: true
+bloom: {
+	bloomRate: 2.5118864
+}
+keyLight: {}
+camera: {
+	fieldOfView: 127.799995
+	near: 0.002
+	far: 60
+	position: {
+		x: 1.4622295
+		y: 0.078605704
+		z: 1.1124835
+	}
+	target: {
+		x: 3.2782555E-7
+		z: 3.2782555E-7
+	}
+	up: {
+		x: -0.034017548
+		y: 0.999086
+		z: -0.025881208
+	}
+}
+views: {
+	close: {
+		near: 0.002
+		far: 60
+		position: {
+			x: 3.0157351
+			y: 0.4558716
+			z: 0.33441046
+		}
+		target: {
+			x: 3.2782555E-7
+			z: 3.2782555E-7
+		}
+		up: {
+			x: -0.14767078
+			y: 0.988901
+			z: -0.016375095
+		}
+	}
+	down: {
+		near: 0.002
+		far: 60
+		position: {
+			x: 4.1519475
+			y: -2.9621005
+			z: 2.8860703
+		}
+		target: {
+			x: 3.2782555E-7
+			z: 3.2782555E-7
+		}
+		up: {
+			x: 0.4150395
+			y: 0.8628515
+			z: 0.28849888
+		}
+	}
+	base: {
+		near: 0.002
+		far: 60
+		position: {
+			x: 6.951777
+			y: 0.36847895
+			z: 1.9697179
+		}
+		target: {
+			x: 3.2782555E-7
+			z: 3.2782555E-7
+		}
+		up: {
+			x: -0.049002133
+			y: 0.9987024
+			z: -0.013884388
+		}
+	}
+	fov: {
+		fieldOfView: 127.799995
+		near: 0.002
+		far: 60
+		position: {
+			x: 1.4622295
+			y: 0.078605704
+			z: 1.1124835
+		}
+		target: {
+			x: 3.2782555E-7
+			z: 3.2782555E-7
+		}
+		up: {
+			x: -0.034018237
+			y: 0.99908733
+			z: -0.02588173
+		}
+	}
+}
+}

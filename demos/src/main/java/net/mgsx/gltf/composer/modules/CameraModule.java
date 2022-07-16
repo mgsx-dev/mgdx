@@ -8,6 +8,7 @@ import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
+import net.mgsx.gltf.composer.core.Composition.CameraConfig;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 
 public class CameraModule implements GLTFComposerModule {
@@ -47,6 +48,16 @@ public class CameraModule implements GLTFComposerModule {
 		controls.add(UI.trig(ctx.skin, "Fit to scene", ()->{
 			ComposerUtils.fitCameraToScene(ctx);
 			buildUI(ctx);
-		}));
+		})).row();
+
+		// Select box de presets
+		controls.add(UI.editor(ctx.skin, ctx.compo.views, null, ()->
+			new CameraConfig().set(ctx.cameraManager.getPerspectiveCamera(), ctx.cameraManager.getPerspectiveTarget()), 
+			config->{
+				if(config != null){
+					config.configure(ctx.cameraManager.getPerspectiveCamera());
+					ctx.cameraManager.setTarget(config.target);
+				}
+			})).row();
 	}
 }

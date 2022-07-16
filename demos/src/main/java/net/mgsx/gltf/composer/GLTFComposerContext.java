@@ -15,7 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
+import net.mgsx.gltf.composer.core.Composition;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
+import net.mgsx.gltf.ibl.io.AWTFileSelector;
+import net.mgsx.gltf.ibl.io.FileSelector;
 import net.mgsx.gltf.scene.PBRRenderTargets;
 import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
@@ -28,21 +31,21 @@ import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.ibl.IBL;
 
 public class GLTFComposerContext {
+	
+	public Composition compo = new Composition();
+	
+	public final FileSelector fileSelector = new AWTFileSelector();
+	
 	public Skin skin;
 	public Stage stage;
-	
+
 	public PBRShaderConfig colorShaderConfig;
 	public DepthShader.Config depthShaderConfig;
 	public SceneManager sceneManager;
 	public Skybox skyBox;
-	public boolean skyBoxEnabled = true;
 	public IBL ibl;
-	public float envRotation = 0;
 	
 	public DirectionalLightEx keyLight = new DirectionalLightEx();
-	public boolean shadows;
-	public int shadowSize = 2048;
-	public float shadowBias = 1f / 255f;
 	
 	public PBRRenderTargets fbo;
 	
@@ -50,7 +53,6 @@ public class GLTFComposerContext {
 	public Scene scene;
 	public final BoundingBox sceneBounds = new BoundingBox();
 	
-	public final Color clearColor = new Color(.2f,.2f,.2f,0f);
 	public BlenderCamera cameraManager;
 	
 	public GLProfiler profiler;
@@ -58,9 +60,11 @@ public class GLTFComposerContext {
 	public int ffps;
 
 	public boolean sceneJustChanged = false;
+	public boolean compositionJustChanged = false;;
 
 	private boolean shadersValid = false;
 	private boolean fboValid = false;
+
 	
 	public void invalidateShaders(){
 		shadersValid = false;
@@ -110,7 +114,7 @@ public class GLTFComposerContext {
 				sceneManager.setSkyBox(null);
 				skyBox.dispose();
 			}
-			if(ibl != null && ibl.environmentCubemap != null && skyBoxEnabled){
+			if(ibl != null && ibl.environmentCubemap != null && compo.skyBoxEnabled){
 				createSkybox();
 				sceneManager.setSkyBox(skyBox);
 			}
@@ -126,6 +130,48 @@ public class GLTFComposerContext {
 		
 		// apply same ambient factor as scene manager.
 		ComposerUtils.syncSkyboxAmbientFactor(this);
+	}
+	public void setComposition(Composition c) {
+		compo = c;
+		
+		
+		// apply camera
+		cameraManager.switchTo(true);
+		cameraManager.setTarget(c.camera.target);
+		c.camera.configure(cameraManager.getPerspectiveCamera());
+		
+		// apply light
+		c.keyLight.configure(keyLight);
+		
+		//
+		ibl = c.ibl;
+		if(ibl != null){
+			ibl.apply(sceneManager);
+		}
+		
+		if(c.sceneAssets.size > 0){
+			setScene(c.sceneAssets.first());
+		}else{
+			setScene(null);
+		}
+		sceneJustChanged = true;
+		
+		compositionJustChanged = true;
+		
+		invalidateFBO();
+		invalidateShaders();
+	}
+	public void setScene(SceneAsset newAsset) {
+		if(scene != null) sceneManager.removeScene(scene);
+		if(asset != null){
+			asset.dispose();
+		}
+		asset = newAsset;
+		if(asset != null){
+			scene = new Scene(asset.scene);
+			sceneManager.addScene(scene);
+			scene.modelInstance.calculateBoundingBox(sceneBounds);
+		}
 	}
 
 }

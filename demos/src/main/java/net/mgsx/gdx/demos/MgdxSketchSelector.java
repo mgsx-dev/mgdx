@@ -27,6 +27,7 @@ import net.mgsx.gdx.demos.sketches.GL32DebugControlSketch;
 import net.mgsx.gdx.demos.sketches.GL32GeometryShaderSketch;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSimpleSketch;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSketch;
+import net.mgsx.gdx.demos.sketches.GLTFXCinematicSketch;
 import net.mgsx.gdx.demos.sketches.HDRBlurCascadeSketech;
 import net.mgsx.gdx.demos.sketches.KTX2Sktech;
 
@@ -36,6 +37,7 @@ public class MgdxSketchSelector extends Dialog
 	static{
 		sketches.addAll(
 			DefaultSketch.class,
+			GLTFXCinematicSketch.class,
 			BenchmarkFileFormatSketch.class,
 			// EXRSketch.class,
 			KTX2Sktech.class,
