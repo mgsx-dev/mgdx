@@ -22,4 +22,12 @@ public class ModelUtils {
 		return results;
 	}
 
+	public static void eachNodePartRecusrsive(Iterable<Node> nodes, Consumer<NodePart> callback) {
+		eachNodeRecusrsive(nodes, node->{
+			for(NodePart part : node.parts){
+				callback.accept(part);
+			}
+		});
+	}
+
 }

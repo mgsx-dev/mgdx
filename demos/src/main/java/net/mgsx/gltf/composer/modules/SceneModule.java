@@ -310,12 +310,12 @@ public class SceneModule implements GLTFComposerModule
 		SceneAsset newAsset = null;
 		try{
 			if(ext.equals("gltf")){
-				newAsset = new GLTFLoader().load(file);
+				newAsset = new GLTFLoader().load(file, true);
 				ctx.compo.scenesPath.clear();
 				ctx.compo.scenesPath.add(file.path());
 			}
 			else if(ext.equals("glb")){
-				newAsset = new GLBLoader().load(file);
+				newAsset = new GLBLoader().load(file, true);
 				ctx.compo.scenesPath.clear();
 				ctx.compo.scenesPath.add(file.path());
 			}

@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.profiling.GLErrorListener;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.Interpolation;
@@ -62,6 +63,8 @@ public class GLTFComposer extends ScreenAdapter {
 	private final SystemModule systemModule;
 	
 	private final IntIntMap moduleToTabIndex = new IntIntMap();
+	
+	private ShapeRenderer shapes;
 
 	public GLTFComposer(Settings settings, boolean hdpiDetected) {
 		
@@ -129,6 +132,8 @@ public class GLTFComposer extends ScreenAdapter {
 		t.add(c).growY().expandX().left();
 		t.setFillParent(true);
 		ctx.stage.addActor(t);
+		
+		shapes = new ShapeRenderer();
 		
 		// add modules
 		addModule(new FileModule(), "icon-file");
@@ -236,6 +241,10 @@ public class GLTFComposer extends ScreenAdapter {
 		}
 		
 		systemModule.endProfiling(ctx);
+		
+		for(int i=0 ; i<modules.size ; i++){
+			modules.get(i).renderOverlay(ctx, shapes);
+		}
 		
 		ctx.stage.getViewport().apply();
 		ctx.stage.act();

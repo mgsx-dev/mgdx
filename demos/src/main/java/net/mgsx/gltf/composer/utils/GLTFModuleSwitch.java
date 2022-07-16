@@ -1,6 +1,7 @@
 package net.mgsx.gltf.composer.utils;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -54,6 +55,11 @@ public class GLTFModuleSwitch implements GLTFComposerModule
 	@Override
 	public void render(GLTFComposerContext ctx) {
 		current.module.render(ctx);
+	}
+	
+	@Override
+	public void renderOverlay(GLTFComposerContext ctx, ShapeRenderer shapes) {
+		current.module.renderOverlay(ctx, shapes);
 	}
 	
 	@Override

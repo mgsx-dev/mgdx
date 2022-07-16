@@ -1,6 +1,7 @@
 package net.mgsx.gltf.composer;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
@@ -19,6 +20,8 @@ public interface GLTFComposerModule extends Disposable {
 	}
 	
 	default void render(GLTFComposerContext ctx){
+	}
+	default void renderOverlay(GLTFComposerContext ctx, ShapeRenderer shapes){
 	}
 	
 	default void show(GLTFComposerContext ctx){}

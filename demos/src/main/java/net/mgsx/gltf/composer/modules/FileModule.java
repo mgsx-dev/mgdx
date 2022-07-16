@@ -71,7 +71,7 @@ public class FileModule implements GLTFComposerModule
 	@Override
 	public boolean handleFile(GLTFComposerContext ctx, FileHandle file) {
 		if(file.extension().toLowerCase().equals("json")){
-			Composition compo = new CompositionLoader().load(file);
+			Composition compo = new CompositionLoader().load(file, true);
 			
 			ctx.setComposition(compo);
 			

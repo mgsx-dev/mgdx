@@ -46,7 +46,7 @@ public class GLTFXCinematicSketch extends ScreenAdapter {
 		}
 		// Direct loading example
 		else{
-			composition = new CompositionLoader().load(Gdx.files.internal(compoPath));
+			composition = new CompositionLoader().load(Gdx.files.internal(compoPath), false);
 		}
 		
 		compositor.setComposition(composition);
