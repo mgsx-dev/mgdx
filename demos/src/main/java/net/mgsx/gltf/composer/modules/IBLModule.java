@@ -1,9 +1,7 @@
 package net.mgsx.gltf.composer.modules;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Cubemap;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -115,7 +113,7 @@ public class IBLModule implements GLTFComposerModule
 				}
 				ctx.ibl.environmentCubemap = map;
 				ctx.ibl.environmentCubemap.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-				applyIBL(ctx);
+				ctx.applyIBL();
 				remove();
 			})).row();
 			
@@ -129,7 +127,7 @@ public class IBLModule implements GLTFComposerModule
 				}
 				ctx.ibl.specularCubemap = map;
 				ctx.ibl.specularCubemap.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-				applyIBL(ctx);
+				ctx.applyIBL();
 				remove();
 			})).row();
 			
@@ -143,7 +141,7 @@ public class IBLModule implements GLTFComposerModule
 				}
 				ctx.ibl.diffuseCubemap = map;
 				ctx.ibl.diffuseCubemap.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-				applyIBL(ctx);
+				ctx.applyIBL();
 				remove();
 			})).row();
 		}
@@ -202,45 +200,30 @@ public class IBLModule implements GLTFComposerModule
 			ctx.ibl.dispose();
 		}
 		ctx.ibl = newIBL;
-		applyIBL(ctx);
-	}
-	private void applyIBL(GLTFComposerContext ctx){
-		
-		if(ctx.ibl.environmentCubemap != null){
-			ctx.ibl.environmentCubemap.bind();
-			Gdx.gl.glGenerateMipmap(GL20.GL_TEXTURE_CUBE_MAP);
-			ctx.ibl.environmentCubemap.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		}
-		
-		ctx.ibl.apply(ctx.sceneManager);
-		if(ctx.ibl.environmentCubemap != null){
-			if(ctx.skyBox == null){
-				ctx.createSkybox();
-				ctx.sceneManager.setSkyBox(ctx.skyBox);
-			}else{
-				ctx.skyBox.set(ctx.ibl.getEnvironmentCubemap());
-			}
-		}else{
-			if(ctx.skyBox != null){
-				ctx.sceneManager.setSkyBox(null);
-				ctx.skyBox.dispose();
-			}
-		}
-		ctx.invalidateShaders();
+		ctx.applyIBL();
 	}
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		controls = UI.table(skin);
 		
+		updateUI(ctx, skin);
+		
+		return controls;
+	}
+	
+	private void updateUI(GLTFComposerContext ctx, Skin skin)
+	{
+		controls.clear();
+		
 		Frame sbFrame = UI.frameToggle("Skybox", skin, true, v->ComposerUtils.enabledSkybox(ctx, v));
 		Table sbTable = sbFrame.getContentTable();
 		UI.slider(sbTable, "rotation", 0, 360, ctx.compo.envRotation, v->ctx.compo.envRotation = v);
 		UI.slider(sbTable, "blur", -10, 10, ctx.compo.skyboxBlur, v->ctx.compo.skyboxBlur=v);
-		UI.slider(sbTable, "Opacity", 0, 1, 1, value->ComposerUtils.setSkyboxOpacity(ctx, value));
+		UI.slider(sbTable, "Opacity", 0, 1, ctx.compo.skyBoxColor.a, value->ComposerUtils.setSkyboxOpacity(ctx, value));
 		controls.add(sbFrame).growX().row();
 		
-		UI.slider(controls, "Ambiant strength", 0, 3, 1, value->ComposerUtils.setAmbientFactor(ctx, value));
+		UI.slider(controls, "Ambiant strength", 0, 3, ctx.compo.ambiantStrength, value->ComposerUtils.setAmbientFactor(ctx, value));
 
 		UI.colorBox(controls, "Background", ctx.compo.clearColor, false);
 		
@@ -295,10 +278,12 @@ public class IBLModule implements GLTFComposerModule
 			new HDRExportDialog(ctx, ctx.ibl.diffuseCubemap, false, ()->{}).show(ctx.stage);
 		})).row();
 		
-		return controls;
 	}
 	@Override
 	public void update(GLTFComposerContext ctx, float delta) {
+		if(ctx.compositionJustChanged){
+			updateUI(ctx, ctx.skin);
+		}
 		ctx.sceneManager.setEnvironmentRotation(ctx.compo.envRotation);
 		if(ctx.skyBox != null){
 			ctx.skyBox.setLod(ctx.compo.skyboxBlur);

@@ -57,6 +57,7 @@ public class CameraModule implements GLTFComposerModule {
 				if(config != null){
 					config.configure(ctx.cameraManager.getPerspectiveCamera());
 					ctx.cameraManager.setTarget(config.target);
+					buildUI(ctx);
 				}
 			})).row();
 	}

@@ -3,30 +3,64 @@ scenesPath: [
 	models/basic-sphere.gltf
 ]
 hdrPath: hdri/demo-lowres.hdr
-iblBaking: {}
-toneMapping: {}
+iblBaking: {
+	envSize: 128
+	radSize: 64
+	irdSize: 8
+}
+clearColor: {
+	r: 0.195
+	g: 0.058500037
+}
+toneMapping: {
+	mode: GAMMA_COMPRESSION
+	luminosity: 0.48977882
+	contrast: 1.1748976
+}
 bloomEnabled: true
 bloom: {
-	bloomRate: 2.5118864
+	bloomRate: 3.3884413
+	threshold: 0.48977882
 }
-keyLight: {}
+skyboxBlur: 3
+skyBoxColor: {
+	r: 2.325
+	g: 2.325
+	b: 2.325
+	a: 0.325
+}
+ambiantStrength: 2.325
+keyLight: {
+	color: {
+		r: 1
+		g: 0.6802
+		b: 0.385
+		a: 1
+	}
+	direction: {
+		x: 0.9806528
+		y: -0.16441782
+		z: 0.10623925
+	}
+	intensity: 10.232929
+}
 camera: {
-	fieldOfView: 127.799995
+	fieldOfView: 39.6
 	near: 0.002
 	far: 60
 	position: {
-		x: 1.4622295
-		y: 0.078605704
-		z: 1.1124835
+		x: 5.0171003
+		y: -0.288597
+		z: 1.3213117
 	}
 	target: {
 		x: 3.2782555E-7
 		z: 3.2782555E-7
 	}
 	up: {
-		x: -0.034017548
-		y: 0.999086
-		z: -0.025881208
+		x: 0.053708676
+		y: 0.9984581
+		z: 0.014144927
 	}
 }
 views: {

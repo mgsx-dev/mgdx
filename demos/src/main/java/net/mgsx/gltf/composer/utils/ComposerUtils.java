@@ -94,12 +94,18 @@ public class ComposerUtils {
 	public static void setAmbientFactor(GLTFComposerContext ctx, float value) {
 		Color c = ctx.sceneManager.environment.get(ColorAttribute.class, ColorAttribute.AmbientLight).color;
 		c.r = c.g = c.b = value;
+		
+		ctx.compo.ambiantStrength = value;
+		
 		// apply also to skybox
 		syncSkyboxAmbientFactor(ctx);
 	}
 	public static void setSkyboxOpacity(GLTFComposerContext ctx, float value) {
 		Color c = ctx.sceneManager.environment.get(ColorAttribute.class, ColorAttribute.AmbientLight).color;
 		c.a = value;
+		
+		ctx.compo.skyBoxColor.set(c);
+		
 		// apply also to skybox
 		syncSkyboxAmbientFactor(ctx);
 	}

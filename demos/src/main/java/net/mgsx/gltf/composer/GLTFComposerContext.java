@@ -3,6 +3,7 @@ package net.mgsx.gltf.composer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
@@ -143,10 +144,13 @@ public class GLTFComposerContext {
 		// apply light
 		c.keyLight.configure(keyLight);
 		
+		ComposerUtils.setSkyboxOpacity(this, compo.skyBoxColor.a);
+		ComposerUtils.setAmbientFactor(this, compo.ambiantStrength);
+		
 		//
 		ibl = c.ibl;
 		if(ibl != null){
-			ibl.apply(sceneManager);
+			applyIBL();
 		}
 		
 		if(c.sceneAssets.size > 0){
@@ -172,6 +176,29 @@ public class GLTFComposerContext {
 			sceneManager.addScene(scene);
 			scene.modelInstance.calculateBoundingBox(sceneBounds);
 		}
+	}
+	public void applyIBL() {
+		if(ibl.environmentCubemap != null){
+			ibl.environmentCubemap.bind();
+			Gdx.gl.glGenerateMipmap(GL20.GL_TEXTURE_CUBE_MAP);
+			ibl.environmentCubemap.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		}
+		
+		ibl.apply(sceneManager);
+		if(ibl.environmentCubemap != null){
+			if(skyBox == null){
+				createSkybox();
+				sceneManager.setSkyBox(skyBox);
+			}else{
+				skyBox.set(ibl.getEnvironmentCubemap());
+			}
+		}else{
+			if(skyBox != null){
+				sceneManager.setSkyBox(null);
+				skyBox.dispose();
+			}
+		}
+		invalidateShaders();
 	}
 
 }

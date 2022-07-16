@@ -14,8 +14,18 @@ import net.mgsx.gltf.composer.utils.ComposerUtils;
 
 public class ShadowModule implements GLTFComposerModule
 {
+	private Table controls;
+
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
+		controls = new Table(skin);
+		controls.defaults().grow();
+		updateUI(ctx, skin);
+		return controls;
+	}
+	private void updateUI(GLTFComposerContext ctx, Skin skin){
+		controls.clear();
+		
 		Frame frame = UI.frameToggle("Shadows", skin, ctx.compo.shadows, value->{ctx.compo.shadows = value; ComposerUtils.recreateLight(ctx);});
 		Table t = frame.getContentTable();
 		
@@ -25,8 +35,13 @@ public class ShadowModule implements GLTFComposerModule
 		
 		UI.slider(t, "Shadow bias", 1e-3f, 1f, ctx.compo.shadowBias, ControlScale.LOG, value->ComposerUtils.updateShadowBias(ctx, value));
 
-		return frame;
+		controls.add(frame);
 	}
-	
+	@Override
+	public void update(GLTFComposerContext ctx, float delta) {
+		if(ctx.compositionJustChanged){
+			updateUI(ctx, ctx.skin);
+		}
+	}
 	
 }

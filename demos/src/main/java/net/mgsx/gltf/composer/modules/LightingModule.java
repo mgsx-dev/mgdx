@@ -17,15 +17,23 @@ import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 
 public class LightingModule implements GLTFComposerModule
 {
+	private Table controls;
+
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		Table t = UI.table(skin);
+		controls = UI.table(skin);
+		updateUI(ctx, skin);
+		return controls;
+	}
+	
+	private void updateUI(GLTFComposerContext ctx, Skin skin){
+		controls.clear();
 		
 		// TODO fill light and back light (rim light)
 		
-		t.add(new ColorBox("Key light", ()->ctx.keyLight.baseColor, false, skin)).row();
+		controls.add(new ColorBox("Key light", ()->ctx.keyLight.baseColor, false, skin)).row();
 		
-		UI.slider(t, "Key light", 0.01f, 100f, ctx.keyLight.intensity, ControlScale.LOG, value->ctx.keyLight.intensity=value);
+		UI.slider(controls, "Key light", 0.01f, 100f, ctx.keyLight.intensity, ControlScale.LOG, value->ctx.keyLight.intensity=value);
 
 		// key light orientation picker
 		ClickListener listener = new ClickListener(){
@@ -37,15 +45,17 @@ public class LightingModule implements GLTFComposerModule
 			}
 		};
 				
-		t.add(UI.trig(skin, "Pick sun position from skybox", ()->{
+		controls.add(UI.trig(skin, "Pick sun position from skybox", ()->{
 			ctx.stage.addCaptureListener(listener);
 		})).row();
 		
-		return t;
 	}
 	
 	@Override
 	public void update(GLTFComposerContext ctx, float delta) {
+		if(ctx.compositionJustChanged){
+			updateUI(ctx, ctx.skin);
+		}
 		// update shadow light
 		if(ctx.keyLight instanceof DirectionalShadowLight){
 			DirectionalShadowLight shadowLight = (DirectionalShadowLight)ctx.keyLight;

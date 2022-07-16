@@ -47,6 +47,8 @@ public class Composition {
 	public boolean skyBoxEnabled = true;
 	public float envRotation = 0;
 	public float skyboxBlur = 0;
+	public Color skyBoxColor = new Color(1,1,1,1);
+	public float ambiantStrength = 1;
 	
 	public static class LightConfig {
 		public Color color = new Color(Color.WHITE);
