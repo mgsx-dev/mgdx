@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 import net.mgsx.gdx.graphics.g3d.ModelUtils;
+import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
@@ -24,6 +25,7 @@ public class SkinningModule implements GLTFComposerModule
 	private Array<Node> bones = new Array<Node>();
 	private final Vector3 bonePos = new Vector3(), parentPos = new Vector3();
 	private boolean displayAxis, displayBox, displayParenting;
+	private boolean displayEnabled;
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
@@ -57,10 +59,14 @@ public class SkinningModule implements GLTFComposerModule
 				
 				controls.add("Bones: " + bones.size).row();
 				
+				Frame frame = UI.frameToggle("Overlay", skin, displayEnabled, v->displayEnabled=v);
+				controls.add(frame).growX().row();
 				
-				UI.toggle(controls, "Display boxes", displayBox, v->displayBox=v);
-				UI.toggle(controls, "Display axis", displayAxis, v->displayAxis=v);
-				UI.toggle(controls, "Display parenting", displayParenting, v->displayParenting=v);
+				Table t = frame.getContentTable();
+				t.defaults().expandX().left();
+				UI.toggle(t, "Display boxes", displayBox, v->displayBox=v);
+				UI.toggle(t, "Display axis", displayAxis, v->displayAxis=v);
+				UI.toggle(t, "Display parenting", displayParenting, v->displayParenting=v);
 				
 			}else{
 				
@@ -82,7 +88,7 @@ public class SkinningModule implements GLTFComposerModule
 	
 	@Override
 	public void renderOverlay(GLTFComposerContext ctx, ShapeRenderer shapes) {
-		if((displayBox || displayAxis) && bones.size > 0){
+		if(displayEnabled && bones.size > 0){
 			float s = ctx.cameraManager.getCamera().position.dst(ctx.cameraManager.getPerspectiveTarget()) / 30f;
 			float bs = s / 3;
 			shapes.setProjectionMatrix(ctx.cameraManager.getCamera().combined);
