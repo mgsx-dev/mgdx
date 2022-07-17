@@ -1,8 +1,10 @@
 package net.mgsx.gltf.composer.utils;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
@@ -153,6 +155,19 @@ public class ComposerUtils {
 			float range = ctx.cameraManager.getCamera().far;
 			if(e != null) e.set(o.near * range, o.far * range, o.exponent);
 			if(c != null) c.color.set(o.color);
+		}
+	}
+
+	public static void attachCamera(GLTFComposerContext ctx, String cameraName) {
+		ctx.cameraAttachment = null;
+		if(cameraName != null){
+			Node node = ctx.scene.modelInstance.getNode(cameraName);
+			if(node != null){
+				Camera camera = ctx.scene.cameras.get(node);
+				if(camera != null){
+					ctx.cameraAttachment = node;
+				}
+			}
 		}
 	}
 }

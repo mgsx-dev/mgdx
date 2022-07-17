@@ -42,12 +42,12 @@
 * [x] skybox on/off
 * [ ] outlines
 * [x] shadows
-* [ ] use scene camera (with animations)
+* [x] use scene camera (with animations)
 * [x] show skeleton (overlay)
 * [x] material textures (on/off, etc..)
 * [x] show only selected node
 * [x] fit to scene on loading
-* [ ] starts with a default IBL
+* [x] starts with a default IBL
 
 ## New features
 

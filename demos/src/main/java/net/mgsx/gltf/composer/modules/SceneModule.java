@@ -16,10 +16,12 @@ import com.badlogic.gdx.graphics.g3d.model.NodeKeyframe;
 import com.badlogic.gdx.graphics.g3d.model.NodePart;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
@@ -52,6 +54,8 @@ import net.mgsx.gltf.scene3d.scene.SceneAsset;
 public class SceneModule implements GLTFComposerModule
 {
 	Table controls;
+	
+	ButtonGroup cameraButtonGroup = new ButtonGroup();
 	
 	private class ModelNode extends Tree.Node<ModelNode, ModelNode, Actor> {
 		protected ModelNode addWrapper(String text, Skin skin){
@@ -182,9 +186,11 @@ public class SceneModule implements GLTFComposerModule
 	}
 	
 	private class CameraNode extends ModelNode {
-		public CameraNode(Node node, Camera camera, Skin skin) {
-			setActor(new Label(node.id, skin));
-			// TODO set active ?
+		public CameraNode(GLTFComposerContext ctx, Node node, Camera camera, Skin skin) {
+			TextButton toggle = UI.toggle(skin, node.id, ctx.cameraAttachment == node, v->ctx.cameraAttachment = v ? node : null);
+			cameraButtonGroup.add(toggle);
+			setActor(toggle);
+			
 		}
 	}
 	
@@ -248,7 +254,7 @@ public class SceneModule implements GLTFComposerModule
 			{
 				ModelNode wrapper = addWrapper("cameras", scene.cameras.size, skin);
 				for(Entry<Node, Camera> e : scene.cameras){
-					wrapper.add(new CameraNode(e.key, e.value, skin));
+					wrapper.add(new CameraNode(ctx, e.key, e.value, skin));
 				}
 			}
 			{
@@ -278,6 +284,10 @@ public class SceneModule implements GLTFComposerModule
 				
 				// TODO options (show selected only)
 				// zoom to selected / zoom to scene (auto adjust)
+				
+				cameraButtonGroup.clear();
+				cameraButtonGroup.setMinCheckCount(0);
+				cameraButtonGroup.setMaxCheckCount(1);
 				
 				Tree<ModelNode, ModelNode> tree = new Tree<>(ctx.skin);
 				SceneNode sceneNode = new SceneNode(ctx, ctx.scene, ctx.skin);

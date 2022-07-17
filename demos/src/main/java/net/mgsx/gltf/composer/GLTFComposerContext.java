@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.PointLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.SpotLightsAttribute;
+import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.shaders.DepthShader;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -62,6 +63,7 @@ public class GLTFComposerContext {
 
 	// Editor live options
 	public boolean showSelectedNodeOnly = false;
+	public Node cameraAttachment;
 	
 	// Profiling
 	public GLProfiler profiler;
@@ -159,6 +161,8 @@ public class GLTFComposerContext {
 		ComposerUtils.setAmbientFactor(this, compo.ambiantStrength);
 		ComposerUtils.setEmissiveIntensity(this, compo.emissiveIntensity);
 		ComposerUtils.enableFog(this, compo.fogEnabled);
+		
+		cameraAttachment = null;
 		
 		//
 		ibl = c.ibl;

@@ -284,7 +284,7 @@ public class UI {
 		t.add(new ColorBox(name, colorModel, alpha, table.getSkin()));
 		table.add(t).row();
 	}
-	public static <T> Table editor(Skin skin, ObjectMap<String, T> map, String selected, Supplier<T> factory, Consumer<T> callback) {
+	public static <T> Table editor(Skin skin, ObjectMap<String, T> map, String selected, Supplier<T> factory, Consumer<String> callback) {
 		Array<String> items = new Array<String>();
 		for(Entry<String, T> e : map.entries()){
 			items.add(e.key);
@@ -292,7 +292,7 @@ public class UI {
 		items.sort();
 		SelectBox<String> selector = selector(skin, items, selected, item->item, item->{
 			if(map.size > 0){
-				callback.accept(map.get(item));
+				callback.accept(item);
 			}else{
 				callback.accept(null);
 			}
@@ -328,8 +328,9 @@ public class UI {
 		t.add(trig(skin, "rename", ()->{
 			if(selector.getItems().size > 0){
 				Label typer = new Label("", skin);
-				Dialog dialog = dialog(typer, "Rename " + selector.getSelected(), skin).show(selector.getStage());
-				selector.getStage().setKeyboardFocus(typer);
+				Stage stage = selector.getStage();
+				Dialog dialog = dialog(typer, "Rename " + selector.getSelected(), skin).show(stage);
+				stage.setKeyboardFocus(typer);
 				InputListener listener = new InputListener(){
 					@Override
 					public boolean keyTyped(InputEvent event, char character) {
@@ -344,7 +345,7 @@ public class UI {
 							map.put(newKey, object);
 							selector.setItems(items);
 							selector.setSelected(newKey);
-							selector.getStage().setKeyboardFocus(null);
+							event.getStage().setKeyboardFocus(null);
 							dialog.hide();
 						}else{
 							label.setText(label.getText() + String.valueOf(character));
