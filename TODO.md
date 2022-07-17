@@ -27,12 +27,12 @@
 * [x] change light color
 * [ ] load simple model (sphere) with basic material (metal roughness)
 * [x] GPU memory statistics
-* [~] Export IBL to files (png, jpg, ktx2, ktx, exr?)
+* [ ] Export IBL to files (png)
 * [~] Import HDR with base exposure, gamma correction ?
 
-## GLTF Viewer features
+## GLTF Viewer features (complete)
 
-* [ ] save to file ?
+* [x] save to file ?
 * [x] import other formats (glb)
 * [x] change shader
 	* [x] PBR
@@ -63,17 +63,22 @@
 * [~] proxy based profiler (wip)
 * [ ] F1 to get help, key bindings, etc..
 * [x] generate skin from GIMP (acting also as example for community)
+* [ ] IBL export
+	* [ ] jpg
+	* [x] ktx2
+	* [ ] exr ?
+	* [ ] ktx ?
 * [ ] MSAA
 * [ ] FXAA
 * [ ] MSAA frame buffers
-* MRT based effects :
-	* [ ] Deferred lighting
+* [ ] MRT based effects :
+	* [ ] Deferred lighting (?)
 	* [ ] SSAO
 	* [ ] SSR
 	* [x] Blender "Cavity"
-* HDR rendering :
-	* [~] HDR Bloom
-		* [ ] fix blur artifacts
+* [x] HDR rendering :
+	* [x] HDR Bloom
+		* [x] fix blur artifacts
 	* [x] Tone mapping
 	* [x] HDR particles
 
