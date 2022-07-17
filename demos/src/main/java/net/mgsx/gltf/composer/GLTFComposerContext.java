@@ -33,8 +33,10 @@ import net.mgsx.ibl.IBL;
 
 public class GLTFComposerContext {
 	
+	// stored settings
 	public Composition compo = new Composition();
 	
+	// runtime objects
 	public final FileSelector fileSelector = new AWTFileSelector();
 	
 	public Skin skin;
@@ -55,11 +57,16 @@ public class GLTFComposerContext {
 	public final BoundingBox sceneBounds = new BoundingBox();
 	
 	public BlenderCamera cameraManager;
+
+	// Editor live options
+	public boolean showSelectedNodeOnly = false;
 	
+	// Profiling
 	public GLProfiler profiler;
 	public boolean vsync, fsync;
 	public int ffps;
 
+	// State changes
 	public boolean sceneJustChanged = false;
 	public boolean compositionJustChanged = false;;
 

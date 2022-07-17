@@ -16,6 +16,11 @@ public class ModelUtils {
 		}
 	}
 	
+	public static void eachNodeRecusrsive(Node node, Consumer<Node> callback){
+		callback.accept(node);
+		if(node.hasChildren()) eachNodeRecusrsive(node.getChildren(), callback);
+	}
+	
 	public static Array<NodePart> collectNodeParts(ModelInstance modelInstance) {
 		Array<NodePart> results = new Array<NodePart>();
 		eachNodeRecusrsive(modelInstance.nodes, node->results.addAll(node.parts));
@@ -25,6 +30,13 @@ public class ModelUtils {
 	public static void eachNodePartRecusrsive(Iterable<Node> nodes, Consumer<NodePart> callback) {
 		eachNodeRecusrsive(nodes, node->{
 			for(NodePart part : node.parts){
+				callback.accept(part);
+			}
+		});
+	}
+	public static void eachNodePartRecusrsive(Node node, Consumer<NodePart> callback) {
+		eachNodeRecusrsive(node, n->{
+			for(NodePart part : n.parts){
 				callback.accept(part);
 			}
 		});

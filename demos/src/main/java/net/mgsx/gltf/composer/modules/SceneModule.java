@@ -31,6 +31,7 @@ import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.ui.AnimationPanel;
 import net.mgsx.gltf.composer.ui.MaterialPanel;
+import net.mgsx.gltf.composer.ui.NodePanel;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.loaders.exceptions.GLTFIllegalException;
 import net.mgsx.gltf.loaders.exceptions.GLTFRuntimeException;
@@ -156,7 +157,9 @@ public class SceneModule implements GLTFComposerModule
 		}
 	}
 	private class NodeNode extends ModelNode {
+		private Node node;
 		public NodeNode(GLTFComposerContext ctx, Node node, Skin skin) {
+			this.node = node;
 			setActor(new Label(node.id, skin));
 			// TODO if some parts have bones : display as bone ? or armature ?
 			if(node.parts.size > 0){
@@ -171,6 +174,10 @@ public class SceneModule implements GLTFComposerModule
 					wrapper.add(new NodeNode(ctx, child, skin));
 				}
 			}
+		}
+		@Override
+		public Actor createPane(GLTFComposerContext ctx) {
+			return new NodePanel(ctx, node);
 		}
 	}
 	

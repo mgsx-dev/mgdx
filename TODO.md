@@ -43,9 +43,9 @@
 * [ ] outlines
 * [x] shadows
 * [ ] use scene camera (with animations)
-* [ ] show skeleton (overlay)
+* [x] show skeleton (overlay)
 * [x] material textures (on/off, etc..)
-* [ ] show only selected node
+* [x] show only selected node
 * [x] fit to scene on loading
 * [ ] starts with a default IBL
 
