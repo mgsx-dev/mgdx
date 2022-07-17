@@ -27,7 +27,7 @@
 * [x] change light color
 * [ ] load simple model (sphere) with basic material (metal roughness)
 * [x] GPU memory statistics
-* [ ] Export IBL to files (png)
+* [x] Export IBL to files (png)
 * [~] Import HDR with base exposure, gamma correction ?
 
 ## GLTF Viewer features (complete)
@@ -64,7 +64,6 @@
 * [ ] F1 to get help, key bindings, etc..
 * [x] generate skin from GIMP (acting also as example for community)
 * [ ] IBL export
-	* [ ] jpg
 	* [x] ktx2
 	* [ ] exr ?
 	* [ ] ktx ?

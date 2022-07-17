@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.function.Supplier;
+import java.util.zip.Deflater;
 import java.util.zip.GZIPOutputStream;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Cubemap;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.utils.Array;
@@ -149,6 +154,36 @@ public class IBL implements Disposable
 		KTX2Processor.exportCubemap(file, buffers, size, size, mipmapCount, 1, format.internalFormat, mipmaps ? MipMapMode.RAW : MipMapMode.NONE, compression);
 	}
 
+	public static void exportToPngs(Cubemap map, FileHandle folder, boolean mipmaps) {
+		int size = map.getWidth(); // assuming all faces are square.
+		int mipmapCount = mipmaps ? RadianceBaker.sizeToPOT(size)+1 : 1;
+		int w = size;
+		int h = size;
+		map.bind();
+		GLFormat format = GLFormat.RGB8;
+		for(int l=0 ; l<mipmapCount ; l++){
+			int bufferSize = w*h*format.bppGpu;
+			for(int f=0 ; f<6 ; f++){
+				ByteBuffer buffer = BufferUtils.newByteBuffer(bufferSize);
+				Mgdx.glMax.glGetTexImage(GL20.GL_TEXTURE_CUBE_MAP_POSITIVE_X+f, l, format.format, format.type, buffer);
+				Pixmap pixmap = new Pixmap(w, h, Format.RGB888);
+				pixmap.getPixels().put(buffer);
+				pixmap.getPixels().flip();
+				String suffix = EnvironmentUtil.FACE_NAMES_NEG_POS[f];
+				FileHandle file;
+				if(mipmaps){
+					file = folder.child(folder.name() + "_" + suffix + "_" + l + ".png");
+				}else{
+					file = folder.child(folder.name() + "_" + suffix + ".png");
+				}
+				PixmapIO.writePNG(file, pixmap, Deflater.DEFAULT_COMPRESSION, false);
+				pixmap.dispose();
+			}
+			w/=2;
+			h/=2;
+		}
+	}
+
 	private static Cubemap fromCacheRaw(FileHandle source, String tag, int size, boolean mipmaps, GLFormat format, boolean enabled, Supplier<Cubemap> baker){
 		Cubemap map = null;
 		FileHandle cache = null;
@@ -269,9 +304,30 @@ public class IBL implements Disposable
 	}
 
 	private static Cubemap loadCubemap(FileHandle file, boolean mipmaps) {
-		KTX2TextureData data = new KTX2TextureData(file);
-		data.prepare();
-		Cubemap map = new Cubemap(data);
+		Cubemap map;
+		if(file.isDirectory()){
+			if(mipmaps){
+				int lods = 0;
+				for(;;){
+					if(!file.child(file.name() + "_" + EnvironmentUtil.FACE_NAMES_NEG_POS[0] + "_" + lods + ".png").exists()){
+						break;
+					}
+					lods++;
+				}
+				map = EnvironmentUtil.createCubemap(new AbsoluteFileHandleResolver(), 
+						file.child(file.name()).path() + "_", "_", ".png", lods, EnvironmentUtil.FACE_NAMES_NEG_POS);
+			}else{
+				map = EnvironmentUtil.createCubemap(new AbsoluteFileHandleResolver(), 
+						file.child(file.name()).path() + "_", ".png", EnvironmentUtil.FACE_NAMES_NEG_POS);
+			}
+			
+		}else if(file.extension().equals("ktx2")){
+			KTX2TextureData data = new KTX2TextureData(file);
+			data.prepare();
+			map = new Cubemap(data);
+		}else{
+			throw new GdxRuntimeException("extension not supported: " + file.extension());
+		}
 		if(mipmaps){
 			map.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 		}else{

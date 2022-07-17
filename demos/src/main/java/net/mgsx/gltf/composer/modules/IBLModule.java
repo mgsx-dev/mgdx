@@ -86,6 +86,12 @@ public class IBLModule implements GLTFComposerModule
 					callback.accept(file);
 				});
 			}));
+			formats.add(new Exporter("png", ()->{
+				ctx.fileSelector.selectFolder(file->{
+					IBL.exportToPngs(map, file, mipmaps);
+					callback.accept(file);
+				});
+			}));
 			
 			Table t = getContentTable();
 			t.defaults().pad(UI.DEFAULT_PADDING);
@@ -113,6 +119,22 @@ public class IBLModule implements GLTFComposerModule
 					IBL.exportToKtx2(ctx.ibl.environmentCubemap, envFile, false, GLFormat.RGB16, true);
 					IBL.exportToKtx2(ctx.ibl.diffuseCubemap, difFile, false, GLFormat.RGB16, true);
 					IBL.exportToKtx2(ctx.ibl.specularCubemap, speFile, true, GLFormat.RGB16, true);
+					
+					ctx.compo.envPath = envFile.path();
+					ctx.compo.diffusePath = difFile.path();
+					ctx.compo.specularPath = speFile.path();
+				});
+			}));
+			
+			formats.add(new Exporter("png", ()->{
+				ctx.fileSelector.selectFolder(file->{
+					FileHandle envFile = file.child("environement");
+					FileHandle difFile = file.child("diffuse");
+					FileHandle speFile = file.child("specular");
+					
+					IBL.exportToPngs(ctx.ibl.environmentCubemap, envFile, false);
+					IBL.exportToPngs(ctx.ibl.diffuseCubemap, difFile, false);
+					IBL.exportToPngs(ctx.ibl.specularCubemap, speFile, true);
 					
 					ctx.compo.envPath = envFile.path();
 					ctx.compo.diffusePath = difFile.path();
