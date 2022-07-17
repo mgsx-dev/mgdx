@@ -38,7 +38,7 @@
 	* [x] PBR
 	* [ ] Gouraud
 	* [x] Ceil shading
-* [ ] fog
+* [x] fog
 * [x] skybox on/off
 * [ ] outlines
 * [x] shadows

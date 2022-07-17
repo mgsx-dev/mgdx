@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import net.mgsx.gdx.graphics.GL32;
 import net.mgsx.gdx.graphics.glutils.ColorUtils;
 import net.mgsx.gltf.composer.GLTFComposerContext;
+import net.mgsx.gltf.composer.core.Composition.FogOptions;
+import net.mgsx.gltf.scene3d.attributes.FogAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
@@ -127,6 +129,30 @@ public class ComposerUtils {
 			ctx.sceneManager.environment.set(PBRFloatAttribute.createEmissiveIntensity(value));
 		}else{
 			emissive.value = value;
+		}
+	}
+
+	public static void enableFog(GLTFComposerContext ctx, boolean enabled) {
+		ctx.compo.fogEnabled = enabled;
+		if(enabled){
+			FogOptions o = ctx.compo.fog;
+			float range = ctx.cameraManager.getCamera().far;
+			ctx.sceneManager.environment.set(FogAttribute.createFog(o.near * range, o.far * range, o.exponent));
+			ctx.sceneManager.environment.set(ColorAttribute.createFog(o.color));
+		}else{
+			ctx.sceneManager.environment.remove(FogAttribute.FogEquation);
+			ctx.sceneManager.environment.remove(ColorAttribute.Fog);
+		}
+	}
+
+	public static void applyFog(GLTFComposerContext ctx) {
+		if(ctx.compo.fogEnabled && ctx.compo.fog != null){
+			FogOptions o = ctx.compo.fog;
+			FogAttribute e = ctx.sceneManager.environment.get(FogAttribute.class, FogAttribute.FogEquation);
+			ColorAttribute c = ctx.sceneManager.environment.get(ColorAttribute.class, ColorAttribute.Fog);
+			float range = ctx.cameraManager.getCamera().far;
+			if(e != null) e.set(o.near * range, o.far * range, o.exponent);
+			if(c != null) c.color.set(o.color);
 		}
 	}
 }

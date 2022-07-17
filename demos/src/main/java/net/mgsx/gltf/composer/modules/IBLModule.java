@@ -240,6 +240,8 @@ public class IBLModule implements GLTFComposerModule
 		
 		return false;
 	}
+	
+	private FogModule fogModule = new FogModule();
 
 	private void replaceIBL(GLTFComposerContext ctx, IBL newIBL) {
 		if(ctx.ibl != null){
@@ -272,6 +274,8 @@ public class IBLModule implements GLTFComposerModule
 		UI.slider(controls, "Ambiant strength", 0, 3, ctx.compo.ambiantStrength, value->ComposerUtils.setAmbientFactor(ctx, value));
 
 		UI.colorBox(controls, "Background", ctx.compo.clearColor, false);
+		
+		controls.add(fogModule.initUI(ctx, skin)).row();
 		
 		Array<String> builtins = new Array<String>();
 		builtins.add("None", "Outdoor", "Indoor");

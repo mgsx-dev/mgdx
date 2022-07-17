@@ -154,7 +154,8 @@ public class GLTFComposerContext {
 		ComposerUtils.setSkyboxOpacity(this, compo.skyBoxColor.a);
 		ComposerUtils.setAmbientFactor(this, compo.ambiantStrength);
 		ComposerUtils.setEmissiveIntensity(this, compo.emissiveIntensity);
-
+		ComposerUtils.enableFog(this, compo.fogEnabled);
+		
 		//
 		ibl = c.ibl;
 		if(ibl != null){

@@ -54,6 +54,15 @@ public class Composition {
 	public Color skyBoxColor = new Color(1,1,1,1);
 	public float ambiantStrength = 1;
 	public float emissiveIntensity = 1;
+
+	public static class FogOptions {
+		public float near = 0;
+		public float far = 1;
+		public float exponent = 1;
+		public Color color = new Color(1,1,1,1);
+	}
+	public boolean fogEnabled = false;
+	public FogOptions fog = new FogOptions();
 	
 	public static class LightConfig {
 		public Color color = new Color(Color.WHITE);

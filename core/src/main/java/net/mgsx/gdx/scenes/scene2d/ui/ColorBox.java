@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Scaling;
 
 public class ColorBox extends Table
@@ -60,6 +61,7 @@ public class ColorBox extends Table
 		if(alpha){
 			alphaPreview.setColor(c.a, c.a, c.a, 1);
 		}
+		fire(new ChangeEvent());
 	}
 	
 }
