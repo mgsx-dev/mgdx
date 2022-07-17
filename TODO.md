@@ -4,18 +4,18 @@
 ## Use cases
 
 * Create HDRI environment in Blender and export for a game
-	* [ ] How to export from Blender (which formats, write documentation)
+	* [x] How to export from Blender (write documentation)
 * Prepare IBL for a game
-	* [ ] export HDRI as cubemaps in various formats
-		* [x] to KTX2
-		* [ ] to EXR
+	* [x] export HDRI as cubemaps in various formats
+		* [x] to KTX2 (HDR)
+		* [x] to PNGs (LDR)
 * Inspect scenes
 	* [x] model browser
 	* [x] profiling
 * Preview scenes
 	* [x] Load IBLs from HDRI or baked IBLs
-	* [x] Emissive bloom (emissive boost by tweaking materials)
-	* [ ] test some post processing effects 
+	* [x] Emissive bloom
+	* [x] test some post processing effects 
 
 ## IBL Composer features
 
@@ -28,7 +28,7 @@
 * [x] load simple model (sphere) with basic material (metal roughness)
 * [x] GPU memory statistics
 * [x] Export IBL to files (png)
-* [~] Import HDR with base exposure, gamma correction ?
+* [~] Import HDR with base exposure, gamma correction ? (useful for LDR targets)
 
 ## GLTF Viewer features (complete)
 
