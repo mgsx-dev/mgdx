@@ -1,0 +1,28 @@
+{
+iblBaking: {}
+toneMapping: {}
+bloom: {}
+fog: {}
+keyLight: {
+	direction: {
+		x: 1
+		y: -2
+		z: 1
+	}
+}
+camera: {
+	fieldOfView: 39.6
+	far: 100
+	position: {
+		x: 5
+		y: 5
+		z: 5
+	}
+	target: {}
+	up: {
+		x: -0.40824828
+		y: 0.81649655
+		z: -0.40824828
+	}
+}
+}

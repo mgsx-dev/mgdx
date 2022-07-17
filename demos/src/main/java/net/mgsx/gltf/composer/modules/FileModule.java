@@ -1,9 +1,13 @@
 package net.mgsx.gltf.composer.modules;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Json;
 
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
@@ -30,8 +34,27 @@ public class FileModule implements GLTFComposerModule
 		controls.add().padTop(50).row();
 		
 		
-		controls.add(UI.trig(skin, "Save composition as...", ()->saveComposition(ctx)));
+		controls.add(UI.trig(skin, "Save composition as...", ()->saveComposition(ctx))).row();
 	
+		
+		Table presetTable = UI.table(skin);
+		
+		UI.header(controls, "Composition presets");
+		controls.add(presetTable).row();
+		
+		String [] presets = {"default", /*"sphere",*/ "helipad"};
+		
+		for(String preset : presets){
+			Texture image = ctx.textureCache("compos/" + preset + ".png");
+			TextButton button = UI.trig(skin, preset, ()->{
+				Composition compo = new CompositionLoader().load(Gdx.files.internal("compos/" + preset + ".json"), true);
+				ctx.setComposition(compo);
+			});
+			button.row();
+			button.add(new Image(image));
+			presetTable.add(button);
+		}
+		
 		return controls;
 	}
 	

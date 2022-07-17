@@ -3,6 +3,7 @@ package net.mgsx.gltf.composer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
 import net.mgsx.gltf.composer.core.Composition;
@@ -210,6 +212,12 @@ public class GLTFComposerContext {
 			}
 		}
 		invalidateShaders();
+	}
+	private final ObjectMap<String, Texture> textureCache = new ObjectMap<String, Texture>();
+	public Texture textureCache(String path) {
+		Texture texture = textureCache.get(path);
+		if(texture == null) textureCache.put(path, texture = new Texture(path));
+		return texture;
 	}
 
 }

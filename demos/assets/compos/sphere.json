@@ -1,0 +1,51 @@
+{
+scenesPath: [
+	models/basic-sphere.gltf
+]
+iblBaking: {}
+envPath: hdri/helipad-env.ktx2
+diffusePath: hdri/helipad-dif.ktx2
+specularPath: hdri/helipad-spe.ktx2
+toneMapping: {
+	exposure: 1.0471286
+}
+bloomEnabled: true
+bloom: {
+	blurMix: 0.68
+	bloomRate: 0.58884364
+	threshold: 0.3548134
+}
+fog: {}
+keyLight: {
+	color: {
+		r: 1
+		g: 0.77919996
+		b: 0.52
+		a: 1
+	}
+	direction: {
+		x: -0.31712785
+		y: -0.037430834
+		z: 0.9476439
+	}
+	intensity: 5.248074
+}
+camera: {
+	near: 0.002
+	far: 60
+	position: {
+		x: -0.40688694
+		y: -0.33286244
+		z: 4.1335115
+	}
+	target: {
+		x: 3.2782555E-7
+		z: 3.2782555E-7
+	}
+	up: {
+		x: -0.007825475
+		y: 0.9968107
+		z: 0.07949912
+	}
+}
+}
