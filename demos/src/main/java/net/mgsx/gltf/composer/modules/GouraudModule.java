@@ -9,15 +9,15 @@ import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.scene.PBRRenderTargets;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 
-public class ToonModule implements GLTFComposerModule
+public class GouraudModule implements GLTFComposerModule
 {
 	@Override
 	public void show(GLTFComposerContext ctx) {
 		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
 		ctx.colorShaderConfig.manualGammaCorrection = true;
-		ctx.colorShaderConfig.glslVersion = "#version 330\n";
-		ctx.colorShaderConfig.vertexShader = null;
-		ctx.colorShaderConfig.fragmentShader = Gdx.files.classpath("shaders/gdx-ceil.fs.glsl").readString();
+		
+		ctx.colorShaderConfig.vertexShader = Gdx.files.classpath("net/mgsx/gltf/shaders/default.vs.glsl").readString();
+		ctx.colorShaderConfig.fragmentShader = Gdx.files.classpath("net/mgsx/gltf/shaders/default.fs.glsl").readString();
 		ctx.invalidateShaders();
 
 		ctx.fbo.clear();

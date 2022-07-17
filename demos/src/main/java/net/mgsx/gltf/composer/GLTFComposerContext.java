@@ -102,7 +102,9 @@ public class GLTFComposerContext {
 				depthShaderConfig.numBones = 0;
 			}
 			
-			
+			if(colorShaderConfig.vertexShader == null){
+				colorShaderConfig.vertexShader = Gdx.files.classpath("net/mgsx/gltf/shaders/gdx-pbr.vs.glsl").readString();
+			}
 			if(colorShaderConfig.fragmentShader == null){
 				colorShaderConfig.glslVersion = null;
 //				colorShaderConfig.fragmentShader = Gdx.files.classpath("net/mgsx/gltf/shaders/gdx-pbr.fs.glsl").readString();

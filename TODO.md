@@ -34,9 +34,9 @@
 
 * [ ] save to file ?
 * [x] import other formats (glb)
-* [ ] change shader
+* [x] change shader
 	* [x] PBR
-	* [ ] Gouraud
+	* [x] Gouraud
 	* [x] Ceil shading
 * [x] fog
 * [x] skybox on/off

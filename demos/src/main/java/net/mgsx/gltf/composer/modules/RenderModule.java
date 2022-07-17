@@ -16,6 +16,7 @@ public class RenderModule extends GLTFModuleSwitch
 	public RenderModule(GLTFComposerContext ctx) {
 		addSubModule(ctx, new HDRModule(), "HDR Rendering");
 		addSubModule(ctx, new LDRModule(), "LDR Rendering");
+		addSubModule(ctx, new GouraudModule(), "Gouraud Rendering");
 		addSubModule(ctx, new CavityModule(), "Cavity");
 		addSubModule(ctx, new ToonModule(), "Toon");
 	}

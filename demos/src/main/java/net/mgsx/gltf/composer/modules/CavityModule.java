@@ -45,6 +45,7 @@ public class CavityModule implements GLTFComposerModule
 		ctx.fbo.replaceLayer(PBRRenderTargets.NORMAL, GLFormat.RGB16);
 		ctx.invalidateFBO();
 
+		ctx.colorShaderConfig.vertexShader = null;
 		ctx.fbo.configure(ctx.colorShaderConfig);
 		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
 		ctx.colorShaderConfig.manualGammaCorrection = true;

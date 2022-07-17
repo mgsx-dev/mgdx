@@ -42,6 +42,7 @@ public class HDRModule implements GLTFComposerModule
 	public void show(GLTFComposerContext ctx) {
 		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
 		ctx.colorShaderConfig.manualGammaCorrection = false;
+		ctx.colorShaderConfig.vertexShader = null;
 		ctx.colorShaderConfig.fragmentShader = null;
 		ctx.invalidateShaders();
 		ctx.fbo.clear();
