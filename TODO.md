@@ -23,7 +23,7 @@
 	* [ ] CTRL +/- to zoom in/out ?
 	* [x] automatic detection
 	* [ ] save to preferences
-* [ ] Copy light code
+* [x] Copy light code
 * [x] change light color
 * [ ] load simple model (sphere) with basic material (metal roughness)
 * [x] GPU memory statistics

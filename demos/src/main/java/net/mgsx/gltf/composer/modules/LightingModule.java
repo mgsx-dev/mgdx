@@ -13,6 +13,7 @@ import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
+import net.mgsx.gltf.composer.utils.ComposerCode;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 
@@ -45,9 +46,13 @@ public class LightingModule implements GLTFComposerModule
 				ctx.stage.removeCaptureListener(this);
 			}
 		};
-				
+		
 		controls.add(UI.trig(skin, "Pick sun position from skybox", ()->{
 			ctx.stage.addCaptureListener(listener);
+		})).row();
+		
+		controls.add(UI.trig(skin, "Copy light code", ()->{
+			ComposerCode.toClipboard(ctx.keyLight);
 		})).row();
 		
 		UI.slider(controls, "Emissive", 0.01f, 100f, ctx.compo.emissiveIntensity, ControlScale.LOG, value->ComposerUtils.setEmissiveIntensity(ctx, value));
