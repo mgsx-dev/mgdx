@@ -1,6 +1,7 @@
 package net.mgsx.gdx.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,17 +13,21 @@ import net.mgsx.gdx.assets.CommonAssets;
 import net.mgsx.gdx.graphics.GLFormat;
 
 public class FrameBufferUtils {
-	public static FrameBuffer create(GLFormat format){
-		return create(format, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
+	public static FrameBuffer create(GLFormat format, boolean depth){
+		return create(format, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), depth);
 	}
-	public static FrameBuffer create(GLFormat format, int width, int height) {
+	public static FrameBuffer create(GLFormat format, int width, int height, boolean depth) {
 		FrameBufferBuilder b = new FrameBufferBuilder(width, height);
 		b.addColorTextureAttachment(format.internalFormat, format.format, format.type);
+		if(depth) b.addDepthRenderBuffer(GL30.GL_DEPTH_COMPONENT24);
 		return b.build();
 	}
 	
 	public static FrameBuffer ensureScreenSize(FrameBuffer fbo, GLFormat format) {
 		return ensureSize(fbo, format, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
+	}
+	public static FrameBuffer ensureScreenSize(FrameBuffer fbo, GLFormat format, boolean depth) {
+		return ensureSize(fbo, format, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), depth);
 	}
 	public static FrameBuffer ensureSize(FrameBuffer fbo, GLFormat format, FrameBuffer match) {
 		return ensureSize(fbo, format, match.getWidth(), match.getHeight());
@@ -31,9 +36,12 @@ public class FrameBufferUtils {
 		return ensureSize(fbo, format, texture.getWidth(), texture.getHeight());
 	}
 	public static FrameBuffer ensureSize(FrameBuffer fbo, GLFormat format, int width, int height) {
+		return ensureSize(fbo, format, width, height, false);
+	}
+	public static FrameBuffer ensureSize(FrameBuffer fbo, GLFormat format, int width, int height, boolean depth) {
 		if(fbo == null || fbo.getWidth() != width || fbo.getHeight() != height){
 			if(fbo != null) fbo.dispose();
-			fbo = create(format);
+			fbo = create(format, depth);
 		}
 		return fbo;
 	}

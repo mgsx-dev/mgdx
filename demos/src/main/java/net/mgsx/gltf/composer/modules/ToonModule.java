@@ -1,9 +1,14 @@
 package net.mgsx.gltf.composer.modules;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.scene.PBRRenderTargets;
@@ -11,6 +16,16 @@ import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 
 public class ToonModule implements GLTFComposerModule
 {
+	private OutlineDepthModule outline = new OutlineDepthModule();
+	private SpriteBatch batch = new SpriteBatch();
+	
+	@Override
+	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
+		Table t = UI.table(skin);
+		t.add(outline.initUI(ctx, skin));
+		return t;
+	}
+	
 	@Override
 	public void show(GLTFComposerContext ctx) {
 		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
@@ -28,7 +43,10 @@ public class ToonModule implements GLTFComposerModule
 	
 	@Override
 	public void render(GLTFComposerContext ctx) {
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
+		
 		ScreenUtils.clear(ctx.compo.clearColor, true);
 		ctx.sceneManager.render();
+		outline.render(ctx, batch);
 	}
 }

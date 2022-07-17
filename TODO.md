@@ -40,7 +40,7 @@
 	* [x] Ceil shading
 * [x] fog
 * [x] skybox on/off
-* [ ] outlines
+* [x] outlines
 * [x] shadows
 * [x] use scene camera (with animations)
 * [x] show skeleton (overlay)
