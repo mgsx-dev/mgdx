@@ -42,7 +42,7 @@ public class FileModule implements GLTFComposerModule
 		UI.header(controls, "Composition presets");
 		controls.add(presetTable).row();
 		
-		String [] presets = {"default", /*"sphere",*/ "helipad"};
+		String [] presets = {"default", "sphere", "helipad"};
 		
 		for(String preset : presets){
 			Texture image = ctx.textureCache("compos/" + preset + ".png");

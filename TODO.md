@@ -25,7 +25,7 @@
 	* [ ] save to preferences
 * [x] Copy light code
 * [x] change light color
-* [ ] load simple model (sphere) with basic material (metal roughness)
+* [x] load simple model (sphere) with basic material (metal roughness)
 * [x] GPU memory statistics
 * [x] Export IBL to files (png)
 * [~] Import HDR with base exposure, gamma correction ?
