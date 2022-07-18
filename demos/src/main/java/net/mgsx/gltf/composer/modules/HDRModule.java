@@ -72,7 +72,7 @@ public class HDRModule implements GLTFComposerModule
 		// render final with tone mapping (HDR to LDR)
 		toneMappingModule.render(ctx, batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
 		
-		antialiasModule.render(ctx, batch);
+		antialiasModule.render(ctx, ctx.fbo.getColorBufferTexture(), batch);
 	}
 
 }

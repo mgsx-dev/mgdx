@@ -1,5 +1,6 @@
 package net.mgsx.gltf.composer.modules;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -43,12 +44,14 @@ public class AntialiasModule implements GLTFComposerModule
 		return frame;
 	}
 
-	public void render(GLTFComposerContext ctx, SpriteBatch batch) {
+	public void render(GLTFComposerContext ctx, Texture texture, SpriteBatch batch) {
 		if(pixelZoom > 1){
 			float rate = pixelZoom;
 			float width = 1f / rate;
 			float offset = 0.5f - width / 2;
-			FrameBufferUtils.blit(batch, ctx.fbo.getColorBufferTexture(), offset, offset, width, width);
+			batch.disableBlending();
+			FrameBufferUtils.blit(batch, texture, offset, offset, width, width);
+			batch.enableBlending();
 		}
 	}
 

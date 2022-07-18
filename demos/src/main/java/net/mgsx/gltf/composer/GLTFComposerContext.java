@@ -109,6 +109,8 @@ public class GLTFComposerContext {
 				depthShaderConfig.numBones = 0;
 			}
 			
+			depthShaderConfig.defaultCullFace = 0; //GL20.GL_BACK;
+			
 			if(colorShaderConfig.vertexShader == null){
 				colorShaderConfig.vertexShader = Gdx.files.classpath("net/mgsx/gltf/shaders/gdx-pbr.vs.glsl").readString();
 			}

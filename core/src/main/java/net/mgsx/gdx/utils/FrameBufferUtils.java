@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.FrameBufferMultisample;
 import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
@@ -16,11 +17,20 @@ public class FrameBufferUtils {
 	public static FrameBuffer create(GLFormat format, boolean depth){
 		return create(format, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), depth);
 	}
+	public static FrameBufferMultisample createMultisample(GLFormat format, boolean depth, int samples){
+		return createMultisample(format, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), depth, samples);
+	}
 	public static FrameBuffer create(GLFormat format, int width, int height, boolean depth) {
 		FrameBufferBuilder b = new FrameBufferBuilder(width, height);
 		b.addColorTextureAttachment(format.internalFormat, format.format, format.type);
 		if(depth) b.addDepthRenderBuffer(GL30.GL_DEPTH_COMPONENT24);
 		return b.build();
+	}
+	public static FrameBufferMultisample createMultisample(GLFormat format, int width, int height, boolean depth, int samples) {
+		FrameBufferBuilder b = new FrameBufferBuilder(width, height);
+		b.addColorTextureAttachment(format.internalFormat, format.format, format.type);
+		if(depth) b.addDepthRenderBuffer(GL30.GL_DEPTH_COMPONENT24);
+		return new FrameBufferMultisample(b, samples);
 	}
 	
 	public static FrameBuffer ensureScreenSize(FrameBuffer fbo, GLFormat format) {
@@ -28,6 +38,9 @@ public class FrameBufferUtils {
 	}
 	public static FrameBuffer ensureScreenSize(FrameBuffer fbo, GLFormat format, boolean depth) {
 		return ensureSize(fbo, format, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), depth);
+	}
+	public static FrameBufferMultisample ensureScreenSize(FrameBufferMultisample fbo, GLFormat format, boolean depth, int samples) {
+		return ensureSize(fbo, format, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), depth, samples);
 	}
 	public static FrameBuffer ensureSize(FrameBuffer fbo, GLFormat format, FrameBuffer match) {
 		return ensureSize(fbo, format, match.getWidth(), match.getHeight());
@@ -42,6 +55,13 @@ public class FrameBufferUtils {
 		if(fbo == null || fbo.getWidth() != width || fbo.getHeight() != height){
 			if(fbo != null) fbo.dispose();
 			fbo = create(format, depth);
+		}
+		return fbo;
+	}
+	public static FrameBufferMultisample ensureSize(FrameBufferMultisample fbo, GLFormat format, int width, int height, boolean depth, int samples) {
+		if(fbo == null || fbo.getWidth() != width || fbo.getHeight() != height || fbo.getSamples() != samples){
+			if(fbo != null) fbo.dispose();
+			fbo = createMultisample(format, depth, samples);
 		}
 		return fbo;
 	}

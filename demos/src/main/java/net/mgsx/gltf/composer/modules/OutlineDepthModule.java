@@ -23,21 +23,20 @@ public class OutlineDepthModule implements GLTFComposerModule
 	private FrameBuffer fboDepth;
 	private boolean enabled;
 	
-	public void render(GLTFComposerContext ctx, SpriteBatch batch) {
+	public void render(GLTFComposerContext ctx, FrameBuffer fbo, SpriteBatch batch) {
 		if(enabled){
 			
 			fboDepth = FrameBufferUtils.ensureScreenSize(fboDepth, GLFormat.RGBA8, true);
 			fboDepth.begin();
-			ScreenUtils.clear(1,1,1,1, true);
+			ScreenUtils.clear(0,0,0,0, true);
 			ctx.sceneManager.setSkyBox(null);
 			ctx.sceneManager.renderDepth();
 			ctx.sceneManager.setSkyBox(ctx.skyBox);
 			fboDepth.end();
 			
-//			outlineDepth.size = .5f;
-//			outlineDepth.distanceFalloff = .5f;
-			
+			if(fbo != null) fbo.begin();
 			outlineDepth.render(batch, fboDepth.getColorBufferTexture(), ctx.sceneManager.camera);
+			if(fbo != null) fbo.end();
 		}
 	}
 	
