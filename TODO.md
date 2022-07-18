@@ -67,9 +67,9 @@
 	* [x] ktx2
 	* [ ] exr ?
 	* [ ] ktx ?
-* [ ] MSAA
-* [ ] FXAA
-* [ ] MSAA frame buffers
+* [x] MSAA
+* [x] FXAA
+* [x] MSAA frame buffers
 * [ ] MRT based effects :
 	* [ ] Deferred lighting (?)
 	* [ ] SSAO
