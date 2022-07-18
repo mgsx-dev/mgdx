@@ -1,7 +1,6 @@
 package net.mgsx.gltf.composer.modules;
 
 import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,6 +15,7 @@ import net.mgsx.gfx.NoiseCache;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.scene.PBRRenderTargets;
+import net.mgsx.gltf.scene.RenderTargets;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 
 public class CavityModule implements GLTFComposerModule
@@ -28,26 +28,22 @@ public class CavityModule implements GLTFComposerModule
 	
 	private Cavity cavity = new Cavity();
 	private FrameBuffer noise;
-	private SpriteBatch batch;
 	
-	public CavityModule() {
-		batch = new SpriteBatch();
-	}
+	private RenderTargets.Usage colorTarget = PBRRenderTargets.BASE_COLOR; // TODO allow to use PBRRenderTargets.COLORS instead 
 	
 	@Override
 	public void show(GLTFComposerContext ctx) {
 
 		ctx.fbo.clear();
 		ctx.fbo.setDepth(false);
-		ctx.fbo.replaceLayer(PBRRenderTargets.COLORS, GLFormat.RGBA8);
-		// ctx.fbo.replaceLayer(PBRRenderTargets.BASE_COLOR, GLFormat.RGBA8);
+		ctx.fbo.replaceLayer(colorTarget, GLFormat.RGBA8);
 		ctx.fbo.replaceLayer(PBRRenderTargets.GLOBAL_POSITION, GLFormat.RGB16);
 		ctx.fbo.replaceLayer(PBRRenderTargets.NORMAL, GLFormat.RGB16);
 		ctx.invalidateFBO();
 
 		ctx.colorShaderConfig.vertexShader = null;
 		ctx.fbo.configure(ctx.colorShaderConfig);
-		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
+		ctx.colorShaderConfig.manualSRGB = SRGB.NONE;
 		ctx.colorShaderConfig.manualGammaCorrection = true;
 		ctx.invalidateShaders();
 	}
@@ -59,7 +55,7 @@ public class CavityModule implements GLTFComposerModule
 		ctx.fbo.ensureScreenSize();
 		ctx.fbo.begin();
 		ctx.sceneManager.setSkyBox(null);
-		ScreenUtils.clear(0,0,0,0, true);
+		ScreenUtils.clear(ctx.compo.clearColor, true);
 		ctx.sceneManager.renderColors();
 		ctx.sceneManager.setSkyBox(ctx.skyBox);
 		ctx.fbo.end();
@@ -72,21 +68,25 @@ public class CavityModule implements GLTFComposerModule
 		if(mode != MODE_NONE){
 			if(noise == null){
 				noise = new FrameBuffer(Format.RGBA8888, 1024, 1024, false);
-				NoiseCache.createGradientNoise(batch, noise, 1f);
+				NoiseCache.createGradientNoise(ctx.batch, noise, 1f);
 			}
 			// TODO need another FBO to avoid drawing inputs to the same output...
 			// BASE_COLOR should be used for calculation
 			// and COLORS to be mixed over
 			
-			cavity.render(batch, ctx.fbo.getFrameBuffer(),
-					ctx.fbo.getTexture(PBRRenderTargets.COLORS),
+			cavity.render(ctx.batch, ctx.fbo.getFrameBuffer(),
+					ctx.fbo.getTexture(colorTarget),
 					ctx.fbo.getTexture(PBRRenderTargets.GLOBAL_POSITION),
 					ctx.fbo.getTexture(PBRRenderTargets.NORMAL),
 					noise.getColorBufferTexture());
 			
-			FrameBufferUtils.blit(batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
+			ctx.batch.disableBlending();
+			FrameBufferUtils.blit(ctx.batch, ctx.fbo.getTexture(colorTarget), ctx.ldrFbo);
+			ctx.batch.enableBlending();
 		}else{
-			FrameBufferUtils.blit(batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
+			ctx.batch.disableBlending();
+			FrameBufferUtils.blit(ctx.batch, ctx.fbo.getTexture(colorTarget), ctx.ldrFbo);
+			ctx.batch.enableBlending();
 		}
 	}
 	

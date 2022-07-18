@@ -106,5 +106,11 @@ public class Composition {
 	}
 	public CameraConfig camera = new CameraConfig();
 	public ObjectMap<String, CameraConfig> views = new ObjectMap<String, Composition.CameraConfig>();
+
+	public static class FXAAOptions {
+		public float reduceMin = 1f / 128f, reduceMul = 1f / 8f, spanMax = 8f;
+	}
+	public FXAAOptions fxaa = new FXAAOptions();
+	public boolean fxaaEnabled;
 	
 }

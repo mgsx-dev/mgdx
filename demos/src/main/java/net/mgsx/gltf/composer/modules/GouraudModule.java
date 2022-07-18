@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.scene.PBRRenderTargets;
@@ -28,7 +29,16 @@ public class GouraudModule implements GLTFComposerModule
 	
 	@Override
 	public void render(GLTFComposerContext ctx) {
+		ctx.sceneManager.renderShadows();
+		
+		ctx.fbo.ensureScreenSize();
+		ctx.fbo.begin();
 		ScreenUtils.clear(ctx.compo.clearColor, true);
-		ctx.sceneManager.render();
+		ctx.sceneManager.renderColors();
+		ctx.fbo.end();
+		
+		ctx.batch.disableBlending();
+		FrameBufferUtils.blit(ctx.batch, ctx.fbo.getColorBufferTexture(), ctx.ldrFbo);
+		ctx.batch.enableBlending();
 	}
 }

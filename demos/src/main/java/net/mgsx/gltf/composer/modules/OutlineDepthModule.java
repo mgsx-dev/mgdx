@@ -1,6 +1,5 @@
 package net.mgsx.gltf.composer.modules;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -23,7 +22,7 @@ public class OutlineDepthModule implements GLTFComposerModule
 	private FrameBuffer fboDepth;
 	private boolean enabled;
 	
-	public void render(GLTFComposerContext ctx, FrameBuffer fbo, SpriteBatch batch) {
+	public void render(GLTFComposerContext ctx, FrameBuffer fbo) {
 		if(enabled){
 			
 			fboDepth = FrameBufferUtils.ensureScreenSize(fboDepth, GLFormat.RGBA8, true);
@@ -35,7 +34,7 @@ public class OutlineDepthModule implements GLTFComposerModule
 			fboDepth.end();
 			
 			if(fbo != null) fbo.begin();
-			outlineDepth.render(batch, fboDepth.getColorBufferTexture(), ctx.sceneManager.camera);
+			outlineDepth.render(ctx.batch, fboDepth.getColorBufferTexture(), ctx.sceneManager.camera);
 			if(fbo != null) fbo.end();
 		}
 	}

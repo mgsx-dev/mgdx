@@ -1,6 +1,5 @@
 package net.mgsx.gltf.composer.modules;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -8,31 +7,21 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
+import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
-import net.mgsx.gltf.scene.PBRRenderTargets;
 import net.mgsx.gltf.scene.RenderTargets;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 
 public class HDRModule implements GLTFComposerModule
 {
-	private SpriteBatch batch;
-	
 	private ToneMappingModule toneMappingModule = new ToneMappingModule();
 	private BloomModule bloomModule = new BloomModule();
-	private AntialiasModule antialiasModule = new AntialiasModule();
-	
-	public HDRModule() {
-		batch = new SpriteBatch();
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
-	}
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		Table t = UI.table(skin);
 
-		t.add(antialiasModule.initUI(ctx, skin)).fill().row();
-		
 		t.add(bloomModule.initUI(ctx, skin)).fill().row();
 		
 		t.add(toneMappingModule.initUI(ctx, skin)).fill().row();
@@ -67,12 +56,13 @@ public class HDRModule implements GLTFComposerModule
 		
 		// TODO need to render to first layer only ! or need another FBO and compose later with tone mapping ?
 		// render bloom
-		bloomModule.render(ctx, batch, ctx.fbo.getFrameBuffer());
+		bloomModule.render(ctx, ctx.fbo.getFrameBuffer());
 		
 		// render final with tone mapping (HDR to LDR)
-		toneMappingModule.render(ctx, batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
-		
-		antialiasModule.render(ctx, ctx.fbo.getColorBufferTexture(), batch);
+		ctx.ldrFbo = FrameBufferUtils.ensureScreenSize(ctx.ldrFbo, GLFormat.RGB8);
+		ctx.ldrFbo.begin();
+		toneMappingModule.render(ctx, ctx.fbo.getFrameBuffer().getColorBufferTexture());
+		ctx.ldrFbo.end();
 	}
 
 }

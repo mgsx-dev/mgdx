@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
@@ -12,13 +13,16 @@ import com.badlogic.gdx.graphics.g3d.attributes.PointLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.SpotLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.shaders.DepthShader;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 
+import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
+import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gltf.composer.core.Composition;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
@@ -44,6 +48,8 @@ public class GLTFComposerContext {
 	
 	public Skin skin;
 	public Stage stage;
+	/** to be used for post processing */
+	public SpriteBatch batch;
 
 	public PBRShaderConfig colorShaderConfig;
 	public DepthShader.Config depthShaderConfig;
@@ -54,7 +60,8 @@ public class GLTFComposerContext {
 	public DirectionalLightEx keyLight = new DirectionalLightEx();
 	
 	public PBRRenderTargetsMultisample fbo;
-	
+	public FrameBuffer ldrFbo;
+
 	public SceneAsset asset;
 	public Scene scene;
 	public final BoundingBox sceneBounds = new BoundingBox();
@@ -81,6 +88,11 @@ public class GLTFComposerContext {
 	// Cache
 	private final ObjectMap<String, Texture> textureCache = new ObjectMap<String, Texture>();
 	
+	public GLTFComposerContext() {
+		batch = new SpriteBatch();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
+	}
+	
 	public void invalidateShaders(){
 		shadersValid = false;
 	}
@@ -93,6 +105,7 @@ public class GLTFComposerContext {
 			invalidateShaders();
 			fboValid = true;
 			fbo.reset();
+			ldrFbo = FrameBufferUtils.ensureScreenSize(ldrFbo, GLFormat.RGB8, true);
 		}
 		if(!shadersValid){
 			shadersValid = true;

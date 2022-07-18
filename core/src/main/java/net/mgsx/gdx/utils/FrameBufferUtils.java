@@ -81,6 +81,11 @@ public class FrameBufferUtils {
 		blit(batch, input, output);
 		batch.setShader(null);
 	}
+	public static void blit(SpriteBatch batch, Texture input, ShaderProgram shader) {
+		batch.setShader(shader);
+		blit(batch, input);
+		batch.setShader(null);
+	}
 	public static void blit(SpriteBatch batch, ShaderProgram shader, FrameBuffer output) {
 		blit(batch, CommonAssets.whitePixel, output);
 	}

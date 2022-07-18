@@ -1,6 +1,5 @@
 package net.mgsx.gltf.composer.modules;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -37,13 +36,13 @@ public class BloomModule implements GLTFComposerModule
 		controls.add(frame);
 	}
 
-	public void render(GLTFComposerContext ctx, SpriteBatch batch, FrameBuffer fbo) {
+	public void render(GLTFComposerContext ctx, FrameBuffer fbo) {
 		if(ctx.compositionJustChanged){
 			updateUI(ctx, ctx.skin);
 		}
 		
 		if(ctx.compo.bloomEnabled){
-			bloom.apply(fbo, batch, ctx.compo.bloom);
+			bloom.apply(fbo, ctx.batch, ctx.compo.bloom);
 		}
 	}
 

@@ -1,7 +1,6 @@
 package net.mgsx.gltf.composer.modules;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -77,7 +76,7 @@ public class ToneMappingModule implements GLTFComposerModule
 		updateUI(compo);
 	}
 
-	public void render(GLTFComposerContext ctx, SpriteBatch batch, Texture texture) {
+	public void render(GLTFComposerContext ctx, Texture texture) {
 		if(ctx.compositionJustChanged){
 			if(ctx.compo.toneMapping.mode == ToneMappingMode.REINHARD){
 				current = reinhardMode;
@@ -99,12 +98,12 @@ public class ToneMappingModule implements GLTFComposerModule
 			gammaMode.setLuminosity(ctx.compo.toneMapping.luminosity);
 			gammaMode.setContrast(ctx.compo.toneMapping.contrast);
 		}
-		batch.setShader(current);
+		ctx.batch.setShader(current);
 		
-		batch.disableBlending();
-		batch.begin();
-		batch.draw(texture, 0, 0, 1, 1, 0, 0, 1, 1);
-		batch.end();
-		batch.setShader(null);
+		ctx.batch.disableBlending();
+		ctx.batch.begin();
+		ctx.batch.draw(texture, 0, 0, 1, 1, 0, 0, 1, 1);
+		ctx.batch.end();
+		ctx.batch.setShader(null);
 	}
 }

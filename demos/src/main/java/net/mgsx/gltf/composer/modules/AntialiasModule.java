@@ -1,7 +1,6 @@
 package net.mgsx.gltf.composer.modules;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -20,10 +19,10 @@ public class AntialiasModule implements GLTFComposerModule
 
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		Frame frame = UI.frame("Antialias", skin);
+		Frame frame = UI.frame("Multisampling", skin);
 		Table tb = frame.getContentTable();
 		{
-			tb.add("MSAA samples");
+			tb.add("samples");
 			int maxPoT = GLUtils.getMaxSamplesPoT();
 			Array<Integer> items = new Array<Integer>();
 			for(int i=0 ; i<=maxPoT ; i++){
@@ -44,14 +43,19 @@ public class AntialiasModule implements GLTFComposerModule
 		return frame;
 	}
 
-	public void render(GLTFComposerContext ctx, Texture texture, SpriteBatch batch) {
+	public void render(GLTFComposerContext ctx, Texture texture) {
+		// TODO this part should be in render module
 		if(pixelZoom > 1){
 			float rate = pixelZoom;
 			float width = 1f / rate;
 			float offset = 0.5f - width / 2;
-			batch.disableBlending();
-			FrameBufferUtils.blit(batch, texture, offset, offset, width, width);
-			batch.enableBlending();
+			ctx.batch.disableBlending();
+			FrameBufferUtils.blit(ctx.batch, texture, offset, offset, width, width);
+			ctx.batch.enableBlending();
+		}else{
+			ctx.batch.disableBlending();
+			FrameBufferUtils.blit(ctx.batch, texture);
+			ctx.batch.enableBlending();
 		}
 	}
 
