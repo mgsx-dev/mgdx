@@ -41,7 +41,7 @@ import net.mgsx.gltf.composer.modules.SceneModule;
 import net.mgsx.gltf.composer.modules.SkinningModule;
 import net.mgsx.gltf.composer.modules.SystemModule;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
-import net.mgsx.gltf.scene.PBRRenderTargets;
+import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
@@ -109,7 +109,7 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.sceneManager = new SceneManager();
 		
 		// basic
-		ctx.fbo = new PBRRenderTargets();
+		ctx.fbo = new PBRRenderTargetsMultisample(ctx.msaa);
 		ctx.fbo.addColors();
 		ctx.fbo.setDepth(GLFormat.DEPTH24);
 		ctx.invalidateFBO();

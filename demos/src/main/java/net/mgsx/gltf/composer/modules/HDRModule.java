@@ -20,7 +20,7 @@ public class HDRModule implements GLTFComposerModule
 	
 	private ToneMappingModule toneMappingModule = new ToneMappingModule();
 	private BloomModule bloomModule = new BloomModule();
-	
+	private AntialiasModule antialiasModule = new AntialiasModule();
 	
 	public HDRModule() {
 		batch = new SpriteBatch();
@@ -30,6 +30,8 @@ public class HDRModule implements GLTFComposerModule
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		Table t = UI.table(skin);
+
+		t.add(antialiasModule.initUI(ctx, skin)).fill().row();
 		
 		t.add(bloomModule.initUI(ctx, skin)).fill().row();
 		
@@ -69,6 +71,8 @@ public class HDRModule implements GLTFComposerModule
 		
 		// render final with tone mapping (HDR to LDR)
 		toneMappingModule.render(ctx, batch, ctx.fbo.getTexture(PBRRenderTargets.COLORS));
+		
+		antialiasModule.render(ctx, batch);
 	}
 
 }

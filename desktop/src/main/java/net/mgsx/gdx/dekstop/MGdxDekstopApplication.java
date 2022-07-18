@@ -26,7 +26,7 @@ public class MGdxDekstopApplication {
 		config.useVsync(game.settings.useVSync);
 		config.setIdleFPS(game.settings.fps);
 		config.setForegroundFPS(game.settings.fps);
-		
+		config.setBackBufferConfig(8, 8, 8, 8, game.settings.depth, game.settings.stencil, game.settings.samples);
 		
 		DisplayMode display = Lwjgl3ApplicationConfiguration.getDisplayMode();
 		game.hdpiDetected = display.height >= 1440;

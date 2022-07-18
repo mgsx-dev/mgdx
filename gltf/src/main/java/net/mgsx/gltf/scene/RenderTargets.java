@@ -37,7 +37,7 @@ public class RenderTargets implements Disposable {
 	
 	protected final Array<Layer> layers = new Array<Layer>();
 	
-	private GLFormat depthFormat, stencilFormat;
+	protected GLFormat depthFormat, stencilFormat;
 	
 	public static final Usage COLORS = new Usage("COLOR_LOCATION");
 	public static final Usage DEPTH = new Usage("DEPTH_LOCATION");
@@ -64,22 +64,26 @@ public class RenderTargets implements Disposable {
 	public boolean ensureSize(int width, int height){
 		if(fbo == null || fbo.getWidth() != width || fbo.getHeight() != height){
 			if(fbo != null) fbo.dispose();
-			FrameBufferBuilder builder = new FrameBufferBuilder(width, height);
-			for(Layer layer : layers){
-				builder.addColorTextureAttachment(layer.format.internalFormat, layer.format.format, layer.format.type);
-			}
-			if(depthFormat != null){
-				builder.addDepthRenderBuffer(depthFormat.internalFormat);
-			}
-			if(stencilFormat != null){
-				builder.addDepthRenderBuffer(stencilFormat.internalFormat);
-			}
-			fbo = builder.build();
+			fbo = buildFBO(width, height);
 			return true;
 		}
 		return false;
 	}
 	
+	protected FrameBuffer buildFBO(int width, int height) {
+		FrameBufferBuilder builder = new FrameBufferBuilder(width, height);
+		for(Layer layer : layers){
+			builder.addColorTextureAttachment(layer.format.internalFormat, layer.format.format, layer.format.type);
+		}
+		if(depthFormat != null){
+			builder.addDepthRenderBuffer(depthFormat.internalFormat);
+		}
+		if(stencilFormat != null){
+			builder.addDepthRenderBuffer(stencilFormat.internalFormat);
+		}
+		return builder.build();
+	}
+
 	public void begin(){
 		fbo.begin();
 	}

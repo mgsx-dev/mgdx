@@ -20,6 +20,10 @@ public class FlexFrameBuffer implements Disposable {
 		framebufferHandle = Gdx.gl.glGenFramebuffer();
 	}
 	
+	public int getFramebufferHandle() {
+		return framebufferHandle;
+	}
+	
 	public void bind(){
 		Gdx.gl.glBindFramebuffer(GL20.GL_FRAMEBUFFER, framebufferHandle);
 	}

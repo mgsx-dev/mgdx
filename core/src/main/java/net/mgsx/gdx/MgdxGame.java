@@ -32,6 +32,9 @@ public abstract class MgdxGame extends Game
 		public int glMajor = 2;
 		public int glMinor = 0;
 		public String [] icons;
+		public int depth = 24;
+		public int stencil = 0;
+		public int samples = 0;
 	}
 	public Settings settings = new Settings();
 	

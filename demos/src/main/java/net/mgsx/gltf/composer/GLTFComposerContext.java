@@ -21,9 +21,9 @@ import com.badlogic.gdx.utils.ObjectMap;
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
 import net.mgsx.gltf.composer.core.Composition;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
+import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
 import net.mgsx.gltf.ibl.io.AWTFileSelector;
 import net.mgsx.gltf.ibl.io.FileSelector;
-import net.mgsx.gltf.scene.PBRRenderTargets;
 import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.scene.Scene;
@@ -53,7 +53,7 @@ public class GLTFComposerContext {
 	
 	public DirectionalLightEx keyLight = new DirectionalLightEx();
 	
-	public PBRRenderTargets fbo;
+	public PBRRenderTargetsMultisample fbo;
 	
 	public SceneAsset asset;
 	public Scene scene;
@@ -64,6 +64,7 @@ public class GLTFComposerContext {
 	// Editor live options
 	public boolean showSelectedNodeOnly = false;
 	public Node cameraAttachment;
+	public int msaa = 0;
 	
 	// Profiling
 	public GLProfiler profiler;
@@ -77,6 +78,8 @@ public class GLTFComposerContext {
 	private boolean shadersValid = false;
 	private boolean fboValid = false;
 
+	// Cache
+	private final ObjectMap<String, Texture> textureCache = new ObjectMap<String, Texture>();
 	
 	public void invalidateShaders(){
 		shadersValid = false;
@@ -217,7 +220,7 @@ public class GLTFComposerContext {
 		}
 		invalidateShaders();
 	}
-	private final ObjectMap<String, Texture> textureCache = new ObjectMap<String, Texture>();
+
 	public Texture textureCache(String path) {
 		Texture texture = textureCache.get(path);
 		if(texture == null) textureCache.put(path, texture = new Texture(path));

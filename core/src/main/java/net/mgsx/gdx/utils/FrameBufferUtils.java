@@ -64,5 +64,10 @@ public class FrameBufferUtils {
 	public static void blit(SpriteBatch batch, ShaderProgram shader, FrameBuffer output) {
 		blit(batch, CommonAssets.whitePixel, output);
 	}
-
+	public static void blit(SpriteBatch batch, Texture input, float srcX, float srcY, float srcW, float srcH) {
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
+		batch.begin();
+		batch.draw(input, 0, 0, 1, 1, srcX, srcY, srcX + srcW, srcY + srcH);
+		batch.end();
+	}
 }
