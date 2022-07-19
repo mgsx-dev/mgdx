@@ -131,6 +131,13 @@ public class UI {
 		if(defaultItem >= 0) selectBox.setSelectedIndex(defaultItem);
 		return selectBox;
 	}
+	public static <T> SelectBox<T> selector(Skin skin, T[] items, T defaultItem, Consumer<T> handler) {
+		SelectBox<T> selectBox = new SelectBox<T>(skin);
+		selectBox.setItems(new Array<T>(items));
+		if(defaultItem != null) selectBox.setSelected(defaultItem);
+		change(selectBox, event->handler.accept(selectBox.getSelected()));
+		return selectBox;
+	}
 	public static SelectBox<String> selector(Skin skin, String ...items) {
 		SelectBox<String> selectBox = new SelectBox<String>(skin);
 		selectBox.setItems(items);

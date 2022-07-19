@@ -84,15 +84,23 @@ public class GLOnlyTexture3DData implements Texture3DData {
 	
 	private void ensureBuffer(){
 		if(pixels == null){
+			// TODO this is not always true, sometimes you want to send raw data (eg. half float)
+			// cometimes you want to send client data as float 32 bit even if internal format uses half float...
 			int bytesPerPixel;
-			if(glInternalFormat == GL30.GL_R8){ // TODO other variants
+			if(glInternalFormat == GL30.GL_R8){
 				bytesPerPixel = 1;
-			}else if(glInternalFormat == GL30.GL_RGBA8){ // TODO other variants
+			}else if(glInternalFormat == GL30.GL_RGBA8){
 				bytesPerPixel = 4;
-			}else if(glInternalFormat == GL30.GL_RGBA16F){ // TODO other variants
+			}else if(glInternalFormat == GL30.GL_RGBA16F){
 				bytesPerPixel = 8;
-			}else if(glInternalFormat == GL30.GL_RGBA32F){ // TODO other variants
+			}else if(glInternalFormat == GL30.GL_RGBA32F){
 				bytesPerPixel = 16;
+			}else if(glInternalFormat == GL30.GL_RGB8){
+				bytesPerPixel = 3;
+			}else if(glInternalFormat == GL30.GL_RGB16F){
+				bytesPerPixel = 6;
+			}else if(glInternalFormat == GL30.GL_RGB32F){
+				bytesPerPixel = 12;
 			}else{
 				throw new GdxRuntimeException("unsupported glInternalFormat: " + glInternalFormat);
 			}

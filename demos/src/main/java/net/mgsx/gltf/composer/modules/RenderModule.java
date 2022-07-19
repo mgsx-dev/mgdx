@@ -1,7 +1,8 @@
 package net.mgsx.gltf.composer.modules;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -16,7 +17,8 @@ public class RenderModule extends GLTFModuleSwitch
 	private ShadowModule shadows = new ShadowModule();
 	private FXAAModule fxaaModule = new FXAAModule();
 	private AntialiasModule antialiasModule = new AntialiasModule();
-
+	private ColorLUTModule colorLUT = new ColorLUTModule();
+	
 	private SpriteBatch batch;
 	
 	public RenderModule(GLTFComposerContext ctx) {
@@ -47,12 +49,19 @@ public class RenderModule extends GLTFModuleSwitch
 
 		table.add(switcher).row();
 
-		UI.header(table, "Antialias");
+		UI.header(table, "Post processing");
+		
+		table.add(colorLUT.initUI(ctx, skin)).row();
 
 		table.add(antialiasModule.initUI(ctx, skin)).row();
 		table.add(fxaaModule.initUI(ctx, skin)).row();
 		
 		return table;
+	}
+	
+	@Override
+	public boolean handleFile(GLTFComposerContext ctx, FileHandle file) {
+		return colorLUT.handleFile(ctx, file);
 	}
 	
 	@Override
@@ -66,8 +75,12 @@ public class RenderModule extends GLTFModuleSwitch
 	public void render(GLTFComposerContext ctx) {
 		super.render(ctx);
 		
-		Texture ldrTexture = fxaaModule.render(ctx, ctx.ldrFbo.getColorBufferTexture());
+		FrameBuffer lastFBO = ctx.ldrFbo;
 		
-		antialiasModule.render(ctx, ldrTexture);
+		lastFBO = fxaaModule.render(ctx, lastFBO);
+		
+		lastFBO = colorLUT.render(ctx, lastFBO);
+		
+		antialiasModule.render(ctx, lastFBO.getColorBufferTexture());
 	}
 }

@@ -30,8 +30,9 @@ public class FXAAModule implements GLTFComposerModule
 		return frame;
 	}
 	
-	public Texture render(GLTFComposerContext ctx, Texture texture){
+	public FrameBuffer render(GLTFComposerContext ctx, FrameBuffer inputFBO){
 		if(ctx.compo.fxaaEnabled){
+			Texture texture = inputFBO.getColorBufferTexture();
 			if(shader == null) shader = new FXAAShader(false);
 			shader.bind();
 			shader.setSize(texture.getWidth(), texture.getHeight());
@@ -40,9 +41,9 @@ public class FXAAModule implements GLTFComposerModule
 			ctx.batch.disableBlending();
 			FrameBufferUtils.blit(ctx.batch, texture, fboAA, shader);
 			ctx.batch.enableBlending();
-			return fboAA.getColorBufferTexture();
+			return fboAA;
 		}else{
-			return texture;
+			return inputFBO;
 		}
 	}
 }

@@ -80,6 +80,9 @@
 		* [x] fix blur artifacts
 	* [x] Tone mapping
 	* [x] HDR particles
+* [x] color management
+	* [x] color grading with LUT texture
+	* [x] cube file loading
 
 ## Users feedback
 
