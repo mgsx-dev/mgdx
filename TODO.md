@@ -89,7 +89,7 @@
 * [ ] minimize window crash FBO construction.
 * [ ] center camera to visible area when UI is on
 * [ ] Blender camera : allow both middle mouse button and left button
-* [ ] Model tree cutted out on the right (scroll pane bug ?)
+* [x] Model tree cutted out on the right (scroll pane bug ?)
 * [ ] display scroll bars when using scroll pane (model browser)
 * [ ] condense material view when there is a lot of textures
 * [ ] add a scroll pane to the material view
