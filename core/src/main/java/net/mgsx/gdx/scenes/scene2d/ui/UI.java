@@ -108,12 +108,17 @@ public class UI {
 	}
 	public static <T> SelectBox<T> selector(Skin skin, Array<T> items, Object defaultItem, Function<T, String> labeler, Consumer<T> handler, boolean prependIndex) {
 		SelectBox<T> selectBox = new SelectBox<T>(skin){
+			private ObjectMap<T, String> labels = new ObjectMap<T, String>();
 			@Override
 			protected String toString(T item) {
-				String s = labeler.apply(item);
-				if(s == null) s = "";
-				if(prependIndex){
-					s = getItems().indexOf(item, true) + " - " + s;
+				String s = labels.get(item);
+				if(s == null){
+					s = labeler.apply(item);
+					if(s == null) s = "";
+					if(prependIndex){
+						s = getItems().indexOf(item, true) + " - " + s;
+					}
+					labels.put(item, s);
 				}
 				return s;
 			}
