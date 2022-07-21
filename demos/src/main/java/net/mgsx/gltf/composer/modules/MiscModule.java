@@ -1,13 +1,16 @@
 package net.mgsx.gltf.composer.modules;
 
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.exporters.GLTFExporter;
+import net.mgsx.gltf.scene3d.scene.Scene;
 
 public class MiscModule implements GLTFComposerModule
 {
@@ -20,15 +23,24 @@ public class MiscModule implements GLTFComposerModule
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		Table controls = UI.table(skin);
-		controls.add(particles.initUI(ctx, skin)).growX().row();
+		controls.defaults().growX();
 		
-		controls.add(UI.trig(skin, "Save to gltf", ()->{
-			if(ctx.scene != null){
+		UI.header(controls, "Experimental");
+		
+		controls.add(particles.initUI(ctx, skin)).row();
+		
+		{
+			Frame frame = UI.frame("Export", skin);
+			controls.add(frame).row();
+			Table t = frame.getContentTable();
+			
+			t.add(UI.trig(ctx.skin, "save current model as gltf", ()->{
 				ctx.fileSelector.save(file->{
-					new GLTFExporter().export(ctx.scene, file);
+					new GLTFExporter().export(ctx.scene != null ? ctx.scene : new Scene(new Model()), file);
 				});
-			}
-		})).row();
+			})).row();
+		}
+		
 		
 		return controls;
 	}

@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.SpotLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.shaders.DepthShader;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,6 +26,7 @@ import net.mgsx.gdx.graphics.cameras.BlenderCamera;
 import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gltf.composer.core.Composition;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
+import net.mgsx.gltf.composer.utils.Overlay;
 import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
 import net.mgsx.gltf.ibl.io.AWTFileSelector;
 import net.mgsx.gltf.ibl.io.FileSelector;
@@ -50,6 +52,8 @@ public class GLTFComposerContext {
 	public Stage stage;
 	/** to be used for post processing */
 	public SpriteBatch batch;
+	/** used for overlays */
+	public ShapeRenderer shapes;
 
 	public PBRShaderConfig colorShaderConfig;
 	public DepthShader.Config depthShaderConfig;
@@ -72,6 +76,8 @@ public class GLTFComposerContext {
 	public boolean showSelectedNodeOnly = false;
 	public Node cameraAttachment;
 	public int msaa = 0;
+	public int pixelZoom = 1;
+	public final Overlay overlay = new Overlay();
 	
 	// Profiling
 	public GLProfiler profiler;
@@ -87,10 +93,11 @@ public class GLTFComposerContext {
 
 	// Cache
 	private final ObjectMap<String, Texture> textureCache = new ObjectMap<String, Texture>();
-	
+
 	public GLTFComposerContext() {
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
+		shapes = new ShapeRenderer();
 	}
 	
 	public void invalidateShaders(){

@@ -263,6 +263,8 @@ public class IBLModule implements GLTFComposerModule
 		return false;
 	}
 	
+	
+	private int builtInIndex;
 	private FogModule fogModule = new FogModule();
 
 	private void replaceIBL(GLTFComposerContext ctx, IBL newIBL) {
@@ -271,6 +273,7 @@ public class IBLModule implements GLTFComposerModule
 		}
 		ctx.ibl = newIBL;
 		ctx.applyIBL();
+		updateUI(ctx, ctx.skin);
 	}
 	
 	@Override
@@ -285,6 +288,16 @@ public class IBLModule implements GLTFComposerModule
 	private void updateUI(GLTFComposerContext ctx, Skin skin)
 	{
 		controls.clear();
+		controls.defaults().fill();
+		
+		UI.header(controls, "Environment");
+		
+		Frame wdFrame = UI.frame("Background", skin);
+		Table wdTable = wdFrame.getContentTable();
+		controls.add(wdFrame).growX().row();
+
+		UI.colorBox(wdTable, "color", ctx.compo.clearColor, false);
+		
 		
 		Frame sbFrame = UI.frameToggle("Skybox", skin, true, v->ComposerUtils.enabledSkybox(ctx, v));
 		Table sbTable = sbFrame.getContentTable();
@@ -293,19 +306,21 @@ public class IBLModule implements GLTFComposerModule
 		UI.slider(sbTable, "Opacity", 0, 1, ctx.compo.skyBoxColor.a, value->ComposerUtils.setSkyboxOpacity(ctx, value));
 		controls.add(sbFrame).growX().row();
 		
-		UI.slider(controls, "Ambiant strength", 0, 3, ctx.compo.ambiantStrength, value->ComposerUtils.setAmbientFactor(ctx, value));
-
-		UI.colorBox(controls, "Background", ctx.compo.clearColor, false);
-		
 		controls.add(fogModule.initUI(ctx, skin)).row();
+
+		// IBL
+		
+		UI.header(controls, "IBL");
 		
 		Array<String> builtins = new Array<String>();
 		builtins.add("None", "Outdoor", "Indoor");
-		controls.add("Builtin IBL").row();
-		controls.add(UI.selector(skin, builtins, builtins.first(), v->v, v->{
-			int index = builtins.indexOf(v, false);
+		Table tBuiltin = UI.table(skin);
+		controls.add(tBuiltin).row();
+		tBuiltin.add("Builtin IBL").row();
+		tBuiltin.add(UI.selector(skin, builtins, builtins.get(builtInIndex), v->v, v->{
+			builtInIndex = builtins.indexOf(v, false);
 			IBLBuilder builder = null;
-			if(index == 0){
+			if(builtInIndex == 0){
 				if(ctx.ibl != null){
 					ctx.ibl.dispose();
 				}
@@ -317,9 +332,9 @@ public class IBLModule implements GLTFComposerModule
 				}
 				IBL.remove(ctx.sceneManager);
 			}
-			else if(index == 1){
+			else if(builtInIndex == 1){
 				builder = IBLBuilder.createOutdoor(ctx.keyLight);
-			}else if(index == 2){
+			}else if(builtInIndex == 2){
 				builder = IBLBuilder.createIndoor(ctx.keyLight);
 			}
 			if(builder != null){
@@ -331,43 +346,58 @@ public class IBLModule implements GLTFComposerModule
 				builder.dispose();
 				
 				replaceIBL(ctx, ibl);
+			}else{
+				updateUI(ctx, ctx.skin);
 			}
 		})).row();
 		
-		controls.add().padTop(50).row();
-		controls.add("Drop an IBL file").row();
-		controls.add("Supported files: *.hdr, png folder").row();
-		
-		controls.add(UI.trig(skin, "Export environment map (skybox)", ()->{
-			new HDRExportDialog(ctx, ctx.ibl.environmentCubemap, false, file->ctx.compo.envPath=file.path()).show(ctx.stage);
-		})).row();
-		
-		controls.add(UI.trig(skin, "Export radiance map (specular)", ()->{
-			new HDRExportDialog(ctx, ctx.ibl.specularCubemap, true, file->ctx.compo.specularPath=file.path()).show(ctx.stage);
-		})).row();
-		
-		controls.add(UI.trig(skin, "Export irradiance map (diffuse)", ()->{
-			new HDRExportDialog(ctx, ctx.ibl.diffuseCubemap, false, file->ctx.compo.diffusePath=file.path()).show(ctx.stage);
-		})).row();
-		
-		controls.add(UI.trig(skin, "Export all", ()->{
-			new HDRExportAllDialog(ctx).show(ctx.stage);
-		})).row();
-		
 		if(ctx.compo.hdrPath != null){
-			controls.add(UI.trig(skin, "Bake again", ()->{
+			Frame bakeFrame = UI.frame("Baking", skin);
+			Table bakeTable = bakeFrame.getContentTable();
+			controls.add(bakeFrame).row();
+			bakeTable.add(UI.trig(skin, "Bake again", ()->{
 				HDRBakingDialog dialog = new HDRBakingDialog(ctx, ()->{
 					FileHandle file = ctx.compo.hdrPath.startsWith("/") ? Gdx.files.absolute(ctx.compo.hdrPath) : ctx.compo.file.sibling(ctx.compo.hdrPath);
 					replaceIBL(ctx, IBL.fromHDR(file, ctx.compo.iblBaking, false));
 				});
 				dialog.show(ctx.stage);
 			})).row();
+		}else{
+			controls.add("Drop IBL files : .hdr, .ktx2, .png folder").fill(false).row();
 		}
+
+		if(ctx.ibl != null && (ctx.ibl.environmentCubemap != null || ctx.ibl.diffuseCubemap != null || ctx.ibl.specularCubemap != null)){
+			
+			Frame exportFrame = UI.frame("Export", skin);
+			Table exportTable = exportFrame.getContentTable();
+			controls.add(exportFrame).row();
+			
+//		controls.add().padTop(50).row();
+//		controls.add("Drop an IBL file").row();
+//		controls.add("Supported files: *.hdr, png folder").row();
+			
+			exportTable.add(UI.trig(skin, "Export all", ()->{
+				new HDRExportAllDialog(ctx).show(ctx.stage);
+			})).row();
+			
+			exportTable.add(UI.trig(skin, "Export environment map (skybox)", ()->{
+				new HDRExportDialog(ctx, ctx.ibl.environmentCubemap, false, file->ctx.compo.envPath=file.path()).show(ctx.stage);
+			})).row();
+			
+			exportTable.add(UI.trig(skin, "Export radiance map (specular)", ()->{
+				new HDRExportDialog(ctx, ctx.ibl.specularCubemap, true, file->ctx.compo.specularPath=file.path()).show(ctx.stage);
+			})).row();
+			
+			exportTable.add(UI.trig(skin, "Export irradiance map (diffuse)", ()->{
+				new HDRExportDialog(ctx, ctx.ibl.diffuseCubemap, false, file->ctx.compo.diffusePath=file.path()).show(ctx.stage);
+			})).row();
+		}
+		
 		
 	}
 	@Override
 	public void update(GLTFComposerContext ctx, float delta) {
-		if(ctx.compositionJustChanged){
+		if(ctx.compositionJustChanged){ // TODO or IBL changed !
 			updateUI(ctx, ctx.skin);
 		}
 		ctx.sceneManager.setEnvironmentRotation(ctx.compo.envRotation);

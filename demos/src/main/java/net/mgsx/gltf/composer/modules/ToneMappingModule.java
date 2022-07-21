@@ -41,7 +41,7 @@ public class ToneMappingModule implements GLTFComposerModule
 		shaders.add(gammaMode);
 		
 		controls.add("Mode");
-		controls.add(selector = UI.selector(skin, shaders, current, v->v.getClass().getSimpleName(), v->setMode(ctx.compo, v))).row();
+		controls.add(selector = UI.selector(skin, shaders, current, v->v.getClass().getSimpleName(), v->setMode(ctx.compo, v))).left().row();
 		
 		controls.add(subControls).colspan(2);
 		

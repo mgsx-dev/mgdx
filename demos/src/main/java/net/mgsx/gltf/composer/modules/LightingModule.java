@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import net.mgsx.gdx.scenes.scene2d.ui.ColorBox;
+import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
 import net.mgsx.gltf.composer.GLTFComposerContext;
@@ -20,6 +21,8 @@ import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 public class LightingModule implements GLTFComposerModule
 {
 	private Table controls;
+	
+	private ShadowModule shadows = new ShadowModule();
 
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
@@ -30,12 +33,25 @@ public class LightingModule implements GLTFComposerModule
 	
 	private void updateUI(GLTFComposerContext ctx, Skin skin){
 		controls.clear();
+		controls.defaults().fill();
 		
+		UI.header(controls, "Lighting");
+		
+		Frame wdFrame = UI.frame("Ambient", skin);
+		Table wdTable = wdFrame.getContentTable();
+		UI.slider(wdTable, "strength", 0, 3, ctx.compo.ambiantStrength, value->ComposerUtils.setAmbientFactor(ctx, value));
+		controls.add(wdFrame).growX().row();
+
 		// TODO fill light and back light (rim light)
 		
-		controls.add(new ColorBox("Key light", ()->ctx.keyLight.baseColor, false, skin)).row();
+		Frame klFrame = UI.frame("Key light", skin);
+		Table klTable = klFrame.getContentTable();
+		controls.add(klFrame).row();
 		
-		UI.slider(controls, "Key light", 0.01f, 100f, ctx.keyLight.intensity, ControlScale.LOG, value->ctx.keyLight.intensity=value);
+		klTable.add("color");
+		klTable.add(new ColorBox("key light", ()->ctx.keyLight.baseColor, false, skin)).expandX().left().row();
+		
+		UI.sliderTable(klTable, "intensity", 0.01f, 100f, ctx.keyLight.intensity, ControlScale.LOG, value->ctx.keyLight.intensity=value);
 
 		// key light orientation picker
 		ClickListener listener = new ClickListener(){
@@ -47,15 +63,22 @@ public class LightingModule implements GLTFComposerModule
 			}
 		};
 		
-		controls.add(UI.trig(skin, "Pick sun position from skybox", ()->{
+		klTable.add(UI.trig(skin, "pick sun position from skybox", ()->{
 			ctx.stage.addCaptureListener(listener);
-		})).row();
+		})).colspan(3).row();
 		
-		controls.add(UI.trig(skin, "Copy light code", ()->{
+		klTable.add(UI.trig(skin, "copy light code", ()->{
 			ComposerCode.toClipboard(ctx.keyLight);
-		})).row();
+		})).colspan(3).row();
 		
-		UI.slider(controls, "Emissive", 0.01f, 100f, ctx.compo.emissiveIntensity, ControlScale.LOG, value->ComposerUtils.setEmissiveIntensity(ctx, value));
+		controls.add(shadows.initUI(ctx, skin)).row();
+		
+		
+		Frame eFrame = UI.frame("Emissive", skin);
+		Table eTable = eFrame.getContentTable();
+		controls.add(eFrame).row();
+		
+		UI.slider(eTable, "strength", 0.01f, 100f, ctx.compo.emissiveIntensity, ControlScale.LOG, value->ComposerUtils.setEmissiveIntensity(ctx, value));
 		
 	}
 	

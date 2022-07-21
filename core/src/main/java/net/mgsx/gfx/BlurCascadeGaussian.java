@@ -92,6 +92,9 @@ public class BlurCascadeGaussian implements Disposable
 				
 				last = dst.getColorBufferTexture();
 			}
+			
+			// TODO not sure....
+			// blurWidth = 2f;
 		}
 		
 		// TODO should be done in one draw call (binding all textures)

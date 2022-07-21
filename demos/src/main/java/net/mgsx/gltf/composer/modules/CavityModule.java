@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gfx.Cavity;
@@ -20,12 +21,6 @@ import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 
 public class CavityModule implements GLTFComposerModule
 {
-	private final static int MODE_NONE = 0;
-	private final static int MODE_SCREEN = 1;
-	private final static int MODE_WORLD = 2;
-	private final static int MODE_BOTH = 3;
-	private int mode = MODE_BOTH;
-	
 	private Cavity cavity = new Cavity();
 	private FrameBuffer noise;
 	
@@ -63,9 +58,7 @@ public class CavityModule implements GLTFComposerModule
 		// post process
 		ScreenUtils.clear(ctx.compo.clearColor, true);
 		
-		cavity.screenEnabled = (mode & MODE_SCREEN) != 0;
-		cavity.worldEnabled = (mode & MODE_WORLD) != 0;
-		if(mode != MODE_NONE){
+		if(cavity.screenEnabled || cavity.worldEnabled){
 			if(noise == null){
 				noise = new FrameBuffer(Format.RGBA8888, 1024, 1024, false);
 				NoiseCache.createGradientNoise(ctx.batch, noise, 1f);
@@ -93,17 +86,26 @@ public class CavityModule implements GLTFComposerModule
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		Table table = UI.table(skin);
+		table.defaults().growX();
 		
-		table.add(UI.selector(skin, new String[]{"None", "Screen", "World", "Both"}, mode, v->mode = v)).row();
+		Frame scrFrame = UI.frameToggle("Screen", skin, cavity.screenEnabled, v->cavity.screenEnabled=v);
+		Table scrTable = scrFrame.getContentTable();
 		
-		UI.slider(table, "Screen Ridge", 0f, 2f, cavity.screenRidge, value->cavity.screenRidge = value);
-		UI.slider(table, "Screen Valley",0f, 2f, cavity.screenValley, value->cavity.screenValley = value);
-		UI.slider(table, "World Ridge", 0f, 2.5f, cavity.worldRidge, value->cavity.worldRidge = value);
-		UI.slider(table, "World Valley",0f, 2.5f, cavity.worldValley, value->cavity.worldValley = value);
-		UI.slideri(table, "World Samples",1, 64, cavity.worldSamples, value->cavity.worldSamples = value);
-		UI.slider(table, "World Distance",0f, 1f, cavity.worldDistance, value->cavity.worldDistance = value);
-		UI.slider(table, "World Attenuation",0f, 100f, cavity.worldAttenuation, value->cavity.worldAttenuation = value);
+		UI.sliderTable(scrTable, "ridge", 0f, 2f, cavity.screenRidge, value->cavity.screenRidge = value);
+		UI.sliderTable(scrTable, "valley",0f, 2f, cavity.screenValley, value->cavity.screenValley = value);
+		
+		Frame wrdFrame = UI.frameToggle("World", skin, cavity.worldEnabled, v->cavity.screenEnabled=v);
+		Table wrdTable = wrdFrame.getContentTable();
+		
+		UI.sliderTable(wrdTable, "ridge", 0f, 2.5f, cavity.worldRidge, value->cavity.worldRidge = value);
+		UI.sliderTable(wrdTable, "valley",0f, 2.5f, cavity.worldValley, value->cavity.worldValley = value);
+		UI.sliderTablei(wrdTable, "samples",1, 64, cavity.worldSamples, value->cavity.worldSamples = value);
+		UI.sliderTable(wrdTable, "distance",0f, 1f, cavity.worldDistance, value->cavity.worldDistance = value);
+		UI.sliderTable(wrdTable, "attenuation",0f, 100f, cavity.worldAttenuation, value->cavity.worldAttenuation = value);
 
+		table.add(scrFrame).row();
+		table.add(wrdFrame).row();
+		
 		return table;
 	}
 

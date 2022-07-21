@@ -46,7 +46,7 @@ public class OutlineDepthModule implements GLTFComposerModule
 		UI.sliderTable(t, "size", 1e-3f, 1e3f, outlineDepth.size, ControlScale.LOG, v->outlineDepth.size=v);
 		UI.sliderTable(t, "depth min", 1e-3f, 1e3f, outlineDepth.depthMin, ControlScale.LOG, v->outlineDepth.depthMin=v);
 		UI.sliderTable(t, "depth max", 1e-3f, 1e3f, outlineDepth.depthMax, ControlScale.LOG, v->outlineDepth.depthMax=v);
-		UI.sliderTable(t, "distance falloff", 1e-3f, 1e3f, outlineDepth.distanceFalloff, ControlScale.LOG, v->outlineDepth.distanceFalloff=v);
+		UI.sliderTable(t, "falloff", 1e-3f, 1e3f, outlineDepth.distanceFalloff, ControlScale.LOG, v->outlineDepth.distanceFalloff=v);
 		t.add(new ColorBox("inner", outlineDepth.insideColor, true, skin)).row();
 		t.add(new ColorBox("outer", outlineDepth.outsideColor, true, skin)).row();
 		return frame;

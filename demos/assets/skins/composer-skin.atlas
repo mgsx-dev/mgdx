@@ -78,7 +78,7 @@ default-select
   index: -1
 default-select-selection
   rotate: false
-  xy: 260, 170
+  xy: 111, 97
   size: 13, 13
   split: 6, 6, 6, 6
   orig: 13, 13
@@ -86,7 +86,7 @@ default-select-selection
   index: -1
 default-slider-knob
   rotate: false
-  xy: 372, 241
+  xy: 408, 241
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
@@ -166,44 +166,79 @@ icon-file-16
   orig: 16, 16
   offset: 0, 0
   index: -1
-icon-human-16
+icon-grad-16
   rotate: false
   xy: 260, 185
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-icon-light-16
+icon-human-16
   rotate: false
   xy: 279, 204
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-icon-orbit-16
+icon-lab-16
   rotate: false
   xy: 354, 238
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-icon-shade-16
+icon-light-16
   rotate: false
   xy: 53, 57
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-icon-wrench-16
+icon-orbit-16
   rotate: false
   xy: 93, 94
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+icon-shade-16
+  rotate: false
+  xy: 260, 167
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+icon-shader-16
+  rotate: false
+  xy: 372, 238
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+icon-tree-16
+  rotate: false
+  xy: 260, 149
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+icon-tv-16
+  rotate: false
+  xy: 390, 238
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+icon-wrench-16
+  rotate: false
+  xy: 260, 131
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 primary-round
   rotate: false
-  xy: 260, 155
+  xy: 423, 241
   size: 13, 13
   split: 6, 6, 6, 6
   orig: 13, 13
@@ -211,7 +246,7 @@ primary-round
   index: -1
 primary-round-down
   rotate: false
-  xy: 111, 97
+  xy: 126, 97
   size: 13, 13
   split: 6, 6, 6, 6
   orig: 13, 13

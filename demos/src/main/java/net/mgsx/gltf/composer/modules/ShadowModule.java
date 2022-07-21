@@ -31,9 +31,10 @@ public class ShadowModule implements GLTFComposerModule
 		
 		Array<Integer> shadowSizes = new Array<Integer>();
 		for(int i=8 ; i<=12 ; i++) shadowSizes.add(1<<i);
-		t.add(UI.selector(skin, shadowSizes, ctx.compo.shadowSize, v->v+"x"+v, v->{ctx.compo.shadowSize = v; ComposerUtils.updateShadowSize(ctx);})).row();
+		t.add("resolution").right();
+		t.add(UI.selector(skin, shadowSizes, ctx.compo.shadowSize, v->v+"x"+v, v->{ctx.compo.shadowSize = v; ComposerUtils.updateShadowSize(ctx);})).left().row();
 		
-		UI.slider(t, "Shadow bias", 1e-3f, 1f, ctx.compo.shadowBias, ControlScale.LOG, value->ComposerUtils.updateShadowBias(ctx, value));
+		UI.sliderTable(t, "bias", 1e-3f, 1f, ctx.compo.shadowBias, ControlScale.LOG, value->ComposerUtils.updateShadowBias(ctx, value));
 
 		controls.add(frame);
 	}

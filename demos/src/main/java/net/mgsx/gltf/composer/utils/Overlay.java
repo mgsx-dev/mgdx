@@ -1,54 +1,44 @@
-package net.mgsx.gltf.composer.modules;
+package net.mgsx.gltf.composer.utils;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 import net.mgsx.gdx.graphics.g3d.ModelUtils;
-import net.mgsx.gdx.scenes.scene2d.ui.Frame;
-import net.mgsx.gdx.scenes.scene2d.ui.UI;
-import net.mgsx.gltf.composer.GLTFComposerContext;
-import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.data.scene.GLTFSkin;
+import net.mgsx.gltf.scene3d.scene.Scene;
+import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
-public class SkinningModule implements GLTFComposerModule
-{
-	private Table controls;
+public class Overlay {
+
+	// TODO use a set instead to avoid duplicated ?
 	private Array<Node> bones = new Array<Node>();
 	private final Vector3 bonePos = new Vector3(), parentPos = new Vector3();
-	private boolean displayAxis, displayBox, displayParenting;
-	private boolean displayEnabled;
-	
-	@Override
-	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		controls = UI.table(skin);
-		updateUI(ctx, skin);
-		return controls;
-	}
+	public boolean displayAxis = true, displayBox = true, displayParenting = true;
+	public boolean displayEnabled;
 
-	private void updateUI(GLTFComposerContext ctx, Skin skin) {
-		controls.clear();
+	public void setScene(SceneAsset asset, Scene scene) {
+			
 		bones.clear();
-		if(ctx.scene != null){
-			if(ctx.asset != null && ctx.asset.data != null && ctx.asset.data.skins != null){
-				for(GLTFSkin glSkin : ctx.asset.data.skins){
+		if(scene != null){
+			if(asset != null && asset.data != null && asset.data.skins != null){
+				// TODO use GLTF skin data to avoid redundent bones ?
+				for(GLTFSkin glSkin : asset.data.skins){
 					String name = glSkin.name;
-					Node root = ctx.scene.modelInstance.getNode(name);
+					Node root = scene.modelInstance.getNode(name);
 					if(root != null){
 						
 					}else{
 						System.err.println("no node found for skin " + name); // TODO possible case ?
 					}
 				}
-				ModelUtils.eachNodePartRecusrsive(ctx.scene.modelInstance.nodes, part->{
+				ModelUtils.eachNodePartRecusrsive(scene.modelInstance.nodes, part->{
 					if(part.bones != null){
 						for(Entry<Node, Matrix4> entry : part.invBoneBindTransforms){
 							Node bone = entry.key;
@@ -56,42 +46,15 @@ public class SkinningModule implements GLTFComposerModule
 						}
 					}
 				});
-				
-				controls.add("Bones: " + bones.size).row();
-				
-				Frame frame = UI.frameToggle("Overlay", skin, displayEnabled, v->displayEnabled=v);
-				controls.add(frame).growX().row();
-				
-				Table t = frame.getContentTable();
-				t.defaults().expandX().left();
-				UI.toggle(t, "Display boxes", displayBox, v->displayBox=v);
-				UI.toggle(t, "Display axis", displayAxis, v->displayAxis=v);
-				UI.toggle(t, "Display parenting", displayParenting, v->displayParenting=v);
-				
-			}else{
-				
-				controls.add("no skeleton found");
 			}
-			
-			
-		}else{
-			controls.add("no model loaded");
 		}
 	}
 	
-	@Override
-	public void update(GLTFComposerContext ctx, float delta) {
-		if(ctx.sceneJustChanged){
-			updateUI(ctx, ctx.skin);
-		}
-	}
-	
-	@Override
-	public void renderOverlay(GLTFComposerContext ctx, ShapeRenderer shapes) {
+	public void render(ShapeRenderer shapes, Camera camera, Vector3 target){
 		if(displayEnabled && bones.size > 0){
-			float s = ctx.cameraManager.getCamera().position.dst(ctx.cameraManager.getPerspectiveTarget()) / 30f;
+			float s = camera.position.dst(target) / 30f;
 			float bs = s / 3;
-			shapes.setProjectionMatrix(ctx.cameraManager.getCamera().combined);
+			shapes.setProjectionMatrix(camera.combined);
 			shapes.begin(ShapeType.Line);
 			for(int i=0 ; i<bones.size ; i++){
 				Node bone = bones.get(i);
@@ -126,5 +89,9 @@ public class SkinningModule implements GLTFComposerModule
 			shapes.end();
 		}
 	}
-	
+
+	public boolean hasBones() {
+		return bones.size > 0;
+	}
+
 }

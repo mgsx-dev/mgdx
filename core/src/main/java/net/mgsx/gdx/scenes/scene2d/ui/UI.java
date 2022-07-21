@@ -119,16 +119,16 @@ public class UI {
 			}
 		};
 		selectBox.setItems(items);
-		change(selectBox, event->handler.accept(selectBox.getSelected()));
 		if(defaultItem != null) selectBox.setSelected((T)defaultItem);
+		change(selectBox, event->handler.accept(selectBox.getSelected()));
 		
 		return selectBox;
 	}
 	public static SelectBox<String> selector(Skin skin, String[] items, int defaultItem, Consumer<Integer> handler) {
 		SelectBox<String> selectBox = new SelectBox<String>(skin);
 		selectBox.setItems(new Array<String>(items));
-		change(selectBox, event->handler.accept(selectBox.getSelectedIndex()));
 		if(defaultItem >= 0) selectBox.setSelectedIndex(defaultItem);
+		change(selectBox, event->handler.accept(selectBox.getSelectedIndex()));
 		return selectBox;
 	}
 	public static <T> SelectBox<T> selector(Skin skin, T[] items, T defaultItem, Consumer<T> handler) {
@@ -160,7 +160,10 @@ public class UI {
 	public static Slider slider(Table table, String name, float min, float max, float val, Consumer<Float> callback) {
 		return slider(table, name, min, max, val, ControlScale.LIN, callback);
 	}
-	
+	public static Slider sliderTable(Table table, String name, float min, float max, float value, Consumer<Float> setter) {
+		return sliderTable(table, name, min, max, value, ControlScale.LIN, setter);
+	}
+
 	public static Slider sliderTable(Table table, String name, float min, float max, float value, ControlScale scale, Consumer<Float> setter) {
 		float width = 200;
 		float stepSize = (max - min) / width;
@@ -205,11 +208,27 @@ public class UI {
 		Table t = new Table(table.getSkin());
 		t.defaults().pad(2);
 		
-		t.add(name).left();
+		t.add(name).right();
 		t.add(slider).width(width);
 		t.add(number).width(50);
 		
 		table.add(t).fill();
+		table.row();
+		
+		return slider;
+	}
+	public static Slider sliderTablei(Table table, String name, int min, int max, int value, Consumer<Integer> callback) {
+		float width = 200;
+		Label number = new Label(String.valueOf(value), table.getSkin());
+		Slider slider = slider((float)min, (float)max, 1f, false, table.getSkin(), (float)value, val->{
+			int ival = MathUtils.round(val);
+			callback.accept(ival);
+			number.setText(ival);
+		});
+		
+		table.add(name).right();
+		table.add(slider).width(width);
+		table.add(number).width(50);
 		table.row();
 		
 		return slider;
@@ -232,7 +251,7 @@ public class UI {
 		dialog.show(stage);
 	}
 	public static void header(Table table, String text) {
-		table.add(new Label(text, table.getSkin(), "section")).growX().row();
+		table.add(new Label(text, table.getSkin(), "section")).fillX().row();
 	}
 	public static Table table(Skin skin) {
 		Table t = new Table(skin);
@@ -244,6 +263,7 @@ public class UI {
 		label.setColor(Color.LIGHT_GRAY);
 		Frame frame = new Frame(label, skin);
 		frame.getContentTable().setSkin(skin);
+		frame.getContentTable().defaults().pad(DEFAULT_PADDING);
 		return frame;
 	}
 	public static Frame frameToggle(String title, Skin skin, boolean checked, Consumer<Boolean> callback) {

@@ -21,10 +21,11 @@ public class HDRModule implements GLTFComposerModule
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		Table t = UI.table(skin);
+		t.defaults().growX();
 
-		t.add(bloomModule.initUI(ctx, skin)).fill().row();
+		t.add(bloomModule.initUI(ctx, skin)).row();
 		
-		t.add(toneMappingModule.initUI(ctx, skin)).fill().row();
+		t.add(toneMappingModule.initUI(ctx, skin)).row();
 		
 		return t;
 	}

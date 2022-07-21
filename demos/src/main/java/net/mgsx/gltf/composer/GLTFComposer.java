@@ -33,12 +33,13 @@ import net.mgsx.gdx.scenes.scene2d.ui.TabPane;
 import net.mgsx.gdx.scenes.scene2d.ui.TabPane.TabPaneStyle;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.modules.CameraModule;
-import net.mgsx.gltf.composer.modules.FileModule;
+import net.mgsx.gltf.composer.modules.CompositionModule;
 import net.mgsx.gltf.composer.modules.IBLModule;
+import net.mgsx.gltf.composer.modules.LightingModule;
 import net.mgsx.gltf.composer.modules.MiscModule;
+import net.mgsx.gltf.composer.modules.PostProcessingModule;
 import net.mgsx.gltf.composer.modules.RenderModule;
 import net.mgsx.gltf.composer.modules.SceneModule;
-import net.mgsx.gltf.composer.modules.SkinningModule;
 import net.mgsx.gltf.composer.modules.SystemModule;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
@@ -64,8 +65,6 @@ public class GLTFComposer extends ScreenAdapter {
 	
 	private final IntIntMap moduleToTabIndex = new IntIntMap();
 	
-	private ShapeRenderer shapes;
-
 	public GLTFComposer(Settings settings, boolean hdpiDetected) {
 		
 		ctx.vsync = settings.useVSync;
@@ -86,7 +85,8 @@ public class GLTFComposer extends ScreenAdapter {
 		float v = (r.getV() + r.getV2())/2;
 		r.setRegion(u, v, u, v);
 		
-		String[] icons = new String[]{"icon-cube",  "icon-shade", "icon-human", 
+		String[] icons = new String[]{"icon-cube",  "icon-shade", "icon-human", "icon-grad", 
+				"icon-tree", "icon-lab", "icon-shader",
 				"icon-file",  "icon-light", "icon-orbit", "icon-camera", "icon-wrench"};
 		for(String icon : icons){
 			skin.add(icon, skin.getRegion(icon + "-16"), TextureRegion.class);
@@ -133,16 +133,15 @@ public class GLTFComposer extends ScreenAdapter {
 		t.setFillParent(true);
 		ctx.stage.addActor(t);
 		
-		shapes = new ShapeRenderer();
-		
 		// add modules
-		addModule(new FileModule(), "icon-file");
-		addModule(new SceneModule(), "icon-cube");
-		addModule(new SkinningModule(), "icon-human");
-		addModule(new IBLModule(), "icon-orbit");
-		addModule(new RenderModule(ctx), "icon-light");
+		addModule(new CompositionModule(), "icon-file");
+		addModule(new SceneModule(), "icon-tree");
 		addModule(new CameraModule(), "icon-camera");
-		addModule(new MiscModule(ctx), "icon-shade");
+		addModule(new IBLModule(), "icon-cube");
+		addModule(new LightingModule(), "icon-light");
+		addModule(new RenderModule(ctx), "icon-shader");
+		addModule(new PostProcessingModule(), "icon-grad");
+		addModule(new MiscModule(ctx), "icon-lab");
 		addModule(systemModule = new SystemModule(), "icon-wrench");
 		
 		tabPane.setCurrentIndex(0);
@@ -241,10 +240,6 @@ public class GLTFComposer extends ScreenAdapter {
 		}
 		
 		systemModule.endProfiling(ctx);
-		
-		for(int i=0 ; i<modules.size ; i++){
-			modules.get(i).renderOverlay(ctx, shapes);
-		}
 		
 		ctx.stage.getViewport().apply();
 		ctx.stage.act();

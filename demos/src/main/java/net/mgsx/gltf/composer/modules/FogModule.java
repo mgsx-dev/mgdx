@@ -29,11 +29,12 @@ public class FogModule implements GLTFComposerModule
 		Table t = frame.getContentTable();
 		ColorBox colorBox = new ColorBox("Fog color", ()->ctx.compo.fog.color, true, skin);
 		UI.change(colorBox, e->ComposerUtils.applyFog(ctx));
-		t.add(colorBox).row();
+		t.add("color").right();
+		t.add(colorBox).left().row();
 		UI.sliderTable(t, "near", 1e-3f, 1, ctx.compo.fog.near, ControlScale.LOG, v->{ctx.compo.fog.near = v; ComposerUtils.applyFog(ctx);});
 		UI.sliderTable(t, "far", 1e-3f, 1, ctx.compo.fog.far, ControlScale.LOG, v->{ctx.compo.fog.far = v; ComposerUtils.applyFog(ctx);});
 		UI.sliderTable(t, "exponent", 0, 1, ctx.compo.fog.exponent, ControlScale.LIN, v->{ctx.compo.fog.exponent = v; ComposerUtils.applyFog(ctx);});
-		controls.add(frame);
+		controls.add(frame).growX();
 	}
 	
 	@Override

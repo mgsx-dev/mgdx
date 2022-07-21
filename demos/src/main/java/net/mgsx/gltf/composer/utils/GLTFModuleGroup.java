@@ -1,7 +1,6 @@
 package net.mgsx.gltf.composer.utils;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -40,13 +39,6 @@ public class GLTFModuleGroup implements GLTFComposerModule
 	public void render(GLTFComposerContext ctx) {
 		for(GLTFComposerModule module : modules){
 			module.render(ctx);
-		}
-	}
-	
-	@Override
-	public void renderOverlay(GLTFComposerContext ctx, ShapeRenderer shapes) {
-		for(GLTFComposerModule module : modules){
-			module.renderOverlay(ctx, shapes);
 		}
 	}
 	

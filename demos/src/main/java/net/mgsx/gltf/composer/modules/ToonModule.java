@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gltf.composer.GLTFComposerContext;
@@ -17,13 +18,17 @@ import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 public class ToonModule implements GLTFComposerModule
 {
 	private OutlineDepthModule outline = new OutlineDepthModule();
-	private boolean outlineOnly;
+	private boolean ceilEnabled = true;
 
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		Table t = UI.table(skin);
-		t.add(UI.toggle(skin, "outline only", outlineOnly, v->outlineOnly=v)).row();
-		t.add(outline.initUI(ctx, skin)).row();
+		t.defaults().fill();
+		
+		Frame ceilFrame = UI.frameToggle("Ceil shading", skin, ceilEnabled, v->ceilEnabled=v);
+		t.add(ceilFrame).row();
+		
+		t.add(outline.initUI(ctx, skin)).growX().row();
 		return t;
 	}
 	
@@ -49,7 +54,7 @@ public class ToonModule implements GLTFComposerModule
 		ctx.fbo.ensureScreenSize();
 		ctx.fbo.begin();
 		ScreenUtils.clear(ctx.compo.clearColor, true);
-		if(!outlineOnly){
+		if(ceilEnabled){
 			ctx.sceneManager.renderColors();
 		}
 		ctx.fbo.end();

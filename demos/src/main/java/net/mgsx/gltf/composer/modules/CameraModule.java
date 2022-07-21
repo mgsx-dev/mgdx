@@ -24,6 +24,7 @@ public class CameraModule implements GLTFComposerModule {
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		controls = UI.table(skin);
+		controls.defaults().growX();
 		buildUI(ctx);
 		return controls;
 	}
@@ -44,8 +45,12 @@ public class CameraModule implements GLTFComposerModule {
 	
 	public void buildUI(GLTFComposerContext ctx){
 		controls.clear();
+		
+		UI.header(controls, "Camera");
+		
+		controls.defaults().fill();
 		{
-			Frame frame = UI.frame("camera", ctx.skin);
+			Frame frame = UI.frame("perspective camera", ctx.skin);
 			controls.add(frame).row();
 			Table t = frame.getContentTable();
 			

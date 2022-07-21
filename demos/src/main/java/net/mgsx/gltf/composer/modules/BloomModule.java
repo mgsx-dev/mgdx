@@ -24,6 +24,7 @@ public class BloomModule implements GLTFComposerModule
 	}
 	private void updateUI(GLTFComposerContext ctx, Skin skin) {
 		controls.clear();
+		controls.defaults().growX();
 		Frame frame = UI.frameToggle("Bloom", skin, ctx.compo.bloomEnabled, value->ctx.compo.bloomEnabled=value);
 		Table t = frame.getContentTable();
 		

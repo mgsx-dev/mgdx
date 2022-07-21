@@ -1,9 +1,7 @@
 package net.mgsx.gltf.composer.utils;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
@@ -22,7 +20,7 @@ public class GLTFModuleSwitch implements GLTFComposerModule
 	private final Array<SubModule> modules = new Array<SubModule>();
 	private SubModule current;
 	private Table controls;
-	private Cell cell;
+	private Table subTable;
 	
 	public void addSubModule(GLTFComposerContext ctx, GLTFComposerModule module, String name){
 		SubModule s = new SubModule();
@@ -58,19 +56,18 @@ public class GLTFModuleSwitch implements GLTFComposerModule
 	}
 	
 	@Override
-	public void renderOverlay(GLTFComposerContext ctx, ShapeRenderer shapes) {
-		current.module.renderOverlay(ctx, shapes);
-	}
-	
-	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
-		controls = new Table(skin);
+		controls = UI.table(skin);
 		for(SubModule subModule : modules){
 			subModule.ui = subModule.module.initUI(ctx, skin);
 		}
 		controls.add(UI.selector(skin, modules, current, m->m.name, m->setCurrent(ctx, m))).row();
-		cell = controls.add(current.ui);
+		controls.add(subTable = new Table()).growX();
 		controls.row();
+		
+		subTable.defaults().growX();
+		subTable.add(current.ui);
+		
 		return controls;
 	}
 
@@ -79,6 +76,7 @@ public class GLTFModuleSwitch implements GLTFComposerModule
 		if(current != null) current.module.hide(ctx);
 		current = m;
 		if(current != null) current.module.show(ctx);
-		cell.setActor(current.ui);
+		subTable.clear();
+		subTable.add(current.ui);
 	}
 }

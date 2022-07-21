@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 import net.mgsx.gdx.graphics.g3d.ModelUtils;
+import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
@@ -269,55 +270,80 @@ public class SceneModule implements GLTFComposerModule
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		controls = UI.table(skin);
-		controls.add("no model loaded");
-	
+		updateUI(ctx);
 		return controls;
 	}
 	
 	@Override
 	public void update(GLTFComposerContext ctx, float delta) {
 		if(ctx.sceneJustChanged){
-			// update UI
-			controls.clear();
+			updateUI(ctx);
+		}
+	}
+	
+	private void updateUI(GLTFComposerContext ctx){
+		// update UI
+		controls.clear();
+		controls.defaults().growX();
+		
+		UI.header(controls, "Model");
+		
+		ctx.overlay.setScene(ctx.asset, ctx.scene);
+		
+		if(ctx.scene != null){
 			
-			if(ctx.scene != null){
-				
-				// TODO options (show selected only)
-				// zoom to selected / zoom to scene (auto adjust)
-				
-				cameraButtonGroup.clear();
-				cameraButtonGroup.setMinCheckCount(0);
-				cameraButtonGroup.setMaxCheckCount(1);
-				
-				Tree<ModelNode, ModelNode> tree = new Tree<>(ctx.skin);
-				SceneNode sceneNode = new SceneNode(ctx, ctx.scene, ctx.skin);
-				tree.getRootNodes().add(sceneNode);
-				tree.updateRootNodes();
-				
-				sceneNode.setExpanded(true);
-				
-				ScrollPane sp = new ScrollPane(tree);
-				sp.setScrollingDisabled(true, false);
-				sp.setTouchable(Touchable.childrenOnly);
-				controls.add(sp).growY().expandX().left().row();
-				
-				Table infoPane = new Table(ctx.skin);
-				controls.add(infoPane).row();
-				
-				tree.addListener(new ChangeListener() {
-					@Override
-					public void changed(ChangeEvent event, Actor actor) {
-						if(actor == tree){
-							ModelNode selection = tree.getSelection().getLastSelected();
-							infoPane.clear();
-							if(selection != null){
-								Actor pane = selection.createPane(ctx);
-								if(pane != null) infoPane.add(pane);
-							}
+			// TODO options (show selected only)
+			// zoom to selected / zoom to scene (auto adjust)
+			
+			cameraButtonGroup.clear();
+			cameraButtonGroup.setMinCheckCount(0);
+			cameraButtonGroup.setMaxCheckCount(1);
+			
+			Tree<ModelNode, ModelNode> tree = new Tree<>(ctx.skin);
+			SceneNode sceneNode = new SceneNode(ctx, ctx.scene, ctx.skin);
+			tree.getRootNodes().add(sceneNode);
+			tree.updateRootNodes();
+			
+			sceneNode.setExpanded(true);
+			
+			ScrollPane sp = new ScrollPane(tree);
+			sp.setScrollingDisabled(true, false);
+			sp.setTouchable(Touchable.childrenOnly);
+			controls.add(sp).growY().expandX().left().row();
+			
+			Table infoPane = new Table(ctx.skin);
+			controls.add(infoPane).fill().row();
+			
+			tree.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					if(actor == tree){
+						ModelNode selection = tree.getSelection().getLastSelected();
+						infoPane.clear();
+						if(selection != null){
+							Actor pane = selection.createPane(ctx);
+							if(pane != null) infoPane.add(pane);
 						}
 					}
-				});
+				}
+			});
+			
+			if(ctx.overlay.hasBones())
+			{
+				UI.header(controls, "Overlay");
+				
+				Frame frame = UI.frameToggle("Bones", ctx.skin, ctx.overlay.displayEnabled, v->ctx.overlay.displayEnabled=v);
+				controls.add(frame).growX().row();
+				
+				Table t = frame.getContentTable();
+				t.defaults().expandX().left();
+				UI.toggle(t, "Display boxes",ctx.overlay.displayBox, v->ctx.overlay.displayBox=v);
+				UI.toggle(t, "Display axis", ctx.overlay.displayAxis, v->ctx.overlay.displayAxis=v);
+				UI.toggle(t, "Display parenting", ctx.overlay.displayParenting, v->ctx.overlay.displayParenting=v);
 			}
+			
+		}else{
+			controls.add("no model loaded").fill(false);
 		}
 	}
 	
