@@ -1,4 +1,4 @@
-// #version 130
+// DEPRECATED : use color-grading-lut.fs.glsl
 
 uniform sampler2D u_texture;
 uniform sampler2D u_textureLUT;
