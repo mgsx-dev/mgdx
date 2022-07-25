@@ -28,8 +28,6 @@ import net.mgsx.gltf.composer.core.Composition;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.composer.utils.Overlay;
 import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
-import net.mgsx.gltf.ibl.io.AWTFileSelector;
-import net.mgsx.gltf.ibl.io.FileSelector;
 import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.scene.Scene;
@@ -39,6 +37,8 @@ import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.ibl.IBL;
+import net.mgsx.io.AWTFileSelector;
+import net.mgsx.io.FileSelector;
 
 public class GLTFComposerContext {
 	

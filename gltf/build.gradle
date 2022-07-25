@@ -5,7 +5,6 @@ dependencies {
 	api project(':core')
 	api project(':desktop')
 	api "com.github.mgsx-dev.gdx-gltf:gltf:$gltfVersion"
-	api "com.github.mgsx-dev.gdx-gltf:ibl-composer:$gltfVersion"
 }
 
 apply plugin: 'maven-publish'
