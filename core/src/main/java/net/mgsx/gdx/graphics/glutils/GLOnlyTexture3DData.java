@@ -7,19 +7,29 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.Texture3DData;
 
+// TODO separate : CustomTexture3DData and GLOnlyTexture3DData
 public class GLOnlyTexture3DData implements Texture3DData {
 
 	private int width, height, depth;
-	private ByteBuffer pixels;
-	private boolean useMipMaps;
+	private int mipMapLevel;
 	private int glFormat;
 	private int glInternalFormat;
 	private int glType;
+	private ByteBuffer pixels;
 	
-	public GLOnlyTexture3DData(int width, int height, int depth, int glFormat, int glInternalFormat, int glType, boolean useMipMaps) {
+	/**
+	 * @see "https://registry.khronos.org/OpenGL-Refpages/es3.0/html/glTexImage3D.xhtml"
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param mipMapLevel
+	 * @param glFormat
+	 * @param glInternalFormat
+	 * @param glType
+	 */
+	public GLOnlyTexture3DData(int width, int height, int depth, int mipMapLevel, int glFormat, int glInternalFormat, int glType) {
 		super();
 		this.width = width;
 		this.height = height;
@@ -27,7 +37,7 @@ public class GLOnlyTexture3DData implements Texture3DData {
 		this.glFormat = glFormat;
 		this.glInternalFormat = glInternalFormat;
 		this.glType = glType;
-		this.useMipMaps = useMipMaps;
+		this.mipMapLevel = mipMapLevel;
 	}
 	
 	@Override
@@ -55,7 +65,7 @@ public class GLOnlyTexture3DData implements Texture3DData {
 
 	@Override
 	public boolean useMipMaps() {
-		return useMipMaps;
+		return false;
 	}
 
 	@Override
@@ -70,13 +80,15 @@ public class GLOnlyTexture3DData implements Texture3DData {
 	public int getGLType() {
 		return glType;
 	}
+	
+	public int getGLFormat() {
+		return glFormat;
+	}
 
-	/**
-	 * pixels buffer can be used in both way: 
-	 * to upload pixels: fill buffer, bind texture and call {@link #consume3DData()}
-	 * to downlaod pixels: bind texture, call {@link #downloadData()} and {@link #getPixels()}
-	 * @return the buffer
-	 */
+	public int getMipMapLevel() {
+		return mipMapLevel;
+	}
+	
 	public ByteBuffer getPixels() {
 		ensureBuffer();
 		return pixels;
@@ -84,26 +96,32 @@ public class GLOnlyTexture3DData implements Texture3DData {
 	
 	private void ensureBuffer(){
 		if(pixels == null){
-			// TODO this is not always true, sometimes you want to send raw data (eg. half float)
-			// cometimes you want to send client data as float 32 bit even if internal format uses half float...
-			int bytesPerPixel;
-			if(glInternalFormat == GL30.GL_R8){
-				bytesPerPixel = 1;
-			}else if(glInternalFormat == GL30.GL_RGBA8){
-				bytesPerPixel = 4;
-			}else if(glInternalFormat == GL30.GL_RGBA16F){
-				bytesPerPixel = 8;
-			}else if(glInternalFormat == GL30.GL_RGBA32F){
-				bytesPerPixel = 16;
-			}else if(glInternalFormat == GL30.GL_RGB8){
-				bytesPerPixel = 3;
-			}else if(glInternalFormat == GL30.GL_RGB16F){
-				bytesPerPixel = 6;
-			}else if(glInternalFormat == GL30.GL_RGB32F){
-				bytesPerPixel = 12;
+			
+			int numChannels;
+			if(glFormat == GL30.GL_RED || glFormat == GL30.GL_RED_INTEGER || glFormat == GL30.GL_LUMINANCE || glFormat == GL30.GL_ALPHA){
+				numChannels = 1;
+			}else if(glFormat == GL30.GL_RG || glFormat == GL30.GL_RG_INTEGER || glFormat == GL30.GL_LUMINANCE_ALPHA){
+				numChannels = 2;
+			}else if(glFormat == GL30.GL_RGB || glFormat == GL30.GL_RGB_INTEGER){
+				numChannels = 3;
+			}else if(glFormat == GL30.GL_RGBA || glFormat == GL30.GL_RGBA_INTEGER){
+				numChannels = 4;
 			}else{
-				throw new GdxRuntimeException("unsupported glInternalFormat: " + glInternalFormat);
+				throw new GdxRuntimeException("unsupported glFormat: " + glFormat);
 			}
+			
+			int bytesPerChannel;
+			if(glType == GL30.GL_UNSIGNED_BYTE || glType == GL30.GL_BYTE){
+				bytesPerChannel = 1;
+			}else if(glType == GL30.GL_UNSIGNED_SHORT || glType == GL30.GL_SHORT || glType == GL30.GL_HALF_FLOAT){
+				bytesPerChannel = 2;
+			}else if(glType == GL30.GL_UNSIGNED_INT || glType == GL30.GL_INT || glType == GL30.GL_FLOAT){
+				bytesPerChannel = 4;
+			}else{
+				throw new GdxRuntimeException("unsupported glType: " + glType);
+			}
+			
+			int bytesPerPixel = numChannels * bytesPerChannel;
 			
 			pixels = BufferUtils.newByteBuffer(width * height * depth * bytesPerPixel);
 		}
@@ -112,20 +130,7 @@ public class GLOnlyTexture3DData implements Texture3DData {
 
 	@Override
 	public void consume3DData() {
-		// TODO use level for mipmaps
-		if(pixels != null){
-			Gdx.gl30.glTexImage3D(GL30.GL_TEXTURE_3D, 0, glInternalFormat, width, height, depth, 0, glFormat, glType, pixels);
-		}else{
-			Gdx.gl30.glTexImage3D(GL30.GL_TEXTURE_3D, 0, glInternalFormat, width, height, depth, 0, glFormat, glType, null);
-		}
-	}
-
-	@Override
-	public void downloadData() {
-		ensureBuffer();
-		pixels.clear();
-		// TODO for each level
-		Mgdx.glMax.glGetTexImage(GL30.GL_TEXTURE_3D, 0, glFormat, glType, pixels);
+		Gdx.gl30.glTexImage3D(GL30.GL_TEXTURE_3D, mipMapLevel, glInternalFormat, width, height, depth, 0, glFormat, glType, pixels);
 	}
 
 }

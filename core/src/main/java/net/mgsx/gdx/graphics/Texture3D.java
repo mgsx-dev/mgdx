@@ -24,15 +24,15 @@ public class Texture3D extends GLTexture {
 
 	protected TextureWrap rWrap = TextureWrap.ClampToEdge;
 
-	public Texture3D (int width, int height, int depth, int glFormat, int glInternalFormat, int glType, boolean useMipMaps){
-		this(new GLOnlyTexture3DData(width, height, depth, glFormat, glInternalFormat, glType, useMipMaps));
+	public Texture3D (int width, int height, int depth, int glFormat, int glInternalFormat, int glType){
+		this(new GLOnlyTexture3DData(width, height, depth, 0, glFormat, glInternalFormat, glType));
 	}
 
 	public Texture3D (Texture3DData data) {
 		super(GL30.GL_TEXTURE_3D, Gdx.gl.glGenTexture());
 
 		if (Gdx.gl30 == null) {
-			throw new GdxRuntimeException("TextureArray requires a device running with GLES 3.0 compatibilty");
+			throw new GdxRuntimeException("Texture3D requires a device running with GLES 3.0 compatibilty");
 		}
 
 		load(data);
@@ -57,9 +57,8 @@ public class Texture3D extends GLTexture {
 		Gdx.gl.glBindTexture(glTarget, 0);
 	}
 	
-	public void download(){
-		bind();
-		data.downloadData();
+	public Texture3DData getData() {
+		return data;
 	}
 	
 	public void upload() {
@@ -129,8 +128,8 @@ public class Texture3D extends GLTexture {
 		return builder.toString();
 	}
 
-	/** @return the number of managed TextureArrays currently loaded */
-	public static int getNumManagedTextureArrays () {
+	/** @return the number of managed Texture3D currently loaded */
+	public static int getNumManagedTextures3D () {
 		return managedTexture3Ds.get(Gdx.app).size;
 	}
 

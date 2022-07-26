@@ -24,7 +24,7 @@ public class ColorGrading {
 	}
 	
 	public static Texture3D createLUT3D(CubeData data){
-		GLOnlyTexture3DData textureData = new GLOnlyTexture3DData(data.dimSize, data.dimSize, data.dimSize, GL30.GL_RGB, GL30.GL_RGB32F, GL30.GL_FLOAT, false);
+		GLOnlyTexture3DData textureData = new GLOnlyTexture3DData(data.dimSize, data.dimSize, data.dimSize, 0, GL30.GL_RGB, GL30.GL_RGB32F, GL30.GL_FLOAT);
 		data.buffer.rewind();
 		textureData.getPixels().put(data.buffer);
 		textureData.getPixels().flip();
@@ -151,7 +151,7 @@ public class ColorGrading {
 		if(pixmap.getWidth() == pixmap.getHeight()){
 			int gridSize = MathUtils.round((float)Math.pow(pixmap.getWidth(), 1.0 / 3.0));
 			int dimSize = pixmap.getHeight() / gridSize;
-			GLOnlyTexture3DData textureData = new GLOnlyTexture3DData(dimSize, dimSize, dimSize, GL30.GL_RGB, GL30.GL_RGB8, GL30.GL_UNSIGNED_BYTE, false);
+			GLOnlyTexture3DData textureData = new GLOnlyTexture3DData(dimSize, dimSize, dimSize, 0, GL30.GL_RGB, GL30.GL_RGB8, GL30.GL_UNSIGNED_BYTE);
 			ByteBuffer buffer = textureData.getPixels();
 			Pixmap submap = new Pixmap(dimSize, dimSize, Format.RGB888);
 			submap.setBlending(Blending.None);
@@ -173,7 +173,7 @@ public class ColorGrading {
 		}else{
 			
 			int dimSize = pixmap.getHeight();
-			GLOnlyTexture3DData textureData = new GLOnlyTexture3DData(dimSize, dimSize, dimSize, GL30.GL_RGB, GL30.GL_RGB8, GL30.GL_UNSIGNED_BYTE, false);
+			GLOnlyTexture3DData textureData = new GLOnlyTexture3DData(dimSize, dimSize, dimSize, 0, GL30.GL_RGB, GL30.GL_RGB8, GL30.GL_UNSIGNED_BYTE);
 			ByteBuffer buffer = textureData.getPixels();
 			Pixmap submap = new Pixmap(dimSize, dimSize, Format.RGB888);
 			submap.setBlending(Blending.None);

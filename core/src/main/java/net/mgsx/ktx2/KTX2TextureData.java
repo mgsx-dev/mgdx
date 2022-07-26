@@ -353,11 +353,6 @@ public class KTX2TextureData implements TextureData, CubemapData, Texture3DData,
 		consumeData();
 	}
 	
-	@Override
-	public void downloadData() {
-		throw new GdxRuntimeException("not supported");
-	}
-	
 	/**
 	 * Example :
 	 * 	int lb = f.buffer.get() & 0xFF;

@@ -32,11 +32,6 @@ public interface Texture3DData  {
 	 * should be disposed of here. */
 	public void consume3DData();
 
-	/**
-	 * Download pixels from GPU to CPU.
-	 */
-	public void downloadData();
-
 	/** @return whether this implementation can cope with a EGL context loss. */
 	public boolean isManaged ();
 }

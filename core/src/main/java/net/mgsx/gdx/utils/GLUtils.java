@@ -1,13 +1,18 @@
 package net.mgsx.gdx.utils;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.utils.BufferUtils;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.Mgdx;
+import net.mgsx.gdx.graphics.Texture3D;
+import net.mgsx.gdx.graphics.Texture3DData;
+import net.mgsx.gdx.graphics.glutils.GLOnlyTexture3DData;
 
 public class GLUtils {
 	public static final IntBuffer buffer1i = BufferUtils.newIntBuffer(1);
@@ -35,5 +40,17 @@ public class GLUtils {
 		buffer1i.clear();
 		Gdx.gl.glGetIntegerv(pname, buffer1i);
 		return buffer1i.get();
+	}
+	public static void downloadTextureData(Texture3D texture){
+		Texture3DData data = texture.getData();
+		if(data instanceof GLOnlyTexture3DData){
+			GLOnlyTexture3DData customData = (GLOnlyTexture3DData)data;
+			texture.bind();
+			ByteBuffer pixels = customData.getPixels();
+			pixels.clear();
+			Mgdx.glMax.glGetTexImage(GL30.GL_TEXTURE_3D, customData.getMipMapLevel(), customData.getGLFormat(), data.getGLType(), pixels);
+		}else{
+			throw new GdxRuntimeException("texture data not supported");
+		}
 	}
 }
