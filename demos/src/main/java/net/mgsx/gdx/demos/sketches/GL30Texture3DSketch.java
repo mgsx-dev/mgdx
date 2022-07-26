@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 
 import net.mgsx.gdx.graphics.Texture3D;
-import net.mgsx.gdx.graphics.glutils.GLOnlyTexture3DData;
+import net.mgsx.gdx.graphics.glutils.CustomTexture3DData;
 import net.mgsx.gdx.utils.ShaderProgramUtils;
 
 public class GL30Texture3DSketch extends ScreenAdapter
@@ -27,7 +27,7 @@ public class GL30Texture3DSketch extends ScreenAdapter
 	public GL30Texture3DSketch() {
 		int size = 8;
 		int w = size, h = size, d = size;
-		GLOnlyTexture3DData data = new GLOnlyTexture3DData(w, h, d, 0, GL30.GL_RGBA, GL30.GL_RGBA8, GL30.GL_UNSIGNED_BYTE);
+		CustomTexture3DData data = new CustomTexture3DData(w, h, d, 0, GL30.GL_RGBA, GL30.GL_RGBA8, GL30.GL_UNSIGNED_BYTE);
 		IntBuffer buffer = data.getPixels().asIntBuffer();
 		Color c = new Color(Color.BLACK);
 		for(int z=0 ; z<d ; z++){

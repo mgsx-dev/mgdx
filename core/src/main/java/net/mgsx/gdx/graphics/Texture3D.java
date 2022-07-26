@@ -11,11 +11,11 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import net.mgsx.gdx.graphics.glutils.GLOnlyTexture3DData;
+import net.mgsx.gdx.graphics.glutils.CustomTexture3DData;
 
 /**
  * Open GLES wrapper for Texture3D
- * @author MGSX */
+ * @author mgsx */
 public class Texture3D extends GLTexture {
 
 	final static Map<Application, Array<Texture3D>> managedTexture3Ds = new HashMap<Application, Array<Texture3D>>();
@@ -25,7 +25,7 @@ public class Texture3D extends GLTexture {
 	protected TextureWrap rWrap = TextureWrap.ClampToEdge;
 
 	public Texture3D (int width, int height, int depth, int glFormat, int glInternalFormat, int glType){
-		this(new GLOnlyTexture3DData(width, height, depth, 0, glFormat, glInternalFormat, glType));
+		this(new CustomTexture3DData(width, height, depth, 0, glFormat, glInternalFormat, glType));
 	}
 
 	public Texture3D (Texture3DData data) {

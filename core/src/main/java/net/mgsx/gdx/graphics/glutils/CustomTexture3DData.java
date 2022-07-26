@@ -9,8 +9,18 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.graphics.Texture3DData;
 
-// TODO separate : CustomTexture3DData and GLOnlyTexture3DData
-public class GLOnlyTexture3DData implements Texture3DData {
+/**
+ * A {@link Texture3DData} implementation that adresses 2 use cases :
+ * 
+ * You can use it as a GL only texure (feed by a compute shader). In this case the texture is not managed.
+ * 
+ * Or you can use it to upload pixels to GPU. In this case you should call {@link #getPixels()} to fill
+ * the buffer prior to consuming it (eg. before new Texture3D(data)).
+ * 
+ * @author mgsx
+ *
+ */
+public class CustomTexture3DData implements Texture3DData {
 
 	private int width, height, depth;
 	private int mipMapLevel;
@@ -21,15 +31,8 @@ public class GLOnlyTexture3DData implements Texture3DData {
 	
 	/**
 	 * @see "https://registry.khronos.org/OpenGL-Refpages/es3.0/html/glTexImage3D.xhtml"
-	 * @param width
-	 * @param height
-	 * @param depth
-	 * @param mipMapLevel
-	 * @param glFormat
-	 * @param glInternalFormat
-	 * @param glType
 	 */
-	public GLOnlyTexture3DData(int width, int height, int depth, int mipMapLevel, int glFormat, int glInternalFormat, int glType) {
+	public CustomTexture3DData(int width, int height, int depth, int mipMapLevel, int glFormat, int glInternalFormat, int glType) {
 		super();
 		this.width = width;
 		this.height = height;
@@ -70,7 +73,7 @@ public class GLOnlyTexture3DData implements Texture3DData {
 
 	@Override
 	public boolean isManaged() {
-		return false;
+		return pixels != null;
 	}
 
 	public int getInternalFormat() {
@@ -90,11 +93,6 @@ public class GLOnlyTexture3DData implements Texture3DData {
 	}
 	
 	public ByteBuffer getPixels() {
-		ensureBuffer();
-		return pixels;
-	}
-	
-	private void ensureBuffer(){
 		if(pixels == null){
 			
 			int numChannels;
@@ -125,7 +123,7 @@ public class GLOnlyTexture3DData implements Texture3DData {
 			
 			pixels = BufferUtils.newByteBuffer(width * height * depth * bytesPerPixel);
 		}
-		
+		return pixels;
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.Texture3D;
 import net.mgsx.gdx.graphics.Texture3DData;
-import net.mgsx.gdx.graphics.glutils.GLOnlyTexture3DData;
+import net.mgsx.gdx.graphics.glutils.CustomTexture3DData;
 
 public class GLUtils {
 	public static final IntBuffer buffer1i = BufferUtils.newIntBuffer(1);
@@ -43,8 +43,8 @@ public class GLUtils {
 	}
 	public static void downloadTextureData(Texture3D texture){
 		Texture3DData data = texture.getData();
-		if(data instanceof GLOnlyTexture3DData){
-			GLOnlyTexture3DData customData = (GLOnlyTexture3DData)data;
+		if(data instanceof CustomTexture3DData){
+			CustomTexture3DData customData = (CustomTexture3DData)data;
 			texture.bind();
 			ByteBuffer pixels = customData.getPixels();
 			pixels.clear();
