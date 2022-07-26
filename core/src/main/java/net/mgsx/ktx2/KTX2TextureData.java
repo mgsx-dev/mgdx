@@ -297,7 +297,10 @@ public class KTX2TextureData implements TextureData, CubemapData, Texture3DData,
 			throw new GdxRuntimeException("face count invalid: " + faceCount);
 		}
 		
-		if(levelCount != 1) useMipMaps = true;
+		// 0 means that mipmaps should be generated at runtime
+		// 1 means that mipmaps shouldn't be generated.
+		// more than 1 means that it contains custom mipmap levels.
+		if(levelCount == 0) useMipMaps = true;
 
 		in.close();
 	}
