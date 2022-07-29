@@ -26,6 +26,7 @@ import net.mgsx.gdx.demos.sketches.GL32BlendingAdvancedSketch;
 import net.mgsx.gdx.demos.sketches.GL32BlendingMRTSketch;
 import net.mgsx.gdx.demos.sketches.GL32DebugControlSketch;
 import net.mgsx.gdx.demos.sketches.GL32GeometryShaderSketch;
+import net.mgsx.gdx.demos.sketches.GL32OffsetElementsSketch;
 import net.mgsx.gdx.demos.sketches.GL32StreamPixels;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSimpleSketch;
 import net.mgsx.gdx.demos.sketches.GL32TesselationShaderSketch;
@@ -60,6 +61,7 @@ public class MgdxSketchSelector extends Dialog
 			GL32TesselationShaderSketch.class,
 			GL32BlendingMRTSketch.class,
 			GL32BlendingAdvancedSketch.class,
+			GL32OffsetElementsSketch.class,
 			GL32StreamPixels.class
 			);
 	}

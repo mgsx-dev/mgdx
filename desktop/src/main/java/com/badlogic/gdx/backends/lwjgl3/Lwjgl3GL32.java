@@ -143,59 +143,94 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 
 	@Override
 	public void glDrawElementsBaseVertex(int mode, int count, int type, Buffer indices, int basevertex) {
-		int oldLimit = indices.limit();
-		indices.limit(count); // TODO not sure
-		if(indices instanceof ByteBuffer){
-			org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, type, (ByteBuffer)indices, basevertex);
-		}else if(indices instanceof IntBuffer){
-			org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, (IntBuffer)indices, basevertex);
-		}else if(indices instanceof ShortBuffer){
-			org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, (ShortBuffer)indices, basevertex);
-		}else{
-			throw new GdxRuntimeException("buffer type not supported");
-		}
-		indices.limit(oldLimit);
+		if (indices instanceof ShortBuffer && type == com.badlogic.gdx.graphics.GL20.GL_UNSIGNED_SHORT) {
+			ShortBuffer sb = (ShortBuffer)indices;
+			int position = sb.position();
+			int oldLimit = sb.limit();
+			sb.limit(position + count);
+			org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, sb, basevertex);
+			sb.limit(oldLimit);
+		} else if (indices instanceof ByteBuffer && type == com.badlogic.gdx.graphics.GL20.GL_UNSIGNED_SHORT) {
+			ShortBuffer sb = ((ByteBuffer)indices).asShortBuffer();
+			int position = sb.position();
+			int oldLimit = sb.limit();
+			sb.limit(position + count);
+			org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, sb, basevertex);
+			sb.limit(oldLimit);
+		} else if (indices instanceof ByteBuffer && type == com.badlogic.gdx.graphics.GL20.GL_UNSIGNED_BYTE) {
+			ByteBuffer bb = (ByteBuffer)indices;
+			int position = bb.position();
+			int oldLimit = bb.limit();
+			bb.limit(position + count);
+			org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, bb, basevertex);
+			bb.limit(oldLimit);
+		} else
+			throw new GdxRuntimeException("Can't use " + indices.getClass().getName()
+				+ " with this method. Use ShortBuffer or ByteBuffer instead.");
 	}
 
 	@Override
 	public void glDrawRangeElementsBaseVertex(int mode, int start, int end, int count, int type, Buffer indices,
 			int basevertex) {
-		int oldLimit = indices.limit();
-		indices.limit(count); // TODO not sure
-		if(indices instanceof ByteBuffer){
-			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, type, (ByteBuffer)indices, basevertex);
-		}else if(indices instanceof IntBuffer){
-			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, (IntBuffer)indices, basevertex);
-		}else if(indices instanceof ShortBuffer){
-			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, (ShortBuffer)indices, basevertex);
-		}else{
-			throw new GdxRuntimeException("buffer type not supported");
-		}
-		indices.limit(oldLimit);
+		if (indices instanceof ShortBuffer && type == com.badlogic.gdx.graphics.GL20.GL_UNSIGNED_SHORT) {
+			ShortBuffer sb = (ShortBuffer)indices;
+			int position = sb.position();
+			int oldLimit = sb.limit();
+			sb.limit(position + count);
+			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, sb, basevertex);
+			sb.limit(oldLimit);
+		} else if (indices instanceof ByteBuffer && type == com.badlogic.gdx.graphics.GL20.GL_UNSIGNED_SHORT) {
+			ShortBuffer sb = ((ByteBuffer)indices).asShortBuffer();
+			int position = sb.position();
+			int oldLimit = sb.limit();
+			sb.limit(position + count);
+			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, sb, basevertex);
+			sb.limit(oldLimit);
+		} else if (indices instanceof ByteBuffer && type == com.badlogic.gdx.graphics.GL20.GL_UNSIGNED_BYTE) {
+			ByteBuffer bb = (ByteBuffer)indices;
+			int position = bb.position();
+			int oldLimit = bb.limit();
+			bb.limit(position + count);
+			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, bb, basevertex);
+			bb.limit(oldLimit);
+		} else
+			throw new GdxRuntimeException("Can't use " + indices.getClass().getName()
+				+ " with this method. Use ShortBuffer or ByteBuffer instead.");
 	}
 
 	@Override
 	public void glDrawElementsInstancedBaseVertex(int mode, int count, int type, Buffer indices, int instanceCount,
 			int basevertex) {
-		int oldLimit = indices.limit();
-		indices.limit(count); // TODO not sure
-		if(indices instanceof ByteBuffer){
-			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, type, (ByteBuffer)indices, instanceCount, basevertex);
-		}else if(indices instanceof IntBuffer){
-			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, (IntBuffer)indices, instanceCount, basevertex);
-		}else if(indices instanceof ShortBuffer){
-			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, (ShortBuffer)indices, instanceCount, basevertex);
-		}else{
-			throw new GdxRuntimeException("buffer type not supported");
-		}
-		indices.limit(oldLimit);
+		if (indices instanceof ShortBuffer && type == com.badlogic.gdx.graphics.GL20.GL_UNSIGNED_SHORT) {
+			ShortBuffer sb = (ShortBuffer)indices;
+			int position = sb.position();
+			int oldLimit = sb.limit();
+			sb.limit(position + count);
+			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, sb, instanceCount, basevertex);
+			sb.limit(oldLimit);
+		} else if (indices instanceof ByteBuffer && type == com.badlogic.gdx.graphics.GL20.GL_UNSIGNED_SHORT) {
+			ShortBuffer sb = ((ByteBuffer)indices).asShortBuffer();
+			int position = sb.position();
+			int oldLimit = sb.limit();
+			sb.limit(position + count);
+			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, sb, instanceCount, basevertex);
+			sb.limit(oldLimit);
+		} else if (indices instanceof ByteBuffer && type == com.badlogic.gdx.graphics.GL20.GL_UNSIGNED_BYTE) {
+			ByteBuffer bb = (ByteBuffer)indices;
+			int position = bb.position();
+			int oldLimit = bb.limit();
+			bb.limit(position + count);
+			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, bb, instanceCount, basevertex);
+			bb.limit(oldLimit);
+		} else
+			throw new GdxRuntimeException("Can't use " + indices.getClass().getName()
+				+ " with this method. Use ShortBuffer or ByteBuffer instead.");
 	}
 
 	@Override
 	public void glDrawElementsInstancedBaseVertex(int mode, int count, int type, int indicesOffset, int instanceCount,
 			int basevertex) {
-		// TODO test
-		org.lwjgl.opengl.GL32.nglDrawElementsInstancedBaseVertex(mode, count, type, indicesOffset, instanceCount, basevertex);
+		org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, count, type, indicesOffset, instanceCount, basevertex);
 	}
 
 	@Override
