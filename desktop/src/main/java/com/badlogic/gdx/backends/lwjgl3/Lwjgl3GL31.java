@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GL46;
 
 import com.badlogic.gdx.utils.BufferUtils;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.graphics.GL31;
 
@@ -21,10 +20,6 @@ public class Lwjgl3GL31 extends Lwjgl3GL30 implements GL31 {
 	
 	private final static ByteBuffer tmpByteBuffer = BufferUtils.newByteBuffer(16);
 	
-	protected void notSupported(){
-		throw new GdxRuntimeException("not supported");
-	}
-
 	@Override
 	public void glDispatchCompute(int num_groups_x, int num_groups_y, int num_groups_z) {
 		GL43.glDispatchCompute(num_groups_x, num_groups_y, num_groups_z);

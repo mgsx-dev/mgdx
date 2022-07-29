@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GL45;
 import org.lwjgl.opengl.GLDebugMessageCallbackI;
+import org.lwjgl.opengl.KHRBlendEquationAdvanced;
 import org.lwjgl.system.MemoryUtil;
 
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -26,7 +27,9 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 
 	@Override
 	public void glBlendBarrier() {
-		notSupported();
+		// when available, this extension is enabled by default.
+		// see https://registry.khronos.org/OpenGL/extensions/KHR/KHR_blend_equation_advanced.txt
+		KHRBlendEquationAdvanced.glBlendBarrierKHR();
 	}
 
 	@Override
