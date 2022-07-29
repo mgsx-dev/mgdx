@@ -31,15 +31,15 @@ public class GL32Interceptor extends GL31Interceptor implements GL32 {
 		check();
 	}
 
-	public void glDebugMessageControl(int source, int type, int severity, int count, IntBuffer ids, boolean enabled) {
+	public void glDebugMessageControl(int source, int type, int severity, IntBuffer ids, boolean enabled) {
 		calls++;
-		gl32.glDebugMessageControl(source, type, severity, count, ids, enabled);
+		gl32.glDebugMessageControl(source, type, severity, ids, enabled);
 		check();
 	}
 
-	public void glDebugMessageInsert(int source, int type, int id, int severity, int length, String buf) {
+	public void glDebugMessageInsert(int source, int type, int id, int severity, String buf) {
 		calls++;
-		gl32.glDebugMessageInsert(source, type, id, severity, length, buf);
+		gl32.glDebugMessageInsert(source, type, id, severity, buf);
 		check();
 	}
 
@@ -152,9 +152,9 @@ public class GL32Interceptor extends GL31Interceptor implements GL32 {
 		return v;
 	}
 
-	public void glDrawElementsBaseVertex(int mode, int type, ByteBuffer indices, int basevertex) {
+	public void glDrawElementsBaseVertex(int mode, int count, int type, Buffer indices, int basevertex) {
 		calls++;
-		gl32.glDrawElementsBaseVertex(mode, type, indices, basevertex);
+		gl32.glDrawElementsBaseVertex(mode, count, type, indices, basevertex);
 		check();
 	}
 
@@ -192,9 +192,9 @@ public class GL32Interceptor extends GL31Interceptor implements GL32 {
 		return v;
 	}
 
-	public void glReadnPixels(int x, int y, int width, int height, int format, int type, Buffer data) {
+	public void glReadnPixels(int x, int y, int width, int height, int format, int type, int bufSize, Buffer data) {
 		calls++;
-		gl32.glReadnPixels(x, y, width, height, format, type, data);
+		gl32.glReadnPixels(x, y, width, height, format, type, bufSize, data);
 		check();
 	}
 

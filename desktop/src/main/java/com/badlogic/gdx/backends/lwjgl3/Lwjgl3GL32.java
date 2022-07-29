@@ -39,13 +39,13 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 	}
 
 	@Override
-	public void glDebugMessageControl(int source, int type, int severity, int count, IntBuffer ids, boolean enabled) {
+	public void glDebugMessageControl(int source, int type, int severity, IntBuffer ids, boolean enabled) {
 		GL43.glDebugMessageControl(source, type, severity, ids, enabled);
 	}
 
 	@Override
-	public void glDebugMessageInsert(int source, int type, int id, int severity, int length, String buf) {
-		GL43.glDebugMessageInsert(source, type, id, severity, buf); // TODO ?
+	public void glDebugMessageInsert(int source, int type, int id, int severity, String buf) {
+		GL43.glDebugMessageInsert(source, type, id, severity, buf);
 	}
 
 	@Override
@@ -142,16 +142,28 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 	}
 
 	@Override
-	public void glDrawElementsBaseVertex(int mode, int type, ByteBuffer indices, int basevertex) {
-		org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, type, indices, basevertex);
+	public void glDrawElementsBaseVertex(int mode, int count, int type, Buffer indices, int basevertex) {
+		int oldLimit = indices.limit();
+		indices.limit(count); // TODO not sure
+		if(indices instanceof ByteBuffer){
+			org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, type, (ByteBuffer)indices, basevertex);
+		}else if(indices instanceof IntBuffer){
+			org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, (IntBuffer)indices, basevertex);
+		}else if(indices instanceof ShortBuffer){
+			org.lwjgl.opengl.GL32.glDrawElementsBaseVertex(mode, (ShortBuffer)indices, basevertex);
+		}else{
+			throw new GdxRuntimeException("buffer type not supported");
+		}
+		indices.limit(oldLimit);
 	}
 
 	@Override
 	public void glDrawRangeElementsBaseVertex(int mode, int start, int end, int count, int type, Buffer indices,
 			int basevertex) {
-		// TODO limit
+		int oldLimit = indices.limit();
+		indices.limit(count); // TODO not sure
 		if(indices instanceof ByteBuffer){
-			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, (ByteBuffer)indices, basevertex);
+			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, type, (ByteBuffer)indices, basevertex);
 		}else if(indices instanceof IntBuffer){
 			org.lwjgl.opengl.GL32.glDrawRangeElementsBaseVertex(mode, start, end, (IntBuffer)indices, basevertex);
 		}else if(indices instanceof ShortBuffer){
@@ -159,14 +171,16 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 		}else{
 			throw new GdxRuntimeException("buffer type not supported");
 		}
+		indices.limit(oldLimit);
 	}
 
 	@Override
 	public void glDrawElementsInstancedBaseVertex(int mode, int count, int type, Buffer indices, int instanceCount,
 			int basevertex) {
-		// TODO limit
+		int oldLimit = indices.limit();
+		indices.limit(count); // TODO not sure
 		if(indices instanceof ByteBuffer){
-			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, (ByteBuffer)indices, instanceCount, basevertex);
+			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, type, (ByteBuffer)indices, instanceCount, basevertex);
 		}else if(indices instanceof IntBuffer){
 			org.lwjgl.opengl.GL32.glDrawElementsInstancedBaseVertex(mode, (IntBuffer)indices, instanceCount, basevertex);
 		}else if(indices instanceof ShortBuffer){
@@ -174,6 +188,7 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 		}else{
 			throw new GdxRuntimeException("buffer type not supported");
 		}
+		indices.limit(oldLimit);
 	}
 
 	@Override
@@ -194,8 +209,25 @@ public class Lwjgl3GL32 extends Lwjgl3GL31 implements GL32 {
 	}
 
 	@Override
-	public void glReadnPixels(int x, int y, int width, int height, int format, int type, Buffer data) {
-		GL45.glReadnPixels(x, y, width, height, format, type, (ByteBuffer)data);
+	public void glReadnPixels(int x, int y, int width, int height, int format, int type, int bufSize, Buffer data) {
+		if(data == null){
+			GL45.glReadnPixels(x, y, width, height, format, type, bufSize, 0L);
+		}else{
+			int oldLimit = data.limit();
+			data.limit(bufSize);
+			if(data instanceof ByteBuffer){
+				GL45.glReadnPixels(x, y, width, height, format, type, (ByteBuffer)data);
+			}else if(data instanceof IntBuffer){
+				GL45.glReadnPixels(x, y, width, height, format, type, (IntBuffer)data);
+			}else if(data instanceof ShortBuffer){
+				GL45.glReadnPixels(x, y, width, height, format, type, (ShortBuffer)data);
+			}else if(data instanceof FloatBuffer){
+				GL45.glReadnPixels(x, y, width, height, format, type, (FloatBuffer)data);
+			}else{
+				throw new GdxRuntimeException("buffer type not supported");
+			}
+			data.limit(oldLimit);
+		}
 	}
 
 	@Override

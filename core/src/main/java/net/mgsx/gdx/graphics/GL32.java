@@ -273,7 +273,7 @@ public interface GL32 extends GL31 {
         int source,
         int type,
         int severity,
-        int count,
+//        int count,
         java.nio.IntBuffer ids,
         boolean enabled
     );
@@ -285,7 +285,7 @@ public interface GL32 extends GL31 {
         int type,
         int id,
         int severity,
-        int length,
+//        int length
         String buf
     );
 
@@ -457,9 +457,9 @@ public interface GL32 extends GL31 {
 
     void glDrawElementsBaseVertex(
         int mode,
-//        int count,
+        int count,
         int type,
-        java.nio.ByteBuffer indices, // java.nio.Buffer indices,
+        java.nio.Buffer indices,
         int basevertex
     );
 
@@ -533,7 +533,7 @@ public interface GL32 extends GL31 {
         int height,
         int format,
         int type,
-//        int bufSize,
+        int bufSize,
         java.nio.Buffer data
     );
 

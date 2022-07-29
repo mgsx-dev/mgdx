@@ -31,7 +31,7 @@ public class GL32DebugControlSketch extends ScreenAdapter
 //						System.out.println(message);
 //					}
 //				});
-		Mgdx.gl32.glDebugMessageInsert(GL32.GL_DEBUG_SOURCE_APPLICATION, GL32.GL_DEBUG_TYPE_OTHER, 1234, GL32.GL_DEBUG_SEVERITY_NOTIFICATION, -1, "mgdx");
+		Mgdx.gl32.glDebugMessageInsert(GL32.GL_DEBUG_SOURCE_APPLICATION, GL32.GL_DEBUG_TYPE_OTHER, 1234, GL32.GL_DEBUG_SEVERITY_NOTIFICATION, "mgdx");
 		checkGL();
 		
 		IntBuffer buf = BufferUtils.newIntBuffer(16);
