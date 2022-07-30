@@ -37,7 +37,7 @@ public class MiscModule implements GLTFComposerModule
 			t.add(UI.trig(ctx.skin, "save current model as gltf", ()->{
 				ctx.fileSelector.save(file->{
 					new GLTFExporter().export(ctx.scene != null ? ctx.scene : new Scene(new Model()), file);
-				});
+				}, "model.gltf", "gltf");
 			})).row();
 		}
 		

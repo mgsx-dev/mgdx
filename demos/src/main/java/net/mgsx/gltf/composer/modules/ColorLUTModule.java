@@ -64,8 +64,8 @@ public class ColorLUTModule implements GLTFComposerModule
 							ColorGrading.createNeutralLUT(32, LUTFormat.ROW);
 					PixmapIO.writePNG(file, pixmap);
 					pixmap.dispose();
-					hide();
-				});
+				}, "lut-neutral" + (format.getSelectedIndex() == 1 ? "-64" : "-32")  + ".png", "png");
+				hide();
 			}));
 			
 		}

@@ -77,14 +77,14 @@ public class IBLModule implements GLTFComposerModule
 		}
 	}
 	private class HDRExportDialog extends Dialog {
-		public HDRExportDialog(GLTFComposerContext ctx, Cubemap map, boolean mipmaps, Consumer<FileHandle> callback) {
+		public HDRExportDialog(GLTFComposerContext ctx, Cubemap map, boolean mipmaps, String defaultName, Consumer<FileHandle> callback) {
 			super("HDR export options", ctx.skin, "dialog");
 			Array<Exporter> formats = new Array<Exporter>();
 			formats.add(new Exporter("ktx2", ()->{
 				ctx.fileSelector.save(file->{
 					IBL.exportToKtx2(map, file, mipmaps, GLFormat.RGB16, true);
 					callback.accept(file);
-				});
+				}, defaultName + ".ktx2", "ktx2");
 			}));
 			formats.add(new Exporter("png", ()->{
 				ctx.fileSelector.selectFolder(file->{
@@ -123,7 +123,7 @@ public class IBLModule implements GLTFComposerModule
 					ctx.compo.envPath = envFile.path();
 					ctx.compo.diffusePath = difFile.path();
 					ctx.compo.specularPath = speFile.path();
-				});
+				}, "ibl");
 			}));
 			
 			formats.add(new Exporter("png", ()->{
@@ -381,15 +381,15 @@ public class IBLModule implements GLTFComposerModule
 			})).row();
 			
 			exportTable.add(UI.trig(skin, "Export environment map (skybox)", ()->{
-				new HDRExportDialog(ctx, ctx.ibl.environmentCubemap, false, file->ctx.compo.envPath=file.path()).show(ctx.stage);
+				new HDRExportDialog(ctx, ctx.ibl.environmentCubemap, false, "environment", file->ctx.compo.envPath=file.path()).show(ctx.stage);
 			})).row();
 			
 			exportTable.add(UI.trig(skin, "Export radiance map (specular)", ()->{
-				new HDRExportDialog(ctx, ctx.ibl.specularCubemap, true, file->ctx.compo.specularPath=file.path()).show(ctx.stage);
+				new HDRExportDialog(ctx, ctx.ibl.specularCubemap, true, "specular", file->ctx.compo.specularPath=file.path()).show(ctx.stage);
 			})).row();
 			
 			exportTable.add(UI.trig(skin, "Export irradiance map (diffuse)", ()->{
-				new HDRExportDialog(ctx, ctx.ibl.diffuseCubemap, false, file->ctx.compo.diffusePath=file.path()).show(ctx.stage);
+				new HDRExportDialog(ctx, ctx.ibl.diffuseCubemap, false, "diffuse", file->ctx.compo.diffusePath=file.path()).show(ctx.stage);
 			})).row();
 		}
 		

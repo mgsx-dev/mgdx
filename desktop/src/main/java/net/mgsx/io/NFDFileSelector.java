@@ -13,7 +13,10 @@ import com.badlogic.gdx.files.FileHandle;
 public class NFDFileSelector extends FileSelector {
 
 	private static String defaultPath(){
-		return defaultPath(Gdx.files.local(""));
+		return defaultPath("");
+	}
+	private static String defaultPath(String name){
+		return defaultPath(Gdx.files.local(name));
 	}
 	
 	private static String defaultPath(FileHandle file){
@@ -38,15 +41,20 @@ public class NFDFileSelector extends FileSelector {
         	MemoryUtil.memFree(pathPointer);
         }
 	}
+	private String formatFilters(String ...exts){
+		String filters = "";
+		for(int i=0 ; i<exts.length ; i++) filters = i == 0 ? exts[i] : "," + exts[i];
+		return filters;
+	}
 	
 	@Override
-	public void open(Consumer<FileHandle> handler) {
-		dialog(handler, pathPointer->NativeFileDialog.NFD_OpenDialog("", defaultPath(), pathPointer));
+	public void open(Consumer<FileHandle> handler, String ...exts) {
+		dialog(handler, pathPointer->NativeFileDialog.NFD_OpenDialog(formatFilters(exts), defaultPath(), pathPointer));
 	}
 
 	@Override
-	public void save(Consumer<FileHandle> handler) {
-		dialog(handler, pathPointer->NativeFileDialog.NFD_SaveDialog("", defaultPath(), pathPointer));
+	public void save(Consumer<FileHandle> handler, String defaultName, String ...exts) {
+		dialog(handler, pathPointer->NativeFileDialog.NFD_SaveDialog(formatFilters(exts), defaultPath(defaultName), pathPointer));
 	}
 
 	@Override

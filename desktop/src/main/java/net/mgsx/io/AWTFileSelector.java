@@ -19,12 +19,12 @@ public class AWTFileSelector extends FileSelector
 	}
 	
 	@Override
-	public void open(Consumer<FileHandle> handler) {
+	public void open(Consumer<FileHandle> handler, String ...exts) {
 		openDialog(handler, false, false);
 	}
 	
 	@Override
-	public void save(Consumer<FileHandle> handler) {
+	public void save(Consumer<FileHandle> handler, String defaultNam, String ...exts) {
 		openDialog(handler, false, true);
 	}
 	

@@ -55,7 +55,7 @@ public class CompositionModule implements GLTFComposerModule
 		ctx.compo.keyLight.set(ctx.keyLight);
 		ctx.compo.camera.set(ctx.cameraManager.getPerspectiveCamera(), ctx.cameraManager.getPerspectiveTarget());
 		
-		ctx.fileSelector.save(file->saveComposition(ctx, file));
+		ctx.fileSelector.save(file->saveComposition(ctx, file), "compo.json", "json");
 	}
 
 	private void saveComposition(GLTFComposerContext ctx, FileHandle file){
