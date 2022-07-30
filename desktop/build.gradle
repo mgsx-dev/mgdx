@@ -14,6 +14,12 @@ dependencies {
     api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-macos-arm64"
     api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-windows"
     api "org.lwjgl:lwjgl-tinyexr:$lwjglVersion:natives-windows-x86"
+    
+    api "org.lwjgl:lwjgl-nfd:$lwjglVersion"
+  	api "org.lwjgl:lwjgl-nfd:$lwjglVersion:natives-windows"
+  	api "org.lwjgl:lwjgl-nfd:$lwjglVersion:natives-windows-x86"
+  	api "org.lwjgl:lwjgl-nfd:$lwjglVersion:natives-linux"
+  	api "org.lwjgl:lwjgl-nfd:$lwjglVersion:natives-macos"
 }
 
 

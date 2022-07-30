@@ -37,8 +37,8 @@ import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.ibl.IBL;
-import net.mgsx.io.AWTFileSelector;
 import net.mgsx.io.FileSelector;
+import net.mgsx.io.NFDFileSelector;
 
 public class GLTFComposerContext {
 	
@@ -46,7 +46,7 @@ public class GLTFComposerContext {
 	public Composition compo = new Composition();
 	
 	// runtime objects
-	public final FileSelector fileSelector = new AWTFileSelector();
+	public final FileSelector fileSelector = new NFDFileSelector();
 	
 	public Skin skin;
 	public Stage stage;
