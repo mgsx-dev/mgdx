@@ -35,6 +35,7 @@ public abstract class MgdxGame extends Game
 		public int depth = 24;
 		public int stencil = 0;
 		public int samples = 0;
+		public boolean debugGL = false;
 	}
 	public Settings settings = new Settings();
 	

@@ -22,6 +22,7 @@ public class MgdxDemo extends MgdxGame
 		settings.glMode = GLMode.GLMAX;
 		settings.glMajor = 4;
 		settings.glMinor = 5;
+		settings.debugGL = true;
 		settings.icons = new String[]{"libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png"};
 	}
 	
@@ -29,7 +30,7 @@ public class MgdxDemo extends MgdxGame
 	public void create() {
 		profiler = new GLProfiler(Gdx.graphics);
 		profiler.enable();
-		profiler.setListener(GLErrorListener.THROWING_LISTENER);
+		profiler.setListener(GLErrorListener.LOGGING_LISTENER);
 		stage = new Stage(new ScreenViewport());
 		skin = new Skin(Gdx.files.internal("skins/composer-skin.json"));
 		Gdx.input.setInputProcessor(stage);

@@ -48,6 +48,9 @@ public class MGdxDekstopApplication {
 		if(game.settings.icons != null){
 			config.setWindowIcon(game.settings.icons);
 		}
+		
+		config.enableGLDebugOutput(game.settings.debugGL, System.err);
+		
 		switch(game.settings.glMode){
 		default:
 		case GL20: config.setOpenGLEmulation(GLEmulation.GL20, game.settings.glMajor, game.settings.glMinor); break;
