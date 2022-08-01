@@ -21,6 +21,7 @@ import net.mgsx.gdx.demos.sketches.GL31ComputeShaderSSBOSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShaderVBOSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShadersSketch;
 import net.mgsx.gdx.demos.sketches.GL31FrameBufferMultisampleSketch;
+import net.mgsx.gdx.demos.sketches.GL31ProgramIntrospection;
 import net.mgsx.gdx.demos.sketches.GL31ProgramPipelineSketch;
 import net.mgsx.gdx.demos.sketches.GL32BlendingAdvancedSketch;
 import net.mgsx.gdx.demos.sketches.GL32BlendingMRTSketch;
@@ -49,6 +50,7 @@ public class MgdxSketchSelector extends Dialog
 			HDRBlurCascadeSketech.class,
 			GL30Texture3DSketch.class,
 			GL30TransformFeedbackSketch.class,
+			GL31ProgramIntrospection.class,
 			GL31ComputeShaderChainSketch.class,
 			GL31ComputeShaderVBOSketch.class,
 			GL31ComputeShaderSSBOSketch.class,
