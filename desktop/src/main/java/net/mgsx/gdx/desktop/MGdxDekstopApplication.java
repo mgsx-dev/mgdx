@@ -1,4 +1,4 @@
-package net.mgsx.gdx.dekstop;
+package net.mgsx.gdx.desktop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;

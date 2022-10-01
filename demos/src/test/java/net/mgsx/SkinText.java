@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import net.mgsx.gdx.MgdxGame;
-import net.mgsx.gdx.dekstop.MGdxDekstopApplication;
+import net.mgsx.gdx.desktop.MGdxDekstopApplication;
 import net.mgsx.gdx.scenes.scene2d.StageScreen;
 import net.mgsx.gdx.scenes.scene2d.ui.ColorBox;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;

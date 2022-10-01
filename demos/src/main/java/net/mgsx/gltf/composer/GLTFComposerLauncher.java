@@ -1,6 +1,6 @@
 package net.mgsx.gltf.composer;
 
-import net.mgsx.gdx.dekstop.MGdxDekstopApplication;
+import net.mgsx.gdx.desktop.MGdxDekstopApplication;
 
 public class GLTFComposerLauncher {
 	public static void main(String[] args) {

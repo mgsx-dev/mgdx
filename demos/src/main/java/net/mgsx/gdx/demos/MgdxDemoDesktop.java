@@ -1,6 +1,6 @@
 package net.mgsx.gdx.demos;
 
-import net.mgsx.gdx.dekstop.MGdxDekstopApplication;
+import net.mgsx.gdx.desktop.MGdxDekstopApplication;
 
 public class MgdxDemoDesktop {
 	public static void main(String[] args) {
