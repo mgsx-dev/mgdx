@@ -33,6 +33,7 @@ import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.ui.AnimationPanel;
+import net.mgsx.gltf.composer.ui.AssetPanel;
 import net.mgsx.gltf.composer.ui.MaterialPanel;
 import net.mgsx.gltf.composer.ui.NodePanel;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
@@ -264,6 +265,11 @@ public class SceneModule implements GLTFComposerModule
 					wrapper.add(new LightNode(e.key, e.value, skin));
 				}
 			}
+		}
+		
+		@Override
+		public Actor createPane(GLTFComposerContext ctx) {
+			return new AssetPanel(ctx, ctx.asset);
 		}
 	}
 	
