@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import net.mgsx.gdx.utils.FrameBufferUtils;
-import net.mgsx.gdx.utils.ShaderProgramUtils;
+import net.mgsx.gltfx.ShaderProgramUtils;
 
 public class NoiseCache {
 	

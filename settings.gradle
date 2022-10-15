@@ -1,1 +1,1 @@
-include 'core', 'desktop', 'gltf', 'demos', 'assets'
+include 'core', 'desktop', 'gltf', 'demos', 'assets', 'gltfx', 'gltf-composer'

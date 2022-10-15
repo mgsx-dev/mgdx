@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.ComputeShader;
 import net.mgsx.gdx.graphics.GL31;
-import net.mgsx.gdx.utils.ShaderProgramUtils;
+import net.mgsx.gltfx.ShaderProgramUtils;
 
 // FIXME not working
 public class GL31ComputeShaderChainSketch extends ScreenAdapter

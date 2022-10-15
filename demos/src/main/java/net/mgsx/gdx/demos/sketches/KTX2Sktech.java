@@ -14,9 +14,9 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.GL32;
-import net.mgsx.gdx.graphics.Texture3D;
 import net.mgsx.gdx.graphics.glutils.TextureUtils;
-import net.mgsx.ktx2.KTX2TextureData;
+import net.mgsx.gltfx.gdx.Texture3D;
+import net.mgsx.gltfx.ktx2.KTX2TextureData;
 
 public class KTX2Sktech extends ScreenAdapter
 {

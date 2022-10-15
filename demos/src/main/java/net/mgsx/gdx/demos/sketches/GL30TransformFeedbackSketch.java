@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.BufferUtils;
 
 import net.mgsx.gdx.graphics.GL31;
-import net.mgsx.gdx.utils.ShaderProgramUtils;
+import net.mgsx.gltfx.ShaderProgramUtils;
 
 public class GL30TransformFeedbackSketch extends ScreenAdapter
 {

@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
-import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gltfx.GLFormat;
 
 public class BlurCascade implements Disposable
 {

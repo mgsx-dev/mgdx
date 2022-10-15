@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.IntArray;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.glutils.FlexFrameBuffer;
-import net.mgsx.gltf.scene.PBRRenderTargets;
+import net.mgsx.gltfx.mrt.PBRRenderTargets;
 
 public class PBRRenderTargetsMultisample extends PBRRenderTargets
 {

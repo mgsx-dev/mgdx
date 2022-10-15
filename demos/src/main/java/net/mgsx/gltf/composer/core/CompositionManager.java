@@ -7,12 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.shaders.DepthShader.Config;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import net.mgsx.gdx.graphics.GLFormat;
-import net.mgsx.gfx.ToneMappingShader;
 import net.mgsx.gltf.composer.core.Composition.CameraConfig;
 import net.mgsx.gltf.composer.core.Composition.ToneMappingOptions.ToneMappingMode;
-import net.mgsx.gltf.composer.modules.Bloom;
-import net.mgsx.gltf.scene.PBRRenderTargets;
 import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.scene.Scene;
@@ -21,6 +17,10 @@ import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
+import net.mgsx.gltfx.GLFormat;
+import net.mgsx.gltfx.gfx.Bloom;
+import net.mgsx.gltfx.gfx.ToneMappingShader;
+import net.mgsx.gltfx.mrt.PBRRenderTargets;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 
 public class CompositionManager {

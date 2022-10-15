@@ -6,14 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
 import net.mgsx.gdx.utils.FrameBufferUtils;
-import net.mgsx.gfx.FXAAShader;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
+import net.mgsx.gltfx.GLFormat;
+import net.mgsx.gltfx.gfx.FXAAShader;
 
 public class FXAAModule implements GLTFComposerModule
 {

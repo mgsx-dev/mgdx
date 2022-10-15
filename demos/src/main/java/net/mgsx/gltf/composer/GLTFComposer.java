@@ -26,7 +26,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.MgdxGame.Settings;
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
 import net.mgsx.gdx.scenes.scene2d.ui.Frame.FrameStyle;
 import net.mgsx.gdx.scenes.scene2d.ui.TabPane;
@@ -46,6 +45,7 @@ import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
+import net.mgsx.gltfx.GLFormat;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 
 public class GLTFComposer extends ScreenAdapter {

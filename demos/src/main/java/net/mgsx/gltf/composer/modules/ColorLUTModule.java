@@ -13,19 +13,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import net.mgsx.cube.ColorGrading;
-import net.mgsx.cube.ColorGrading.LUTFormat;
-import net.mgsx.cube.ColorGradingShaders.ColorGrading2D;
-import net.mgsx.cube.ColorGradingShaders.ColorGrading2DHQ;
-import net.mgsx.cube.ColorGradingShaders.ColorGrading3D;
-import net.mgsx.cube.CubeData;
-import net.mgsx.cube.CubeDataLoader;
-import net.mgsx.gdx.graphics.Texture3D;
 import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
+import net.mgsx.gltfx.gdx.Texture3D;
+import net.mgsx.gltfx.lut.ColorGrading;
+import net.mgsx.gltfx.lut.CubeData;
+import net.mgsx.gltfx.lut.CubeDataLoader;
+import net.mgsx.gltfx.lut.ColorGrading.LUTFormat;
+import net.mgsx.gltfx.lut.ColorGradingShaders.ColorGrading2D;
+import net.mgsx.gltfx.lut.ColorGradingShaders.ColorGrading2DHQ;
+import net.mgsx.gltfx.lut.ColorGradingShaders.ColorGrading3D;
 
 public class ColorLUTModule implements GLTFComposerModule
 {

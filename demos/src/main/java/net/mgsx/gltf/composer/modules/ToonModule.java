@@ -6,14 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
-import net.mgsx.gltf.scene.PBRRenderTargets;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
+import net.mgsx.gltfx.GLFormat;
+import net.mgsx.gltfx.mrt.PBRRenderTargets;
 
 public class ToonModule implements GLTFComposerModule
 {

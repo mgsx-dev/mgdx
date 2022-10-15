@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
-import net.mgsx.gltf.composer.modules.Bloom.BloomOptions;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
+import net.mgsx.gltfx.gfx.Bloom.BloomOptions;
 import net.mgsx.ibl.IBL;
 import net.mgsx.ibl.IBL.IBLBakingOptions;
 

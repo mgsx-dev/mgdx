@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.CubemapData;
 import com.badlogic.gdx.graphics.GL20;
 
-import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gltfx.GLFormat;
 
 public class FlexCubemapData implements CubemapData {
 

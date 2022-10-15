@@ -1,0 +1,29 @@
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = 'gdx-gltfx'
+
+dependencies {
+	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+	api "com.github.mgsx-dev.gdx-gltf:gltf:$gltfVersion"
+	
+	testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+	testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+	
+}
+
+apply plugin: 'maven-publish'
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId project.group
+			artifactId "gdx-gltfx"
+			version project.version
+			from components.java
+		}
+	}
+}

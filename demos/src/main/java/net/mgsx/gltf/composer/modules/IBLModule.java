@@ -14,15 +14,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
+import net.mgsx.gltfx.GLFormat;
+import net.mgsx.gltfx.ktx2.KTX2TextureData;
 import net.mgsx.ibl.IBL;
-import net.mgsx.ktx2.KTX2TextureData;
 
 public class IBLModule implements GLTFComposerModule
 {

@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.scenes.scene2d.ui.ColorBox;
 import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
@@ -15,6 +14,7 @@ import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gfx.OutlineDepth;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
+import net.mgsx.gltfx.GLFormat;
 
 public class OutlineDepthModule implements GLTFComposerModule
 {

@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.GL32;
-import net.mgsx.gdx.utils.ShaderProgramUtils;
+import net.mgsx.gltfx.ShaderProgramUtils;
 
 public class GL32BlendingMRTSketch extends ScreenAdapter
 {

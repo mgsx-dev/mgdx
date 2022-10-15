@@ -17,12 +17,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gdx.Mgdx;
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
 import net.mgsx.gfx.BlurCascade;
 import net.mgsx.gfx.BlurCascade.BlurMixMode;
-import net.mgsx.gfx.BrighnessExtractShader;
-import net.mgsx.gfx.ToneMappingShader;
 import net.mgsx.gltf.GLTFMaterialUtils;
 import net.mgsx.gltf.loaders.gltf.GLTFLoader;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
@@ -33,6 +30,9 @@ import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
+import net.mgsx.gltfx.GLFormat;
+import net.mgsx.gltfx.gfx.BrighnessExtractShader;
+import net.mgsx.gltfx.gfx.ToneMappingShader;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.ibl.IBL;
 

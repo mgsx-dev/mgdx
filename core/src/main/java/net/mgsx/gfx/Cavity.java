@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.glutils.TextureUtils;
 import net.mgsx.gdx.utils.FrameBufferUtils;
-import net.mgsx.gdx.utils.ShaderProgramUtils;
+import net.mgsx.gltfx.GLFormat;
+import net.mgsx.gltfx.ShaderProgramUtils;
 
 public class Cavity implements Disposable
 {

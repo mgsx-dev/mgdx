@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import net.mgsx.gdx.assets.CommonAssets;
-import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gltfx.GLFormat;
 
 public class FrameBufferUtils {
 	public static FrameBuffer create(GLFormat format, boolean depth){

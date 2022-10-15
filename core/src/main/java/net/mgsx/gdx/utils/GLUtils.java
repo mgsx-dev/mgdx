@@ -10,9 +10,9 @@ import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.Mgdx;
-import net.mgsx.gdx.graphics.Texture3D;
-import net.mgsx.gdx.graphics.Texture3DData;
-import net.mgsx.gdx.graphics.glutils.CustomTexture3DData;
+import net.mgsx.gltfx.gdx.CustomTexture3DData;
+import net.mgsx.gltfx.gdx.Texture3D;
+import net.mgsx.gltfx.gdx.Texture3DData;
 
 public class GLUtils {
 	public static final IntBuffer buffer1i = BufferUtils.newIntBuffer(1);

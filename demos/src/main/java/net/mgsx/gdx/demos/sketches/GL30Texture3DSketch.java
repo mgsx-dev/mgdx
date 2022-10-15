@@ -14,8 +14,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
-import net.mgsx.gdx.graphics.Texture3D;
-import net.mgsx.gdx.graphics.glutils.CustomTexture3DData;
+import net.mgsx.gltfx.gdx.CustomTexture3DData;
+import net.mgsx.gltfx.gdx.Texture3D;
 
 public class GL30Texture3DSketch extends ScreenAdapter
 {

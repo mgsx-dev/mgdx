@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
-import net.mgsx.gdx.utils.ShaderProgramUtils;
+import net.mgsx.gltfx.ShaderProgramUtils;
 
 public class OutlineDepth
 {

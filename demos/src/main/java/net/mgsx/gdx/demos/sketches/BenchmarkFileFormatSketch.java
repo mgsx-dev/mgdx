@@ -15,11 +15,11 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.exr.EXRLoader;
 import net.mgsx.gdx.graphics.GL32;
-import net.mgsx.gdx.graphics.GLFormat;
-import net.mgsx.gdx.graphics.Texture3D;
 import net.mgsx.gdx.graphics.g2d.HDRILoader;
 import net.mgsx.gdx.graphics.glutils.TextureUtils;
-import net.mgsx.ktx2.KTX2TextureData;
+import net.mgsx.gltfx.GLFormat;
+import net.mgsx.gltfx.gdx.Texture3D;
+import net.mgsx.gltfx.ktx2.KTX2TextureData;
 
 public class BenchmarkFileFormatSketch extends ScreenAdapter
 {

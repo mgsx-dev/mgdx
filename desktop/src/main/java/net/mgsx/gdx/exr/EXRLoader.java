@@ -22,8 +22,8 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.StreamUtils;
 
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.glutils.FlexTextureData;
+import net.mgsx.gltfx.GLFormat;
 
 public class EXRLoader {
 

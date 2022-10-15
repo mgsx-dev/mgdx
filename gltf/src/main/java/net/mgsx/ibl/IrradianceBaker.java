@@ -18,9 +18,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.glutils.FlexCubemapData;
 import net.mgsx.gdx.graphics.glutils.FlexFrameBuffer;
+import net.mgsx.gltfx.GLFormat;
 
 public class IrradianceBaker implements Disposable {
 

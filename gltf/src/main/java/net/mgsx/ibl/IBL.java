@@ -24,7 +24,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import net.mgsx.gdx.Mgdx;
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.g2d.HDRILoader;
 import net.mgsx.gdx.graphics.glutils.FlexCubemapData;
 import net.mgsx.gdx.utils.FileHandleUtils;
@@ -32,9 +31,10 @@ import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
-import net.mgsx.ktx2.KTX2Data.MipMapMode;
-import net.mgsx.ktx2.KTX2Processor;
-import net.mgsx.ktx2.KTX2TextureData;
+import net.mgsx.gltfx.GLFormat;
+import net.mgsx.gltfx.ktx2.KTX2Processor;
+import net.mgsx.gltfx.ktx2.KTX2TextureData;
+import net.mgsx.gltfx.ktx2.KTX2Data.MipMapMode;
 
 public class IBL implements Disposable
 {

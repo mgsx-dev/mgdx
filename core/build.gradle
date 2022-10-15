@@ -3,6 +3,7 @@ eclipse.project.name = appName + '-core'
 
 dependencies {
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+	api project(':gltfx')
 }
 
 apply plugin: 'maven-publish'

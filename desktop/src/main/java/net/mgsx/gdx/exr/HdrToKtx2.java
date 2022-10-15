@@ -12,10 +12,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.g2d.HDRILoader;
-import net.mgsx.ktx2.KTX2Data.MipMapMode;
-import net.mgsx.ktx2.KTX2Processor;
+import net.mgsx.gltfx.GLFormat;
+import net.mgsx.gltfx.ktx2.KTX2Processor;
+import net.mgsx.gltfx.ktx2.KTX2Data.MipMapMode;
 
 public class HdrToKtx2 {
 	public static void main(String[] args) {

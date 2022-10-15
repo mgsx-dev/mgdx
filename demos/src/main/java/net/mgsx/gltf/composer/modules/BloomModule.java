@@ -10,6 +10,7 @@ import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gdx.scenes.scene2d.ui.UI.ControlScale;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
+import net.mgsx.gltfx.gfx.Bloom;
 
 public class BloomModule implements GLTFComposerModule
 {

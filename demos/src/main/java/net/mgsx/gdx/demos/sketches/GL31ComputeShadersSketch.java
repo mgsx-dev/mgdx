@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.mgsx.gdx.Mgdx;
 import net.mgsx.gdx.graphics.ComputeShader;
 import net.mgsx.gdx.graphics.GL31;
-import net.mgsx.gdx.utils.ShaderProgramUtils;
+import net.mgsx.gltfx.ShaderProgramUtils;
 
 public class GL31ComputeShadersSketch extends ScreenAdapter
 {

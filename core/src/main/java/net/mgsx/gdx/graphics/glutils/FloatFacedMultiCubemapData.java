@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.Pixmap.Blending;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import net.mgsx.gdx.graphics.GLFormat;
+import net.mgsx.gltfx.GLFormat;
 
 public class FloatFacedMultiCubemapData implements CubemapData
 {

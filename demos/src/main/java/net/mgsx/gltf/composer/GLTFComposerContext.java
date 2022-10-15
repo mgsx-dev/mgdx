@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
 
-import net.mgsx.gdx.graphics.GLFormat;
 import net.mgsx.gdx.graphics.cameras.BlenderCamera;
 import net.mgsx.gdx.utils.FrameBufferUtils;
 import net.mgsx.gltf.composer.core.Composition;
@@ -36,6 +35,7 @@ import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
+import net.mgsx.gltfx.GLFormat;
 import net.mgsx.ibl.IBL;
 import net.mgsx.io.FileSelector;
 import net.mgsx.io.NFDFileSelector;

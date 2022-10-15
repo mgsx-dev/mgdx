@@ -4,6 +4,8 @@
 /core/build/
 /dekstop/build/
 /demos/build/
+/gltfx/build/
+/gltf-composer/build/
 
 ## Java:
 *.class
@@ -51,6 +53,8 @@ gwt-unitCache/
 /core/bin/
 /desktop/bin/
 /demos/bin/
+/gltfx/bin/
+/gltf-composer/bin/
 *.tmp
 *.bak
 *.swp
