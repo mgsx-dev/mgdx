@@ -17,11 +17,12 @@ import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
+import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
+import net.mgsx.gltf.scene3d.utils.ShaderParser;
 import net.mgsx.gltfx.GLFormat;
 import net.mgsx.gltfx.gfx.Bloom;
 import net.mgsx.gltfx.gfx.ToneMappingShader;
 import net.mgsx.gltfx.mrt.PBRRenderTargets;
-import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 
 public class CompositionManager {
 	public SceneManager sceneManager;
@@ -66,7 +67,7 @@ public class CompositionManager {
 		if(mrtRequired){
 			fbo.configure(colorConfig);
 		}else if(compo.hdr){
-			colorConfig.fragmentShader = Gdx.files.classpath("shaders/gdx-pbr-patch-hdr.fs.glsl").readString();
+			colorConfig.fragmentShader = ShaderParser.parse(Gdx.files.classpath("shaders/pbr/pbr.fs.glsl"));
 		}else{
 //			colorShaderConfig.fragmentShader = Gdx.files.classpath("net/mgsx/gltf/shaders/gdx-pbr.fs.glsl").readString();
 		}

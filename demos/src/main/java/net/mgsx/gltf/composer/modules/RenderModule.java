@@ -16,6 +16,7 @@ public class RenderModule extends GLTFModuleSwitch
 		addSubModule(ctx, new GouraudModule(), "Gouraud Rendering");
 		addSubModule(ctx, new CavityModule(), "Cavity");
 		addSubModule(ctx, new ToonModule(), "Toon");
+		addSubModule(ctx, new MRTModule(), "MRT debug");
 	}
 	
 	@Override

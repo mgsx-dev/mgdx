@@ -34,7 +34,13 @@ import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.ui.AnimationPanel;
 import net.mgsx.gltf.composer.ui.AssetPanel;
-import net.mgsx.gltf.composer.ui.MaterialPanel;
+import net.mgsx.gltf.composer.ui.MaterialBasicPanel;
+import net.mgsx.gltf.composer.ui.MaterialDebugPanel;
+import net.mgsx.gltf.composer.ui.MaterialEmissionPanel;
+import net.mgsx.gltf.composer.ui.MaterialIridescencePanel;
+import net.mgsx.gltf.composer.ui.MaterialOpacityPanel;
+import net.mgsx.gltf.composer.ui.MaterialSpecularPanel;
+import net.mgsx.gltf.composer.ui.MaterialTransmissionPanel;
 import net.mgsx.gltf.composer.ui.NodePanel;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.loaders.exceptions.GLTFIllegalException;
@@ -133,13 +139,19 @@ public class SceneModule implements GLTFComposerModule
 
 		private Material material;
 		
-		public MaterialNode(Material material, Skin skin) {
+		public MaterialNode(GLTFComposerContext ctx, Material material, Skin skin) {
 			this.material = material;
 			setActor(new Label(material.id, skin));
+			addWrapper("Opacity", skin, ()->new MaterialOpacityPanel(ctx, material));
+			addWrapper("Emission", skin, ()->new MaterialEmissionPanel(ctx, material));
+			addWrapper("Transmission", skin, ()->new MaterialTransmissionPanel(ctx, material));
+			addWrapper("Iridescence", skin, ()->new MaterialIridescencePanel(ctx, material));
+			addWrapper("Specular", skin, ()->new MaterialSpecularPanel(ctx, material));
+			addWrapper("Debug", skin, ()->new MaterialDebugPanel(ctx, material));
 		}
 		@Override
 		public Actor createPane(GLTFComposerContext ctx) {
-			return new MaterialPanel(ctx, material);
+			return new MaterialBasicPanel(ctx, material);
 		}
 	}
 	private class PartNode extends ModelNode {
@@ -150,7 +162,7 @@ public class SceneModule implements GLTFComposerModule
 			addWrapper("offset: " + part.meshPart.offset, skin);
 			addWrapper("size: " + part.meshPart.size, skin);
 			addWrapper("primitive: " + ComposerUtils.primitiveString(part.meshPart.primitiveType), skin);
-			addWrapper("material: " + part.material.id, skin, ()->new MaterialPanel(ctx, part.material));
+			addWrapper("material: " + part.material.id, skin);
 			if(part.bones != null){
 				addWrapper("bones: " + part.bones.length, skin);
 			}
@@ -244,7 +256,7 @@ public class SceneModule implements GLTFComposerModule
 			{
 				ModelNode wrapper = addWrapper("materials", scene.modelInstance.materials.size, skin);
 				for(Material material : scene.modelInstance.materials){
-					wrapper.add(new MaterialNode(material, skin));
+					wrapper.add(new MaterialNode(ctx, material, skin));
 				}
 			}
 			{

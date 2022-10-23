@@ -51,7 +51,9 @@ public class RenderTargets implements Disposable {
 	}
 	
 	public String buildOptions(){
-		String options = "";
+		String options = "#define MRT\n";
+		options += "#define GLSL3\n";
+		
 		for(Layer layer : layers){
 			options += "#define " + layer.usage.alias + " " + layer.attachmentIndex + "\n";
 		}

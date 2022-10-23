@@ -3,6 +3,7 @@ package net.mgsx.gltf.composer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.SpotLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.shaders.DepthShader;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferBuilder;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -32,9 +34,12 @@ import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
+import net.mgsx.gltf.scene3d.scene.TransmissionSource;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
+import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
+import net.mgsx.gltf.scene3d.utils.ShaderParser;
 import net.mgsx.gltfx.GLFormat;
 import net.mgsx.ibl.IBL;
 import net.mgsx.io.FileSelector;
@@ -121,6 +126,10 @@ public class GLTFComposerContext {
 			colorShaderConfig.numPointLights = 0;
 			colorShaderConfig.numSpotLights = 0;
 			
+			final boolean isHDR = !colorShaderConfig.manualGammaCorrection;
+			
+			colorShaderConfig.transmissionSRGB = isHDR ? SRGB.NONE: SRGB.FAST;
+			
 			if(asset != null){
 				colorShaderConfig.numBones = asset.maxBones;
 				depthShaderConfig.numBones = asset.maxBones;
@@ -132,16 +141,29 @@ public class GLTFComposerContext {
 			depthShaderConfig.defaultCullFace = 0; //GL20.GL_BACK;
 			
 			if(colorShaderConfig.vertexShader == null){
-				colorShaderConfig.vertexShader = Gdx.files.classpath("net/mgsx/gltf/shaders/gdx-pbr.vs.glsl").readString();
+				colorShaderConfig.vertexShader = ShaderParser.parse(Gdx.files.classpath("shaders/pbr/pbr.vs.glsl"));
 			}
 			if(colorShaderConfig.fragmentShader == null){
 				colorShaderConfig.glslVersion = null;
-//				colorShaderConfig.fragmentShader = Gdx.files.classpath("net/mgsx/gltf/shaders/gdx-pbr.fs.glsl").readString();
-				colorShaderConfig.fragmentShader = Gdx.files.classpath("shaders/gdx-pbr-patch-hdr.fs.glsl").readString();
+				colorShaderConfig.fragmentShader = ShaderParser.parse(Gdx.files.classpath("shaders/pbr/pbr.fs.glsl"));
 			}
-			
-			sceneManager.setShaderProvider(new PBRShaderProvider(colorShaderConfig));
+			PBRShaderProvider colorShader = new PBRShaderProvider(colorShaderConfig);
+			sceneManager.setShaderProvider(colorShader);
 			sceneManager.setDepthShaderProvider(new PBRDepthShaderProvider(depthShaderConfig));
+			
+			sceneManager.setTransmissionSource(new TransmissionSource(colorShader){
+				@Override
+				protected FrameBuffer createFrameBuffer(int width, int height) {
+					if(isHDR){
+						FrameBufferBuilder fb = new FrameBufferBuilder(width, height);
+						fb.addColorTextureAttachment(GL30.GL_RGBA16F, GL30.GL_RGBA, GL30.GL_HALF_FLOAT);
+						fb.addDepthRenderBuffer(GL30.GL_DEPTH_COMPONENT24);
+						return fb.build();
+					}else{
+						return super.createFrameBuffer(width, height);
+					}
+				}
+			});
 			
 			// TODO remove all lights added by a scene (workaround)
 			sceneManager.environment.remove(DirectionalLightsAttribute.Type);

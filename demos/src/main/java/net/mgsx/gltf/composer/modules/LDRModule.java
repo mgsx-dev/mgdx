@@ -28,6 +28,7 @@ public class LDRModule implements GLTFComposerModule
 	@Override
 	public void render(GLTFComposerContext ctx) {
 		ctx.sceneManager.renderShadows();
+		ctx.sceneManager.renderTransmission();
 		
 		ctx.fbo.ensureScreenSize();
 		ctx.fbo.begin();

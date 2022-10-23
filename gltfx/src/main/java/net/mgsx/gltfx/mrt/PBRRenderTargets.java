@@ -3,6 +3,7 @@ package net.mgsx.gltfx.mrt;
 import com.badlogic.gdx.Gdx;
 
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
+import net.mgsx.gltf.scene3d.utils.ShaderParser;
 import net.mgsx.gltfx.GLFormat;
 
 public class PBRRenderTargets extends RenderTargets
@@ -15,17 +16,17 @@ public class PBRRenderTargets extends RenderTargets
 	public static final Usage ORM = new Usage("ORM_LOCATION");
 
 	public void configure(PBRShaderConfig config){
-//		config.vertexShader = 
-//				ShaderProgramUtils.getCompatibilityHeader(ShaderStage.vertex, GLSLVersion.OpenGL330) +
-//				Gdx.files.classpath("gltfx/gdx-pbr-mrt.vs.glsl").readString();
-		config.glslVersion = "#version 330\n";
-		config.fragmentShader = 
-				// ShaderProgramUtils.getCompatibilityHeader(ShaderStage.fragment, GLSLVersion.OpenGL330) +
-				buildOptions() +
-				Gdx.files.classpath("shaders/gdx-pbr-mrt.fs.glsl").readString();
+		config.glslVersion = "#version 330\n"; // TODO use version utils ! (GLSLVersion)
+		
+		String mrtOptions = buildOptions();
+		
+		config.fragmentShader = mrtOptions +
+				ShaderParser.parse(Gdx.files.classpath("shaders/pbr/pbr.fs.glsl"))
+			;
+		config.vertexShader =mrtOptions +
+				ShaderParser.parse(Gdx.files.classpath("shaders/pbr/pbr.vs.glsl"));
 	}
 	
-	// 
 	public void addColors() {
 		addLayer(COLORS, GLFormat.RGBA8, defaultSamples);
 	}
