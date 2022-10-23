@@ -199,10 +199,15 @@ void main() {
 
     // mix diffuse with transmission
 #ifdef transmissionFlag
-    f_diffuse = mix(f_diffuse, f_transmission, getTransmissionFactor());
+    float transmissionFactor = getTransmissionFactor();
+    f_transmission *= transmissionFactor;
+    f_diffuse *= (1.0 - transmissionFactor);
+    vec3 f_color = f_diffuse + f_transmission;
+#else
+    vec3 f_color = f_diffuse;
 #endif
 
-    vec3 color = ambientColor + f_diffuse + f_specular;
+    vec3 color = ambientColor + f_color + f_specular;
 
     // Add emissive
 #if defined(emissiveTextureFlag) && defined(emissiveColorFlag)

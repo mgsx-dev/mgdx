@@ -14,6 +14,11 @@ public class PBRRenderTargets extends RenderTargets
 	public static final Usage BASE_COLOR = new Usage("BASE_COLOR_LOCATION");
 	public static final Usage EMISSIVE = new Usage("EMISSIVE_LOCATION");
 	public static final Usage ORM = new Usage("ORM_LOCATION");
+	
+	public static final Usage DIFFUSE = new Usage("DIFFUSE_LOCATION");
+	public static final Usage SPECULAR = new Usage("SPECULAR_LOCATION");
+	public static final Usage TRANSMISSION = new Usage("TRANSMISSION_LOCATION");
+	
 
 	public void configure(PBRShaderConfig config){
 		config.glslVersion = "#version 330\n"; // TODO use version utils ! (GLSLVersion)

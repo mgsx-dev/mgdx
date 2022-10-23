@@ -29,6 +29,19 @@ layout(location = LOCAL_POSITION_LOCATION) out vec3 out_localPosition;
 #ifdef ORM_LOCATION
 layout(location = ORM_LOCATION) out vec3 out_ORM;
 #endif
+
+#ifdef DIFFUSE_LOCATION
+layout(location = DIFFUSE_LOCATION) out vec3 out_diffuse;
+#endif
+
+#ifdef SPECULAR_LOCATION
+layout(location = SPECULAR_LOCATION) out vec3 out_specular;
+#endif
+
+#ifdef TRANSMISSION_LOCATION
+layout(location = TRANSMISSION_LOCATION) out vec3 out_transmission;
+#endif
+
 #else
 
 

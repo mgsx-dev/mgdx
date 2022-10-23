@@ -24,6 +24,19 @@
     out_normals = n;
 #endif
 
+#ifdef DIFFUSE_LOCATION
+    out_diffuse = f_diffuse;
+#endif
+
+#ifdef SPECULAR_LOCATION
+    out_specular = f_specular;
+#endif
+
+#ifdef TRANSMISSION_LOCATION
+    out_transmission = f_transmission;
+#endif
+
+
 #ifndef MRT
 #ifndef COLOR_LOCATION
 #define COLOR_LOCATION
