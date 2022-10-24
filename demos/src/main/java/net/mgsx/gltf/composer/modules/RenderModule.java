@@ -17,6 +17,7 @@ public class RenderModule extends GLTFModuleSwitch
 		addSubModule(ctx, new CavityModule(), "Cavity");
 		addSubModule(ctx, new ToonModule(), "Toon");
 		addSubModule(ctx, new MRTModule(), "MRT debug");
+		addSubModule(ctx, new LDROldModule(), "LDR (old shader) Rendering");
 	}
 	
 	@Override
