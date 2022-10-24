@@ -1,0 +1,136 @@
+{
+"asset": {
+	"generator": "GDX glTF exporter 1.0",
+	"version": "2.0"
+},
+"scenes": [
+	{
+		"nodes": [ 0 ]
+	}
+],
+"nodes": [
+	{
+		"name": "Cube",
+		"mesh": 0
+	}
+],
+"meshes": [
+	{
+		"primitives": [
+			{
+				"attributes": {
+					"NORMAL": 0,
+					"POSITION": 1,
+					"TEXCOORD_0": 2
+				},
+				"indices": 3,
+				"material": 0
+			}
+		]
+	}
+],
+"images": [
+	{
+		"uri": "base-map-albedo.png"
+	},
+	{
+		"uri": "base-map-orm.png"
+	}
+],
+"samplers": [
+	{
+		"minFilter": 9728,
+		"magFilter": 9728,
+		"wrapS": 33071,
+		"wrapT": 33071
+	},
+	{
+		"minFilter": 9728,
+		"magFilter": 9728,
+		"wrapS": 33071,
+		"wrapT": 33071
+	}
+],
+"textures": [
+	{
+		"source": 0,
+		"sampler": 0
+	},
+	{
+		"source": 1,
+		"sampler": 1
+	}
+],
+"accessors": [
+	{
+		"bufferView": 0,
+		"componentType": 5126,
+		"count": 440,
+		"type": "VEC3"
+	},
+	{
+		"bufferView": 1,
+		"componentType": 5126,
+		"count": 440,
+		"type": "VEC3"
+	},
+	{
+		"bufferView": 2,
+		"componentType": 5126,
+		"count": 440,
+		"type": "VEC2"
+	},
+	{
+		"bufferView": 3,
+		"componentType": 5122,
+		"count": 672,
+		"type": "SCALAR"
+	}
+],
+"materials": [
+	{
+		"name": "mtl9",
+		"pbrMetallicRoughness": {
+			"baseColorTexture": {
+				"index": 0
+			},
+			"metallicRoughnessTexture": {
+				"index": 1
+			}
+		}
+	}
+],
+"bufferViews": [
+	{
+		"byteLength": 5280,
+		"buffer": 0
+	},
+	{
+		"byteOffset": 5280,
+		"byteLength": 5280,
+		"buffer": 0
+	},
+	{
+		"byteOffset": 10560,
+		"byteLength": 3520,
+		"buffer": 0
+	},
+	{
+		"byteOffset": 14080,
+		"byteLength": 1344,
+		"buffer": 0
+	}
+],
+"buffers": [
+	{
+		"uri": "result.bin",
+		"byteLength": 15424
+	}
+],
+"extensionsUsed": [
+	"KHR_lights_punctual"
+],
+"extensionsRequired": [
+	"KHR_lights_punctual"
+]
+}
