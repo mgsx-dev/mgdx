@@ -1,5 +1,6 @@
 package net.mgsx.gltf.composer.ui;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -26,7 +27,18 @@ public class MeshPanel extends Table
 		// header
 		content.add("vertex");
 		for(VertexAttribute attr : mesh.getVertexAttributes()){
-			content.add(attr.alias).colspan(attr.numComponents);
+			int nbFloats;
+			if(attr.type == GL20.GL_FLOAT){
+				nbFloats = attr.numComponents;
+			}else if(attr.type == GL20.GL_UNSIGNED_SHORT || attr.type == GL20.GL_SHORT){
+				nbFloats = attr.numComponents / 2;
+			}else if(attr.type == GL20.GL_UNSIGNED_BYTE || attr.type == GL20.GL_BYTE){
+				nbFloats = attr.numComponents / 4;
+			}else{
+				// TODO ???
+				nbFloats = attr.numComponents;
+			}
+			content.add(attr.alias).colspan(nbFloats);
 		}
 		content.row();
 		
@@ -43,8 +55,22 @@ public class MeshPanel extends Table
 		
 		for(int i=0, index=0 ; i<count ; i++){
 			content.add("#" + i);
-			for(int j=0 ; j<stride ; j++, index++){
-				content.add(String.valueOf(vertices[index]));
+			
+			for(VertexAttribute attr : mesh.getVertexAttributes()){
+				int nbFloats;
+				if(attr.type == GL20.GL_FLOAT){
+					nbFloats = attr.numComponents;
+				}else if(attr.type == GL20.GL_UNSIGNED_SHORT || attr.type == GL20.GL_SHORT){
+					nbFloats = attr.numComponents / 2;
+				}else if(attr.type == GL20.GL_UNSIGNED_BYTE || attr.type == GL20.GL_BYTE){
+					nbFloats = attr.numComponents / 4;
+				}else{
+					// TODO ???
+					nbFloats = attr.numComponents;
+				}
+				for(int j=0 ; j<nbFloats ; j++, index++){
+					content.add(String.valueOf(vertices[index]));
+				}
 			}
 			content.row();
 		}
