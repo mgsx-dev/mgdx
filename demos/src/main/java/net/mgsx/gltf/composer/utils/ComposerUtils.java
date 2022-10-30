@@ -3,6 +3,7 @@ package net.mgsx.gltf.composer.utils;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.math.Vector3;
@@ -73,6 +74,20 @@ public class ComposerUtils {
 		case GL32.GL_PATCHES: return "GL_PATCHES";
 		case GL32.GL_QUADS: return "GL_QUADS";
 		default: return "UNKNOWN";
+		}
+	}
+	
+	public static String glTypeString(int glType){
+		switch(glType){
+		case GL20.GL_BYTE: return "GL_BYTE";
+		case GL20.GL_UNSIGNED_BYTE: return "GL_UNSIGNED_BYTE";
+		case GL20.GL_SHORT: return "GL_SHORT";
+		case GL20.GL_UNSIGNED_SHORT: return "GL_UNSIGNED_SHORT";
+		case GL20.GL_INT: return "GL_INT";
+		case GL20.GL_UNSIGNED_INT: return "GL_UNSIGNED_INT";
+		case GL30.GL_HALF_FLOAT: return "GL_HALF_FLOAT";
+		case GL20.GL_FLOAT: return "GL_FLOAT";
+		default: return "???";
 		}
 	}
 

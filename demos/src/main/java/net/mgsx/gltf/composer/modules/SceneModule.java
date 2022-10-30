@@ -41,6 +41,7 @@ import net.mgsx.gltf.composer.ui.MaterialIridescencePanel;
 import net.mgsx.gltf.composer.ui.MaterialOpacityPanel;
 import net.mgsx.gltf.composer.ui.MaterialSpecularPanel;
 import net.mgsx.gltf.composer.ui.MaterialTransmissionPanel;
+import net.mgsx.gltf.composer.ui.MeshPanel;
 import net.mgsx.gltf.composer.ui.NodePanel;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.loaders.exceptions.GLTFIllegalException;
@@ -217,16 +218,21 @@ public class SceneModule implements GLTFComposerModule
 	
 	private class MeshNode extends ModelNode
 	{
+		private Mesh mesh;
 		public MeshNode(Mesh mesh, Skin skin) {
+			this.mesh = mesh;
 			setActor(new Label("mesh", skin));
 			addWrapper("vertices: " + mesh.getNumVertices(), skin);
 			addWrapper("indices: " + mesh.getNumIndices(), skin);
 			ModelNode vx = addWrapper("vertex: " + mesh.getVertexSize() + " bytes", skin);
 			for(VertexAttribute atr : mesh.getVertexAttributes()){
-				// TODO map type
-				vx.addWrapper(atr.alias + "_" + atr.unit + " " + atr.numComponents + "x" + atr.type, skin);
+				vx.addWrapper(atr.alias + "_" + atr.unit + " " + atr.numComponents + "x" + ComposerUtils.glTypeString(atr.type), skin);
 			}
 			// setExpanded(true);
+		}
+		@Override
+		public Actor createPane(GLTFComposerContext ctx) {
+			return new MeshPanel(ctx, mesh);
 		}
 	}
 	

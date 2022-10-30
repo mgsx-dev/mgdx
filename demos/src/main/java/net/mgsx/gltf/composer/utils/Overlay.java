@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 import net.mgsx.gdx.graphics.g3d.ModelUtils;
-import net.mgsx.gltf.data.scene.GLTFSkin;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
@@ -28,16 +27,6 @@ public class Overlay {
 		bones.clear();
 		if(scene != null){
 			if(asset != null && asset.data != null && asset.data.skins != null){
-				// TODO use GLTF skin data to avoid redundent bones ?
-				for(GLTFSkin glSkin : asset.data.skins){
-					String name = glSkin.name;
-					Node root = scene.modelInstance.getNode(name);
-					if(root != null){
-						
-					}else{
-						System.err.println("no node found for skin " + name); // TODO possible case ?
-					}
-				}
 				ModelUtils.eachNodePartRecusrsive(scene.modelInstance.nodes, part->{
 					if(part.bones != null){
 						for(Entry<Node, Matrix4> entry : part.invBoneBindTransforms){
