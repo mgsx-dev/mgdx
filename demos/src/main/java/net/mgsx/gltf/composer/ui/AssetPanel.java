@@ -1,12 +1,19 @@
 package net.mgsx.gltf.composer.ui;
 
+import com.badlogic.gdx.graphics.g3d.ModelCache;
+import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FlushablePool;
 
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
 public class AssetPanel extends Table {
+	
+	private ModelCache mc;
+	
 	public AssetPanel(GLTFComposerContext ctx, SceneAsset asset) {
 		super(ctx.skin);
 		defaults().pad(UI.DEFAULT_PADDING).left();
@@ -49,6 +56,37 @@ public class AssetPanel extends Table {
 			}
 			
 		}
+		
+		UI.toggle(table, "Use model cache", mc != null, on->{
+			
+			if(on){
+				
+				mc = new ModelCache();
+				mc.begin();
+				mc.add(ctx.scene.modelInstance);
+				mc.end();
+				
+				Array<Renderable> renderables = new Array<Renderable>();
+				mc.getRenderables(renderables, new FlushablePool<Renderable>() {
+					@Override
+					protected Renderable newObject () {
+						return new Renderable();
+					}
+				});
+				
+				for(Renderable r : renderables){
+					System.out.println(r.material);
+				}
+				ctx.sceneManager.getRenderableProviders().clear();
+				ctx.sceneManager.getRenderableProviders().add(mc);
+			}else{
+				if(mc != null) mc.dispose();
+				
+				ctx.sceneManager.getRenderableProviders().clear();
+				ctx.sceneManager.getRenderableProviders().add(ctx.scene);
+			}
+			
+		});
 		
 	}
 }
