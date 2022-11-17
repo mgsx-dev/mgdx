@@ -22,6 +22,23 @@ public class NodePanel extends Table
 			updateParts(ctx, node);
 		});
 		
+		// TODO CUI.control("translation", node.translation);
+		table.add("Translation").row();
+		table.add("x: " + node.translation.x).row();
+		table.add("y: " + node.translation.y).row();
+		table.add("z: " + node.translation.z).row();
+		
+		table.add("Rotation").row();
+		table.add("x: " + node.rotation.x).row();
+		table.add("y: " + node.rotation.y).row();
+		table.add("z: " + node.rotation.z).row();
+		table.add("w: " + node.rotation.w).row();
+		
+		table.add("Scale").row();
+		table.add("x: " + node.scale.x).row();
+		table.add("y: " + node.scale.y).row();
+		table.add("z: " + node.scale.z).row();
+		
 		// update when selection changed (TODO should be done in listener instead)
 		if(ctx.showSelectedNodeOnly){
 			updateParts(ctx, node);
