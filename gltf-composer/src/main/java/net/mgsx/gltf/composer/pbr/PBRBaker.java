@@ -26,6 +26,7 @@ import net.mgsx.gltf.loaders.gltf.GLTFLoader;
 import net.mgsx.gltf.scene3d.attributes.PBRColorAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
+import net.mgsx.gltf.scene3d.attributes.PBRVolumeAttribute;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
 public class PBRBaker extends MgdxGame {
@@ -159,9 +160,76 @@ public class PBRBaker extends MgdxGame {
 				}
 			}
 			
+			// Transmission
+			// AO-Metal-roughness
+			Pixmap TT = null;
+			FileHandle transmissionFile = base.child(mat.id + "-transmission.png");
+			Pixmap transmissionPix = transmissionFile.exists() ? new Pixmap(transmissionFile) : null;
+			if(transmissionPix != null){
+				TT = new Pixmap(transmissionPix.getWidth(), transmissionPix.getHeight(), Format.RGB888);
+			}
+			
+			FileHandle thicknessFile = base.child(mat.id + "-thickness.png");
+			Pixmap thicknessPix = thicknessFile.exists() ? new Pixmap(thicknessFile) : null;
+			if(thicknessPix != null){
+				if(TT == null){
+					TT = new Pixmap(thicknessPix.getWidth(), thicknessPix.getHeight(), Format.RGB888);
+				}else{
+					if(TT.getWidth() != thicknessPix.getWidth() || TT.getHeight() != thicknessPix.getHeight()){
+						throw new GdxRuntimeException("TT maps mismatch");
+					}
+				}
+			}
+			
+			if(TT != null){
+				TT.setBlending(Blending.None);
+				Color in = new Color();
+				for(int y=0 ; y<TT.getHeight() ; y++){
+					for(int x=0 ; x<TT.getWidth() ; x++){
+						float transmission;
+						float thickness;
+						if(transmissionPix != null){
+							in.set(transmissionPix.getPixel(x, y));
+							transmission = in.r;
+						}else{
+							PBRFloatAttribute attr = mat.get(PBRFloatAttribute.class, PBRFloatAttribute.TransmissionFactor);
+							if(attr != null){
+								transmission = attr.value;
+							}else{
+								transmission = 1;
+							}
+						}
+						if(thicknessPix != null){
+							in.set(thicknessPix.getPixel(x, y));
+							thickness = in.r;
+						}else{
+							PBRVolumeAttribute attr = mat.get(PBRVolumeAttribute.class, PBRVolumeAttribute.Type);
+							if(attr != null){
+								thickness = attr.thicknessFactor;
+							}else{
+								thickness = 1;
+							}
+						}
+						TT.drawPixel(x, y, Color.rgba8888(transmission, thickness, 0, 1));
+					}
+				}
+				Texture TTTexture = new Texture(TT);
+				textureToName.put(TTTexture, mat.id + "-tt");
+				if(transmissionPix != null){
+					mat.set(PBRTextureAttribute.createTransmissionTexture(TTTexture));
+					mat.set(PBRFloatAttribute.createTransmissionFactor(1));
+				}
+				if(thicknessPix != null){
+					mat.set(PBRTextureAttribute.createThicknessTexture(TTTexture));
+//					PBRVolumeAttribute attr = mat.get(PBRVolumeAttribute.class, PBRVolumeAttribute.Type);
+//					if(attr != null){
+//						attr.thicknessFactor = 1;
+//					}
+				}
+			}
+			
 			// simply recompose textures, and export as a new GLTF
 		}
-		
 		
 		
 		boolean export = true;
