@@ -2,25 +2,19 @@ package net.mgsx.gltf.composer.pbr;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Blending;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import net.mgsx.gdx.MgdxGame;
 import net.mgsx.gdx.desktop.MGdxDekstopApplication;
 import net.mgsx.gltf.exporters.GLTFExporter;
 import net.mgsx.gltf.exporters.GLTFExporterConfig;
 import net.mgsx.gltf.loaders.gltf.GLTFLoader;
-import net.mgsx.gltf.scene3d.attributes.PBRColorAttribute;
-import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
-import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
 /**
@@ -76,10 +70,8 @@ public class PBRComposer extends MgdxGame {
 		SceneAsset inputMaterials = new GLTFLoader().load(inputMaterialsFile);
 		SceneAsset inputScene = new GLTFLoader().load(inputSceneFile);
 		
-		// first parse filename
-		String baseName = inputMapFile.nameWithoutExtension();
-		
 		// make palette
+		Array<Material> materials = new Array<Material>();
 		IntMap<Material> pixelMap = new IntMap<Material>();
 		int width = inputMap.getWidth();
 		int height = inputMap.getHeight();
@@ -95,7 +87,8 @@ public class PBRComposer extends MgdxGame {
 				Material foundMaterial = null;
 				for(Material material : inputMaterials.scene.model.materials){
 					if(material.id.startsWith("M" + index + "-")){
-						if(foundMaterial != null) throw new GdxRuntimeException("input material name conflicts for index " + index);
+						if(foundMaterial != null) throw new GdxRuntimeException("input material name conflicts for index " + index +
+							": " + foundMaterial.id + " and " + material.id);
 						foundMaterial = material;
 					}
 				}
@@ -104,21 +97,17 @@ public class PBRComposer extends MgdxGame {
 						throw new GdxRuntimeException("duplicated palette entry at " + col + "," + row);
 					}
 					pixelMap.put(pixel, foundMaterial);
+					materials.add(foundMaterial);
 				}
 			}
 		}
 		
-		// TODO expand with emissive, etc...
-		
 		// create material
 		Material result = inputScene.scene.model.materials.first();
-		Pixmap baseColor = new Pixmap(width, height, Format.RGBA8888);
-		baseColor.setBlending(Blending.None);
-		Pixmap orm = new Pixmap(width, height, Format.RGB888);
-		orm.setBlending(Blending.None);
+		
+		PBRPainter painter = new PBRPainter(width, height, materials);
 		
 		// apply palette
-		Color baseColorValue = new Color();
 		for(int y=0 ; y<height ; y++){
 			for(int x=0 ; x<width ; x++){
 				int color = inputMap.getPixel(x, y);
@@ -129,71 +118,20 @@ public class PBRComposer extends MgdxGame {
 				if(material == null){
 					throw new GdxRuntimeException("no material found for color " + color + " at " + x + "," + y);
 				}
-				{
-					PBRColorAttribute a = material.get(PBRColorAttribute.class, PBRColorAttribute.BaseColorFactor);
-					if(a != null){
-						baseColorValue.set(a.color);
-					}else{
-						baseColorValue.set(Color.WHITE);
-					}
-					baseColor.drawPixel(x, y, Color.rgba8888(baseColorValue));
-				}
-				float metallic = 0;
-				float rougness = .5f;
-				float ambientOcclusion = 1;
-				{
-					PBRFloatAttribute a = material.get(PBRFloatAttribute.class, PBRFloatAttribute.Metallic);
-					if(a != null){
-						metallic = a.value;
-					}
-				}
-				{
-					PBRFloatAttribute a = material.get(PBRFloatAttribute.class, PBRFloatAttribute.Roughness);
-					if(a != null){
-						rougness = a.value;
-					}
-				}
 				
-				orm.drawPixel(x, y, Color.rgba8888(ambientOcclusion, rougness, metallic, 1));
+				painter.paint(x, y, material);
 			}
 		}
 		
-		Texture baseColorTexture = new Texture(baseColor);
-		
-		{
-			PBRTextureAttribute a = PBRTextureAttribute.createBaseColorTexture(baseColorTexture);
-			// XXX keep original and workaround for TODO  material exporter (null filter should be handled)
-			a.textureDescription.minFilter = TextureFilter.Nearest;
-			a.textureDescription.magFilter = TextureFilter.Nearest;
-			a.textureDescription.uWrap =
-			a.textureDescription.vWrap = TextureWrap.ClampToEdge;
-			
-			result.set(a);
-		}
-		
-		Texture ormTexture = new Texture(orm);
-		{
-			PBRTextureAttribute a = PBRTextureAttribute.createMetallicRoughnessTexture(ormTexture);
-			// XXX keep original and workaround for TODO  material exporter (null filter should be handled)
-			a.textureDescription.minFilter = TextureFilter.Nearest;
-			a.textureDescription.magFilter = TextureFilter.Nearest;
-			a.textureDescription.uWrap =
-			a.textureDescription.vWrap = TextureWrap.ClampToEdge;
-					
-			result.set(a);
-		}
+		ObjectMap<Texture, String> namesMap = painter.patchMaterial(result);
 		
 		// save as GLTF
 		GLTFExporterConfig config = new GLTFExporterConfig();
 		new GLTFExporter(config){
 			protected String getImageName(Texture texture) {
-				if(texture == baseColorTexture){
-					return baseName + "-albedo";
-				}
-				if(texture == ormTexture){
-					return baseName + "-orm";
-				}
-				return super.getImageName(texture);
+				String name = namesMap.get(texture);
+				if(name == null) throw new GdxRuntimeException("name not found for texture");
+				return name;
 			}
 		}.export(inputScene, outputSceneFile);
 	}
