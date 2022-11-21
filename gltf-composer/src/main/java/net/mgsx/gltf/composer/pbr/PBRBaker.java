@@ -37,7 +37,8 @@ public class PBRBaker extends MgdxGame {
 	}
 	
 	private void testCompose(){
-		FileHandle base = Gdx.files.local("pbr-example/raw_materials");
+		FileHandle base = args.length <= 1 ? Gdx.files.local("pbr-example/raw_materials") :
+			Gdx.files.absolute(args[1]);
 		SceneAsset asset = new GLTFLoader().load(base.child("materials.gltf"));
 		
 		ObjectMap<Texture, String> textureToName = new ObjectMap<Texture, String>();

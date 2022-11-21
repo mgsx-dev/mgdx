@@ -103,6 +103,7 @@ public class PBRComposer extends MgdxGame {
 		}
 		
 		// create material
+		// TODO should handle multi palette and materials without palette !
 		Material result = inputScene.scene.model.materials.first();
 		
 		PBRPainter painter = new PBRPainter(width, height, materials);
