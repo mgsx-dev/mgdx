@@ -112,5 +112,13 @@ public class Composition {
 	}
 	public FXAAOptions fxaa = new FXAAOptions();
 	public boolean fxaaEnabled;
+
+	public static class MirrorOptions{
+		public Vector3 normal = new Vector3(Vector3.Y);
+		public float origin = 0;
+		public boolean clip = true;
+	}
+	public MirrorOptions mirror = new MirrorOptions();
+	public boolean mirrorEnabled;
 	
 }

@@ -31,6 +31,7 @@ import net.mgsx.gltf.composer.utils.Overlay;
 import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
 import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
+import net.mgsx.gltf.scene3d.scene.MirrorSource;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
@@ -99,6 +100,8 @@ public class GLTFComposerContext {
 	// Cache
 	private final ObjectMap<String, Texture> textureCache = new ObjectMap<String, Texture>();
 
+	public MirrorSource mirrorSource;
+
 	public GLTFComposerContext() {
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
@@ -129,6 +132,7 @@ public class GLTFComposerContext {
 			final boolean isHDR = !colorShaderConfig.manualGammaCorrection;
 			
 			colorShaderConfig.transmissionSRGB = isHDR ? SRGB.NONE: SRGB.FAST;
+			colorShaderConfig.mirrorSRGB = isHDR ? SRGB.NONE: SRGB.FAST;
 			
 			if(asset != null){
 				colorShaderConfig.numBones = asset.maxBones;

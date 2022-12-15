@@ -21,6 +21,14 @@ uniform sampler2D u_brdfLUT;
 uniform float u_mipmapScale; // = 9.0 for resolution of 512x512
 #endif
 
+#ifdef mirrorSpecularFlag
+uniform sampler2D u_mirrorSpecularSampler;
+uniform float u_mirrorMipmapScale;
+uniform vec3 u_mirrorNormal;
+#endif
+
+uniform vec2 u_viewportInv;
+
 #endif
 
 
@@ -139,6 +147,21 @@ PBRLightContribs getIBLContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 refl
 #endif
     vec3 diffuseLight = SRGBtoLINEAR(textureCube(u_DiffuseEnvSampler, diffuseDirection)).rgb;
 
+#ifdef mirrorSpecularFlag
+    float lod = (pbrSurface.perceptualRoughness * u_mirrorMipmapScale);
+    vec2 mirrorCoord = gl_FragCoord.xy * u_viewportInv;
+
+    // normal perturbation
+	vec3 i1 = reflect(reflection, n);
+	vec3 i2 = reflect(reflection, u_mirrorNormal);
+	vec2 p = (u_projViewTrans * vec4(i2 - i1, 0.0)).xy;
+	mirrorCoord += p / 2.0;
+	mirrorCoord.x = 1.0 - mirrorCoord.x;
+
+    vec3 specularLight = msSRGBtoLINEAR(texture2DLodEXT(u_mirrorSpecularSampler, mirrorCoord, lod)).rgb;
+
+#else
+
 #ifdef ENV_ROTATION
 	vec3 specularDirection = u_envRotation * reflection;
 #else
@@ -152,6 +175,7 @@ PBRLightContribs getIBLContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 refl
     vec3 specularLight = SRGBtoLINEAR(textureCube(u_SpecularEnvSampler, specularDirection)).rgb;
 #endif
 
+#endif
 
 #ifdef iridescenceFlag
 

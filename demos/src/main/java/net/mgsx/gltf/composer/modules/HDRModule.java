@@ -47,6 +47,7 @@ public class HDRModule implements GLTFComposerModule
 	public void render(GLTFComposerContext ctx) {
 		
 		ctx.sceneManager.renderShadows();
+		ctx.sceneManager.renderMirror();
 		ctx.sceneManager.renderTransmission();
 		ctx.fbo.ensureScreenSize();
 		ctx.fbo.begin();

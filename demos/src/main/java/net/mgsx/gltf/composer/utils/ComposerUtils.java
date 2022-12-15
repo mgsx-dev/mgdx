@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Node;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
@@ -17,6 +19,7 @@ import net.mgsx.gltf.scene3d.attributes.FogAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
+import net.mgsx.gltf.scene3d.scene.MirrorSource;
 
 public class ComposerUtils {
 	public static void fitCameraToScene(GLTFComposerContext ctx){
@@ -184,5 +187,39 @@ public class ComposerUtils {
 				}
 			}
 		}
+	}
+
+	public static void enableMirror(GLTFComposerContext ctx, boolean enabled) {
+		ctx.compo.mirrorEnabled = enabled;
+		if(enabled){
+			ctx.mirrorSource = new MirrorSource(){
+				@Override
+				protected FrameBuffer createFrameBuffer(int width, int height) {
+					// TODO need to know if it's an HDR context...
+					FrameBufferBuilder fb = new FrameBufferBuilder(width, height);
+					fb.addColorTextureAttachment(GL30.GL_RGBA16F, GL30.GL_RGBA, GL30.GL_HALF_FLOAT);
+					fb.addDepthRenderBuffer(GL30.GL_DEPTH_COMPONENT24);
+					return fb.build();
+					// return super.createFrameBuffer(width, height);
+				}
+			};
+			ctx.mirrorSource.set(ctx.compo.mirror.normal.x, 
+					ctx.compo.mirror.normal.y,
+					ctx.compo.mirror.normal.z,
+					ctx.compo.mirror.origin,
+					ctx.compo.mirror.clip);
+			ctx.sceneManager.setMirrorSource(ctx.mirrorSource);
+		}else{
+			ctx.mirrorSource = null;
+			ctx.sceneManager.setMirrorSource(null);
+		}
+	}
+
+	public static void applyMirror(GLTFComposerContext ctx) {
+		ctx.mirrorSource.set(ctx.compo.mirror.normal.x, 
+				ctx.compo.mirror.normal.y,
+				ctx.compo.mirror.normal.z,
+				ctx.compo.mirror.origin,
+				ctx.compo.mirror.clip);
 	}
 }

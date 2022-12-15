@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.IntMap;
 
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
 import net.mgsx.gltf.composer.GLTFComposerContext;
+import net.mgsx.gltf.scene3d.attributes.MirrorAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRColorAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRFlagAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
@@ -103,6 +104,11 @@ public class MaterialBasicPanel extends MaterialPanelBase
 			
 			table.add(t).row();
 		}
+		
+		UI.toggle(table, "Mirror", material.has(MirrorAttribute.Specular), v->{
+			if(v) material.set(MirrorAttribute.createSpecular());
+			else material.remove(MirrorAttribute.Specular);
+		});
 		
 	}
 }

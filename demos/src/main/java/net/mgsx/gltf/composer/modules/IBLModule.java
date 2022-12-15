@@ -266,6 +266,7 @@ public class IBLModule implements GLTFComposerModule
 	
 	private int builtInIndex;
 	private FogModule fogModule = new FogModule();
+	private MirrorModule mirrorModule = new MirrorModule();
 
 	private void replaceIBL(GLTFComposerContext ctx, IBL newIBL) {
 		if(ctx.ibl != null){
@@ -308,6 +309,8 @@ public class IBLModule implements GLTFComposerModule
 		
 		controls.add(fogModule.initUI(ctx, skin)).row();
 
+		controls.add(mirrorModule.initUI(ctx, skin)).row();
+		
 		// IBL
 		
 		UI.header(controls, "IBL");
@@ -392,6 +395,7 @@ public class IBLModule implements GLTFComposerModule
 				new HDRExportDialog(ctx, ctx.ibl.diffuseCubemap, false, "diffuse", file->ctx.compo.diffusePath=file.path()).show(ctx.stage);
 			})).row();
 		}
+		
 		
 		
 	}
