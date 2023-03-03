@@ -44,6 +44,7 @@ import net.mgsx.gltf.composer.ui.MaterialTransmissionPanel;
 import net.mgsx.gltf.composer.ui.MeshPanel;
 import net.mgsx.gltf.composer.ui.NodePanel;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
+import net.mgsx.gltf.composer.utils.FileUtils;
 import net.mgsx.gltf.loaders.exceptions.GLTFIllegalException;
 import net.mgsx.gltf.loaders.exceptions.GLTFRuntimeException;
 import net.mgsx.gltf.loaders.exceptions.GLTFUnsupportedException;
@@ -373,6 +374,21 @@ public class SceneModule implements GLTFComposerModule
 	
 	@Override
 	public boolean handleFile(GLTFComposerContext ctx, FileHandle file) {
+		if(file.isDirectory()){
+			Array<FileHandle> gltfs = FileUtils.filterRecursive(file, "gltf", true);
+			Array<FileHandle> glbs = FileUtils.filterRecursive(file, "glb", true);
+			gltfs.addAll(glbs);
+			if(gltfs.size == 1){
+				return handleFile(ctx, gltfs.first());
+			}
+			else if(gltfs.size > 1){
+				UI.popup(ctx.stage, ctx.skin, "Not supported", "Multiple gltf and glb files found in folder.");
+				return true;
+			}
+			// Some other handler may handle a directory
+			return false;
+		}
+		
 		String ext = file.extension().toLowerCase();
 		SceneAsset newAsset = null;
 		try{
