@@ -1,5 +1,7 @@
 package net.mgsx.gdx.utils;
 
+import java.util.function.Consumer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.GLTexture;
@@ -52,9 +54,13 @@ public class FrameBufferUtils {
 		return ensureSize(fbo, format, width, height, false);
 	}
 	public static FrameBuffer ensureSize(FrameBuffer fbo, GLFormat format, int width, int height, boolean depth) {
+		return ensureSize(fbo, format, width, height, depth, null);
+	}
+	public static FrameBuffer ensureSize(FrameBuffer fbo, GLFormat format, int width, int height, boolean depth, Consumer<FrameBuffer> init) {
 		if(fbo == null || fbo.getWidth() != width || fbo.getHeight() != height){
 			if(fbo != null) fbo.dispose();
-			fbo = create(format, depth);
+			fbo = create(format, width, height, depth);
+			if(init != null) init.accept(fbo);
 		}
 		return fbo;
 	}

@@ -143,6 +143,17 @@ public class UI {
 		change(selectBox, event->handler.accept(selectBox.getSelected()));
 		return selectBox;
 	}
+	public static <T> Actor selector(Skin skin, String label, T[] items, T defaultItem, Consumer<T> handler) {
+		SelectBox<T> selectBox = new SelectBox<T>(skin);
+		selectBox.setItems(new Array<T>(items));
+		if(defaultItem != null) selectBox.setSelected(defaultItem);
+		change(selectBox, event->handler.accept(selectBox.getSelected()));
+		Table t = new Table(skin);
+		t.defaults().pad(DEFAULT_PADDING);
+		t.add(label);
+		t.add(selectBox);
+		return t;
+	}
 	public static SelectBox<String> selector(Skin skin, String ...items) {
 		SelectBox<String> selectBox = new SelectBox<String>(skin);
 		selectBox.setItems(items);
