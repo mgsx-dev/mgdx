@@ -11,7 +11,7 @@ com.badlogic.gdx.graphics.Color: {
 	disabled: {r: 0.5, g: 0.5, b: 0.5, a: 1.0}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
-	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } },
+	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.0} },
 	fade-tabpane-tab-on: {name: tabpane-tab-on, color: fade}
 	fade-tabpane-tab-off: {name: tabpane-tab-off, color: fade }
 	fade-tabpane-back: {name: tabpane-back, color: fade }
