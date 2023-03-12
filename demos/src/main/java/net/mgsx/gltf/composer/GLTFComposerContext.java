@@ -102,6 +102,8 @@ public class GLTFComposerContext {
 
 	public MirrorSource mirrorSource;
 
+	public Runnable extraRender;
+
 	public GLTFComposerContext() {
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
