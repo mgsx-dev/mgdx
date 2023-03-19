@@ -1,12 +1,9 @@
 package net.mgsx.gltf.composer.modules;
 
-import java.util.function.Supplier;
-
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Array;
 
 import net.mgsx.gdx.scenes.scene2d.ui.Frame;
 import net.mgsx.gdx.scenes.scene2d.ui.UI;
@@ -17,16 +14,10 @@ import net.mgsx.gltf.scene3d.scene.Scene;
 
 public class MiscModule implements GLTFComposerModule
 {
-	public static final Array<Supplier<GLTFComposerModule>> addonsFactory = new Array<Supplier<GLTFComposerModule>>();
-	private static final Array<GLTFComposerModule> addons = new Array<GLTFComposerModule>();
-	
 	private ParticleModule particles;
 	
 	public MiscModule(GLTFComposerContext ctx) {
 		particles = new ParticleModule();
-		for(Supplier<GLTFComposerModule> f : addonsFactory){
-			addons.add(f.get());
-		}
 	}
 	
 	@Override
@@ -50,26 +41,16 @@ public class MiscModule implements GLTFComposerModule
 			})).row();
 		}
 		
-		for(GLTFComposerModule addon : addons){
-			controls.add(addon.initUI(ctx, skin)).row();
-		}
-		
 		return controls;
 	}
 	
 	@Override
 	public void update(GLTFComposerContext ctx, float delta) {
 		particles.update(ctx, delta);
-		for(GLTFComposerModule addon : addons){
-			addon.update(ctx, delta);
-		}
 	}
 	
 	@Override
 	public void render(GLTFComposerContext ctx) {
 		particles.render(ctx);
-		for(GLTFComposerModule addon : addons){
-			addon.render(ctx);
-		}
 	}
 }

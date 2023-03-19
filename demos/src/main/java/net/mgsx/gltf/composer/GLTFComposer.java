@@ -1,12 +1,13 @@
 package net.mgsx.gltf.composer;
 
+import java.util.function.Supplier;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.profiling.GLErrorListener;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.Interpolation;
@@ -42,13 +43,15 @@ import net.mgsx.gltf.composer.modules.SceneModule;
 import net.mgsx.gltf.composer.modules.SystemModule;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
-import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
-import net.mgsx.gltfx.GLFormat;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
+import net.mgsx.gltfx.GLFormat;
 
 public class GLTFComposer extends ScreenAdapter {
+	
+	public static final Array<Supplier<GLTFComposerModule>> addonsFactory = new Array<Supplier<GLTFComposerModule>>();
+	
 	public final Array<GLTFComposerModule> modules = new Array<GLTFComposerModule>();
 	
 	public final GLTFComposerContext ctx = new GLTFComposerContext();
@@ -106,8 +109,6 @@ public class GLTFComposer extends ScreenAdapter {
 		ctx.colorShaderConfig.manualGammaCorrection = false;
 		ctx.colorShaderConfig.manualSRGB = SRGB.FAST;
 		
-		ctx.sceneManager = new SceneManager();
-		
 		// basic
 		ctx.fbo = new PBRRenderTargetsMultisample(ctx.msaa);
 		ctx.fbo.addColors();
@@ -143,6 +144,9 @@ public class GLTFComposer extends ScreenAdapter {
 		addModule(new PostProcessingModule(), "icon-grad");
 		addModule(new MiscModule(ctx), "icon-lab");
 		addModule(systemModule = new SystemModule(), "icon-wrench");
+		for(Supplier<GLTFComposerModule> f : addonsFactory){
+			addModule(f.get(), "icon-lab");
+		}
 		
 		tabPane.setCurrentIndex(0);
 	}
