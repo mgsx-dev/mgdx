@@ -63,7 +63,34 @@ public class GLTFComposerContext {
 
 	public PBRShaderConfig colorShaderConfig;
 	public DepthShader.Config depthShaderConfig;
-	public SceneManager sceneManager;
+	
+	public Runnable beforeColors = ()->{};
+	public Runnable beforeMirror = ()->{};
+	public Runnable beforeTransmission = ()->{};
+	public Runnable beforeShadows = ()->{};
+
+	public final SceneManager sceneManager = new SceneManager(){
+		public void renderColors() {
+			beforeColors.run();
+			super.renderColors();
+		}
+		public void renderDepth() {
+			beforeColors.run();
+			super.renderDepth();
+		}
+		public void renderMirror() {
+			beforeMirror.run();
+			super.renderMirror();
+		}
+		public void renderShadows() {
+			beforeShadows.run();
+			super.renderShadows();
+		}
+		public void renderTransmission() {
+			beforeTransmission.run();
+			super.renderTransmission();
+		}
+	};
 	public Skybox skyBox;
 	public IBL ibl;
 	
@@ -101,9 +128,7 @@ public class GLTFComposerContext {
 	private final ObjectMap<String, Texture> textureCache = new ObjectMap<String, Texture>();
 
 	public MirrorSource mirrorSource;
-
-	public Runnable extraRender;
-
+	
 	public GLTFComposerContext() {
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);

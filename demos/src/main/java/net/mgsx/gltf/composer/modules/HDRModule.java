@@ -45,7 +45,6 @@ public class HDRModule implements GLTFComposerModule
 	
 	@Override
 	public void render(GLTFComposerContext ctx) {
-		
 		ctx.sceneManager.renderShadows();
 		ctx.sceneManager.renderMirror();
 		ctx.sceneManager.renderTransmission();
@@ -53,7 +52,6 @@ public class HDRModule implements GLTFComposerModule
 		ctx.fbo.begin();
 		ScreenUtils.clear(ctx.compo.clearColor, true);
 		ctx.sceneManager.renderColors();
-		if(ctx.extraRender != null) ctx.extraRender.run();
 		ctx.fbo.end();
 		
 		// post process
