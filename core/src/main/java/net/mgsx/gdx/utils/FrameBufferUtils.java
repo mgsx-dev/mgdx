@@ -103,4 +103,11 @@ public class FrameBufferUtils {
 		batch.draw(input, 0, 0, 1, 1, srcX, srcY, srcX + srcW, srcY + srcH);
 		batch.end();
 	}
+	public static void subBlit(SpriteBatch batch, Texture input, float dstX, float dstY, float dstW, float dstH) {
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 1, 1);
+		batch.begin();
+		batch.draw(input, dstX, dstY, dstW, dstH, 0, 0, 1, 1);
+		batch.end();
+	}
+
 }

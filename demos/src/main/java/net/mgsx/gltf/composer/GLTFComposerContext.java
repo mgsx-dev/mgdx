@@ -48,6 +48,8 @@ import net.mgsx.io.NFDFileSelector;
 
 public class GLTFComposerContext {
 	
+	public static int DEFAULT_POINT_LIGHTS = 0;
+	
 	// stored settings
 	public Composition compo = new Composition();
 	
@@ -63,6 +65,8 @@ public class GLTFComposerContext {
 
 	public PBRShaderConfig colorShaderConfig;
 	public DepthShader.Config depthShaderConfig;
+	
+	public PBRShaderProvider customColorShaderProvider;
 	
 	public Runnable beforeColors = ()->{};
 	public Runnable beforeMirror = ()->{};
@@ -153,7 +157,7 @@ public class GLTFComposerContext {
 			shadersValid = true;
 
 			colorShaderConfig.numDirectionalLights = 1;
-			colorShaderConfig.numPointLights = 0;
+			colorShaderConfig.numPointLights = DEFAULT_POINT_LIGHTS;
 			colorShaderConfig.numSpotLights = 0;
 			
 			final boolean isHDR = !colorShaderConfig.manualGammaCorrection;
@@ -178,7 +182,8 @@ public class GLTFComposerContext {
 				colorShaderConfig.glslVersion = null;
 				colorShaderConfig.fragmentShader = ShaderParser.parse(Gdx.files.classpath("shaders/pbr/pbr.fs.glsl"));
 			}
-			PBRShaderProvider colorShader = new PBRShaderProvider(colorShaderConfig);
+			PBRShaderProvider colorShader = customColorShaderProvider != null ? customColorShaderProvider :
+				new PBRShaderProvider(colorShaderConfig);
 			sceneManager.setShaderProvider(colorShader);
 			sceneManager.setDepthShaderProvider(new PBRDepthShaderProvider(depthShaderConfig));
 			
