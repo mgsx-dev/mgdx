@@ -64,4 +64,9 @@ subprojects {
 	}
 }
 
+configurations.all {
+    resolutionStrategy.cacheDynamicVersionsFor 0, 'hours'
+    resolutionStrategy.cacheChangingModulesFor 0, 'hours'
+}
+
 eclipse.project.name = 'mgdx'
