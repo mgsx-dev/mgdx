@@ -59,8 +59,10 @@ public class UI {
 		});
 		return slider;
 	}
-	public static void toggle(Table t, String text, boolean checked, Consumer<Boolean> handler){
-		t.add(toggle(t.getSkin(), text, checked, handler)).row();
+	public static TextButton toggle(Table t, String text, boolean checked, Consumer<Boolean> handler){
+		TextButton bt = toggle(t.getSkin(), text, checked, handler);
+		t.add(bt).row();
+		return bt;
 	}
 	
 	public static TextButton toggle(Skin skin, String text, boolean checked, Consumer<Boolean> handler){
