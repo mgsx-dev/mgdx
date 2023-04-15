@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.files.FileHandle;
@@ -41,6 +42,7 @@ import net.mgsx.gltf.composer.modules.PostProcessingModule;
 import net.mgsx.gltf.composer.modules.RenderModule;
 import net.mgsx.gltf.composer.modules.SceneModule;
 import net.mgsx.gltf.composer.modules.SystemModule;
+import net.mgsx.gltf.composer.utils.ComposerRayCast;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
@@ -101,7 +103,8 @@ public class GLTFComposer extends ScreenAdapter {
 		ScreenViewport viewport = new ScreenViewport();
 		if(hdpiDetected) viewport.setUnitsPerPixel(0.5f);
 		ctx.stage = new Stage(viewport);
-		ctx.cameraManager = new BlenderCamera(Vector3.Zero, 5f);
+		ctx.cameraManager = new BlenderCamera(Vector3.Zero, 5f, Buttons.LEFT);
+		ctx.cameraManager.rayCastHandler = new ComposerRayCast(ctx);
 		
 		ctx.colorShaderConfig = PBRShaderProvider.createDefaultConfig();
 		ctx.depthShaderConfig = PBRDepthShaderProvider.createDefaultConfig();

@@ -1,6 +1,7 @@
 package net.mgsx.gltf.composer.modules;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -15,6 +16,7 @@ import net.mgsx.gltf.composer.GLTFComposerContext;
 import net.mgsx.gltf.composer.GLTFComposerModule;
 import net.mgsx.gltf.composer.core.Composition;
 import net.mgsx.gltf.composer.core.CompositionLoader;
+import net.mgsx.gltf.composer.ui.CUI;
 
 public class CompositionModule implements GLTFComposerModule
 {
@@ -46,6 +48,9 @@ public class CompositionModule implements GLTFComposerModule
 			button.add(new Image(image));
 			presetTable.add(button);
 		}
+		
+		UI.header(controls, "Prefs");
+		CUI.toggle(controls, "Middle mouse input", false, b->ctx.cameraManager.setButton(b ? Buttons.MIDDLE : Buttons.LEFT));
 		
 		return controls;
 	}

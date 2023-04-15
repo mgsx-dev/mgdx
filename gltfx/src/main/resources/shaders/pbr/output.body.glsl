@@ -11,6 +11,10 @@
     out_localPosition = v_localPosition;
 #endif
 
+#ifdef DEPTH_LOCATION
+    out_depth = gl_FragCoord.z;
+#endif
+
 #ifdef ORM_LOCATION
     perceptualRoughness = clamp(perceptualRoughness, 0.0, 1.0);
     out_ORM = vec3(ao, perceptualRoughness, metallic);

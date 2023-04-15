@@ -38,6 +38,7 @@ public class MRTModule implements GLTFComposerModule {
 		usages.add(PBRRenderTargets.DIFFUSE);
 		usages.add(PBRRenderTargets.SPECULAR);
 		usages.add(PBRRenderTargets.TRANSMISSION);
+//		usages.add(PBRRenderTargets.DEPTH);
 		
 		// TODO add more : diffuse / specular / lights (all)
 		// TODO some debug : F0 F90, FDG, etc...

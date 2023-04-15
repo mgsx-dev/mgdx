@@ -210,6 +210,7 @@ public class GLTFComposerContext {
 			if(skyBox != null){
 				sceneManager.setSkyBox(null);
 				skyBox.dispose();
+				skyBox = null;
 			}
 			if(ibl != null && ibl.environmentCubemap != null && compo.skyBoxEnabled){
 				createSkybox();

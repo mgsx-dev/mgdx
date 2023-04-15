@@ -4,6 +4,10 @@
 layout(location = COLOR_LOCATION) out vec4 out_FragColor;
 #endif
 
+#ifdef DEPTH_LOCATION
+layout(location = DEPTH_LOCATION) out float out_depth;
+#endif
+
 #ifdef EMISSIVE_LOCATION
 layout(location = EMISSIVE_LOCATION) out vec4 out_emissive;
 #endif

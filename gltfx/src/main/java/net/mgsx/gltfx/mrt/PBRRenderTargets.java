@@ -60,7 +60,8 @@ public class PBRRenderTargets extends RenderTargets
 
 	public void setDepth(boolean hasAttachment) {
 		if(hasAttachment){
-			addLayer(DEPTH, GLFormat.DEPTH24);
+			addLayer(DEPTH, GLFormat.DEPTH24); // TODO doesn't work.
+			// super.setDepth(GLFormat.DEPTH24);
 		}else{
 			super.setDepth(GLFormat.DEPTH24);
 		}

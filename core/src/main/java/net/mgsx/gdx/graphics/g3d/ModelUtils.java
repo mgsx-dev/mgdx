@@ -26,6 +26,11 @@ public class ModelUtils {
 		eachNodeRecusrsive(modelInstance.nodes, node->results.addAll(node.parts));
 		return results;
 	}
+	public static Array<Node> collectNodes(ModelInstance modelInstance) {
+		Array<Node> results = new Array<Node>();
+		eachNodeRecusrsive(modelInstance.nodes, node->results.add(node));
+		return results;
+	}
 
 	public static void eachNodePartRecusrsive(Iterable<Node> nodes, Consumer<NodePart> callback) {
 		eachNodeRecusrsive(nodes, node->{

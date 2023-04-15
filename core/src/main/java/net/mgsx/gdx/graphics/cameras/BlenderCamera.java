@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -29,9 +30,10 @@ public class BlenderCamera {
 		
 		public BlenderCameraController(Camera camera, Vector3 homeTarget, float homeDistance, int button) {
 			super(camera);
-			this.homeTarget = homeTarget;
+			this.homeTarget = new Vector3(homeTarget);
 			this.target.set(homeTarget);
 			this.homeDistance = homeDistance;
+			this.button = button;
 			
 			this.activateKey = 0;
 			this.alwaysScroll = true;
@@ -152,6 +154,9 @@ public class BlenderCamera {
 			camera.update();
 			controller.target.set(target);
 		}
+		public void setButton(int button) {
+			controller.button = button;
+		}
 	}
 	
 	private CameraConfig<PerspectiveCamera> perspective;
@@ -163,6 +168,12 @@ public class BlenderCamera {
 	
 	private InputMultiplexer inputs;
 	private int button;
+	
+	public interface CameraRayCast {
+		boolean rayCast(Ray ray, Vector3 position);
+	}
+	
+	public CameraRayCast rayCastHandler;
 	
 	public BlenderCamera(Vector3 homeTarget, float homeDistance){
 		this(homeTarget, homeDistance, Input.Buttons.MIDDLE);
@@ -222,7 +233,15 @@ public class BlenderCamera {
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)){
 			if(Gdx.input.isButtonJustPressed(button)){
-				// TODO center position on geometry, require raycast mesh.
+				if(rayCastHandler != null){
+					Vector3 inter = new Vector3();
+					boolean b = rayCastHandler.rayCast(current.camera.getPickRay(Gdx.input.getX(), Gdx.input.getY()), inter);
+					
+					System.out.println(current.camera.position.dst(inter));
+					if(b){
+						// TODO set focus and translate to it (keeping camera direction)
+					}
+				}
 			}
 		}
 		current().update();
@@ -274,5 +293,11 @@ public class BlenderCamera {
 
 	public void setTarget(Vector3 target) {
 		setTarget(target.x, target.y, target.z);
+	}
+
+	public void setButton(int button) {
+		this.button = button;
+		perspective.setButton(button);
+		orthographic.setButton(button);
 	}
 }
