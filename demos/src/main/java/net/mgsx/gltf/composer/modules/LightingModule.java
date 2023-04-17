@@ -92,5 +92,10 @@ public class LightingModule implements GLTFComposerModule
 			DirectionalShadowLight shadowLight = (DirectionalShadowLight)ctx.keyLight;
 			shadowLight.setBounds(ctx.sceneBounds);
 		}
+		shadows.update(ctx, delta);
+	}
+	@Override
+	public void renderOverlay(GLTFComposerContext ctx) {
+		shadows.renderOverlay(ctx);
 	}
 }

@@ -248,6 +248,10 @@ public class GLTFComposer extends ScreenAdapter {
 		
 		systemModule.endProfiling(ctx);
 		
+		for(int i=0 ; i<modules.size ; i++){
+			modules.get(i).renderOverlay(ctx);
+		}
+		
 		ctx.stage.getViewport().apply();
 		ctx.stage.act();
 		ctx.stage.draw();

@@ -21,6 +21,9 @@ public interface GLTFComposerModule extends Disposable {
 	default void render(GLTFComposerContext ctx){
 	}
 	
+	default void renderOverlay(GLTFComposerContext ctx){
+	}
+	
 	default void show(GLTFComposerContext ctx){}
 	default void hide(GLTFComposerContext ctx){}
 	

@@ -43,6 +43,13 @@ public class GLTFModuleGroup implements GLTFComposerModule
 	}
 	
 	@Override
+	public void renderOverlay(GLTFComposerContext ctx) {
+		for(GLTFComposerModule module : modules){
+			module.renderOverlay(ctx);
+		}
+	}
+	
+	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		controls = new Table(skin);
 		for(GLTFComposerModule subModule : modules){

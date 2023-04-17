@@ -54,6 +54,10 @@ public class GLTFModuleSwitch implements GLTFComposerModule
 	public void render(GLTFComposerContext ctx) {
 		current.module.render(ctx);
 	}
+	@Override
+	public void renderOverlay(GLTFComposerContext ctx) {
+		current.module.renderOverlay(ctx);
+	}
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {

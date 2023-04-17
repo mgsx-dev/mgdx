@@ -15,6 +15,7 @@ import net.mgsx.gltf.composer.utils.ComposerUtils;
 public class ShadowModule implements GLTFComposerModule
 {
 	private Table controls;
+	private CSMModule csm = new CSMModule();
 
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
@@ -36,6 +37,9 @@ public class ShadowModule implements GLTFComposerModule
 		
 		UI.sliderTable(t, "bias", 1e-3f, 1f, ctx.compo.shadowBias, ControlScale.LOG, value->ComposerUtils.updateShadowBias(ctx, value));
 
+		// CSM
+		t.add(csm.initUI(ctx, skin)).colspan(3).fill();
+		
 		controls.add(frame);
 	}
 	@Override
@@ -43,6 +47,11 @@ public class ShadowModule implements GLTFComposerModule
 		if(ctx.compositionJustChanged){
 			updateUI(ctx, ctx.skin);
 		}
+		csm.update(ctx, delta);
+	}
+	@Override
+	public void renderOverlay(GLTFComposerContext ctx) {
+		csm.renderOverlay(ctx);
 	}
 	
 }
