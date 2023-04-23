@@ -2,6 +2,10 @@
 
 #include <compat.vs.glsl>
 
+#ifdef INSTANCE_TRANSFORM
+attribute mat4 i_transform;
+#endif
+
 varying vec3 v_position;
 
 #ifdef LOCAL_POSITION_LOCATION
@@ -294,6 +298,10 @@ void main() {
 		vec4 pos = u_worldTrans * vec4(morph_pos, 1.0);
 	#endif
 	
+	#ifdef INSTANCE_TRANSFORM
+	pos = i_transform * pos;
+	#endif
+
 	v_position = vec3(pos.xyz) / pos.w;
 	gl_Position = u_projViewTrans * pos;
 	
