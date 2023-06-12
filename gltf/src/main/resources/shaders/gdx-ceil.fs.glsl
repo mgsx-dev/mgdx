@@ -88,7 +88,9 @@ in vec3 v_normal;
 uniform sampler2D u_MetallicRoughnessSampler;
 #endif
 
-
+#ifdef emissiveColorFlag
+uniform vec4 u_emissiveColor;
+#endif
 
 // Find the normal for this fragment, pulling either from a predefined normal map
 // or from the interpolated mesh normal and tangent attributes.
@@ -184,6 +186,12 @@ void main() {
 	vec3 specular = light.color * specularColor * specularFactor;
 
 	vec3 color = (ambientFactor + lightValue) * baseColor.rgb + specular;
+#ifdef unlitFlag
+	color = baseColor.rgb;
+#endif
+#ifdef emissiveColorFlag
+	color = u_emissiveColor.rgb;
+#endif
 
 	out_color = vec4(color, baseColor.a);
 }

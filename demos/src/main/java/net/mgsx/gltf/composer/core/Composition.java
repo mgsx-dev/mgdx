@@ -3,6 +3,7 @@ package net.mgsx.gltf.composer.core;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -102,6 +103,27 @@ public class Composition {
 			up.set(camera.up);
 			this.target.set(target);
 			return this;
+		}
+		public CameraConfig set(CameraConfig o) {
+			fieldOfView = o.fieldOfView;
+			near = o.near;
+			far = o.far;
+			position.set(o.position);
+			up.set(o.up);
+			target.set(o.target);
+			return this;
+		}
+		public CameraConfig lerp(CameraConfig o, float t) {
+			fieldOfView = MathUtils.lerp(fieldOfView, o.fieldOfView, t);
+			near = MathUtils.lerp(near, o.near, t);
+			far = MathUtils.lerp(far, o.far, t);
+			position.lerp(o.position, t);
+			up.lerp(o.up, t);
+			target.lerp(o.target, t);
+			return this;
+		}
+		public CameraConfig cpy() {
+			return new CameraConfig().set(this);
 		}
 	}
 	public CameraConfig camera = new CameraConfig();

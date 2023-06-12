@@ -145,6 +145,18 @@ public class UI {
 		change(selectBox, event->handler.accept(selectBox.getSelected()));
 		return selectBox;
 	}
+	public static <T> SelectBox<T> selector(Skin skin, ObjectMap<T,String> items, T defaultItem, Consumer<T> handler) {
+		SelectBox<T> selectBox = new SelectBox<T>(skin){
+			@Override
+			protected String toString(T item) {
+				return items.get(item);
+			}
+		};
+		selectBox.setItems(items.keys().toArray());
+		if(defaultItem != null) selectBox.setSelected(defaultItem);
+		change(selectBox, event->handler.accept(selectBox.getSelected()));
+		return selectBox;
+	}
 	public static <T> Actor selector(Skin skin, String label, T[] items, T defaultItem, Consumer<T> handler) {
 		SelectBox<T> selectBox = new SelectBox<T>(skin);
 		selectBox.setItems(new Array<T>(items));

@@ -48,6 +48,8 @@ import net.mgsx.io.NFDFileSelector;
 
 public class GLTFComposerContext {
 	
+	public static int MIN_BONES = 0;
+
 	public static int DEFAULT_POINT_LIGHTS = 0;
 	
 	// stored settings
@@ -166,8 +168,8 @@ public class GLTFComposerContext {
 			colorShaderConfig.mirrorSRGB = isHDR ? SRGB.NONE: SRGB.FAST;
 			
 			if(asset != null){
-				colorShaderConfig.numBones = asset.maxBones;
-				depthShaderConfig.numBones = asset.maxBones;
+				colorShaderConfig.numBones = Math.max(asset.maxBones, MIN_BONES);
+				depthShaderConfig.numBones = Math.max(asset.maxBones, MIN_BONES);
 			}else{
 				colorShaderConfig.numBones = 0;
 				depthShaderConfig.numBones = 0;

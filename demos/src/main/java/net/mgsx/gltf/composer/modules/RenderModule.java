@@ -1,5 +1,7 @@
 package net.mgsx.gltf.composer.modules;
 
+import java.util.function.Supplier;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -14,10 +16,14 @@ import net.mgsx.gltf.composer.utils.GLTFModuleSwitch;
 public class RenderModule extends GLTFModuleSwitch
 {
 	public static final ObjectMap<GLTFComposerModule, String> extra = new ObjectMap<>();
+	public static final ObjectMap<Supplier<GLTFComposerModule>, String> extraFactory = new ObjectMap<>();
 	
 	public RenderModule(GLTFComposerContext ctx) {
 		for(Entry<GLTFComposerModule, String> e : extra){
 			addSubModule(ctx, e.key, e.value);
+		}
+		for(Entry<Supplier<GLTFComposerModule>, String> e : extraFactory){
+			addSubModule(ctx, e.key.get(), e.value);
 		}
 		addSubModule(ctx, new HDRModule(), "HDR Rendering");
 		addSubModule(ctx, new LDRModule(), "LDR Rendering");
