@@ -20,14 +20,16 @@ public class CSMModule implements GLTFComposerModule {
 	private boolean enabled;
 	private Texture defaultMap;
 	private CascadeShadowMap csm;
-	private int numCascades = 1;
+	private int numCascades = 3;
 	private boolean displayCascades;
+	private float splitDivisor = 4f;
 	
 	@Override
 	public Actor initUI(GLTFComposerContext ctx, Skin skin) {
 		Frame frame = UI.frameToggle("CSM", skin, enabled, v->enable(ctx,v));
 		Table t = frame.getContentTable();
 		CUI.slideri(t, "Cascades", 0, 4, numCascades, v->{numCascades=v; recreateCSM(ctx);});
+		CUI.slider(t, "Split divisor", 1f, 16f, splitDivisor, v->{splitDivisor=v;});
 		CUI.toggle(t, "Display cascades", displayCascades, v->displayCascades=v);
 		return frame;
 	}
@@ -49,10 +51,12 @@ public class CSMModule implements GLTFComposerModule {
 	@Override
 	public void update(GLTFComposerContext ctx, float delta) {
 		DirectionalShadowLight shadowLight = ctx.sceneManager.getFirstDirectionalShadowLight();
-		if(shadowLight != null && csm != null){
-			shadowLight.setCenter(ctx.sceneManager.camera.position);
-			defaultMap = (Texture)shadowLight.getDepthMap().texture;
-			csm.setCascade(shadowLight, 4f);
+		if(shadowLight != null){
+			if(csm != null){
+				float size = Math.max(ctx.sceneBounds.getWidth(), Math.max(ctx.sceneBounds.getHeight(), ctx.sceneBounds.getDepth()));
+				csm.setCascades(ctx.cameraManager.getCamera(), shadowLight, size, splitDivisor);
+				defaultMap = (Texture)shadowLight.getDepthMap().texture;
+			}
 		}
 	}
 	

@@ -41,7 +41,7 @@ public class ComposerUtils {
 		
 		float size = Math.max(box.getWidth(), Math.max(box.getHeight(), box.getDepth()));
 		float near = size / 1000f;
-		float far = size * 30f;
+		float far = size * 10f;
 		
 		ctx.cameraManager.set(position, center, near, far);
 	}
