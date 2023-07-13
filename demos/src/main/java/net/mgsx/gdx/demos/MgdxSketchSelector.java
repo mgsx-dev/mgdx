@@ -17,6 +17,8 @@ import net.mgsx.gdx.demos.sketches.DefaultSketch;
 import net.mgsx.gdx.demos.sketches.GL30Texture3DSketch;
 import net.mgsx.gdx.demos.sketches.GL30TransformFeedbackSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShaderChainSketch;
+import net.mgsx.gdx.demos.sketches.GL31ComputeShaderMeshGridSketch;
+import net.mgsx.gdx.demos.sketches.GL31ComputeShaderMeshSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShaderSSBOSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShaderVBOSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShadersSketch;
@@ -42,6 +44,8 @@ public class MgdxSketchSelector extends Dialog
 	private static final Array<Class<? extends Screen>> sketches = new Array<Class<? extends Screen>>();
 	static{
 		sketches.addAll(
+			GL31ComputeShaderMeshGridSketch.class,
+			GL31ComputeShaderMeshSketch.class,
 			DefaultSketch.class,
 			GLTFXCinematicSketch.class,
 			BenchmarkFileFormatSketch.class,
