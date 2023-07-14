@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 import net.mgsx.gdx.demos.sketches.BenchmarkFileFormatSketch;
 import net.mgsx.gdx.demos.sketches.DefaultSketch;
 import net.mgsx.gdx.demos.sketches.GL30Texture3DSketch;
+import net.mgsx.gdx.demos.sketches.GL30TransformFeedbackMeshSketch;
 import net.mgsx.gdx.demos.sketches.GL30TransformFeedbackSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShaderChainSketch;
 import net.mgsx.gdx.demos.sketches.GL31ComputeShaderMeshGridSketch;
@@ -44,6 +45,7 @@ public class MgdxSketchSelector extends Dialog
 	private static final Array<Class<? extends Screen>> sketches = new Array<Class<? extends Screen>>();
 	static{
 		sketches.addAll(
+			GL30TransformFeedbackMeshSketch.class,
 			GL31ComputeShaderMeshGridSketch.class,
 			GL31ComputeShaderMeshSketch.class,
 			DefaultSketch.class,
