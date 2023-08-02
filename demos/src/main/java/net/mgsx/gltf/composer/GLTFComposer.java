@@ -55,6 +55,7 @@ public class GLTFComposer extends ScreenAdapter {
 	public static final Array<Supplier<GLTFComposerModule>> addonsFactory = new Array<Supplier<GLTFComposerModule>>();
 	
 	public final Array<GLTFComposerModule> modules = new Array<GLTFComposerModule>();
+	public final Array<GLTFComposerModule> extraModules = new Array<GLTFComposerModule>();
 	
 	public final GLTFComposerContext ctx = new GLTFComposerContext();
 	
@@ -148,7 +149,9 @@ public class GLTFComposer extends ScreenAdapter {
 		addModule(new MiscModule(ctx), "icon-lab");
 		addModule(systemModule = new SystemModule(), "icon-wrench");
 		for(Supplier<GLTFComposerModule> f : addonsFactory){
-			addModule(f.get(), "icon-lab");
+			GLTFComposerModule m = f.get();
+			addModule(m, "icon-lab");
+			extraModules.add(m);
 		}
 		
 		tabPane.setCurrentIndex(0);
@@ -189,6 +192,13 @@ public class GLTFComposer extends ScreenAdapter {
 			UI.popup(ctx.stage, ctx.skin, "Error", "multiple files not supported");
 		}else{
 			FileHandle file = files.first();
+			// extra module takes precedence for file handling
+			for(int i=0 ; i<extraModules.size ; i++){
+				GLTFComposerModule module = extraModules.get(i);
+				if(module.handleFile(ctx, file)){
+					return;
+				}
+			}
 			for(int i=modules.size-1 ; i>=0 ; i--){
 				if(modules.get(i).handleFile(ctx, file)){
 					int tabIndex = moduleToTabIndex.get(i, -1);
