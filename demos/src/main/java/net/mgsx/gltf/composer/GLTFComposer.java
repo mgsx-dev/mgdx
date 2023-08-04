@@ -3,8 +3,8 @@ package net.mgsx.gltf.composer;
 import java.util.function.Supplier;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.files.FileHandle;
@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -155,6 +157,18 @@ public class GLTFComposer extends ScreenAdapter {
 		}
 		
 		tabPane.setCurrentIndex(0);
+		
+		ctx.stage.addListener(new InputListener(){
+			@Override
+			public boolean keyDown(InputEvent event, int keycode) {
+				// TODO which one (N is Blender like)
+				if(keycode == Keys.TAB || keycode == Keys.N){
+					toggleTab();
+					return true;
+				}
+				return false;
+			}
+		});
 	}
 
 	private void addModule(GLTFComposerModule module, String iconName){
@@ -234,10 +248,6 @@ public class GLTFComposer extends ScreenAdapter {
 	
 	@Override
 	public void render(float delta) {
-		// TODO which one (N is Blender like)
-		if(Gdx.input.isKeyJustPressed(Input.Keys.TAB) || Gdx.input.isKeyJustPressed(Input.Keys.N)){
-			toggleTab();
-		}
 		
 		ctx.validate();
 		

@@ -335,6 +335,13 @@ public class UI {
 		
 		return dialog;
 	}
+	public static Dialog dialog(String title, Skin skin) {
+		Dialog dialog = new Dialog(title, skin, "dialog");
+		// dialog.getContentTable().add(trig(skin, "Close", ()->dialog.hide()));
+		dialog.getTitleTable().add(UI.change(new Button(skin), e->dialog.hide())).pad(0).size(16, 16);
+		
+		return dialog;
+	}
 	public static void colorBox(Table table, String name, Color colorModel, boolean alpha) {
 		Table t = table(table.getSkin());
 		t.add(name);
