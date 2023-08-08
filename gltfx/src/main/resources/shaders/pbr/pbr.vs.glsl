@@ -352,6 +352,10 @@ void main() {
 		#else
 			vec3 normal = morph_nor;
 		#endif
+		#ifdef INSTANCE_TRANSFORM
+			normal = (i_transform * vec4(normal, 0.0)).xyz;
+		#endif
+
 		
 		// normal new
 		#ifdef tangentFlag
@@ -388,6 +392,9 @@ void main() {
 				vec3 tangent = (skinning * vec4(morph_tan, 0.0)).xyz;
 			#else
 				vec3 tangent = morph_tan;
+			#endif
+			#ifdef INSTANCE_TRANSFORM
+				tangent = (i_transform * vec4(tangent, 0.0)).xyz;
 			#endif
 			
 			
