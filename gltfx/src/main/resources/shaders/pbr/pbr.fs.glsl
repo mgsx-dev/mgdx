@@ -9,6 +9,7 @@
 #include <env.glsl>
 #include <lights.glsl>
 #include <shadows.glsl>
+#include <shadows-debug.glsl>
 #include <ibl.glsl>
 #include <output.head.glsl>
 

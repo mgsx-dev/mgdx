@@ -31,6 +31,8 @@ import net.mgsx.gltf.composer.utils.Overlay;
 import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
 import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
+import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
+import net.mgsx.gltf.scene3d.scene.CascadeShadowMap;
 import net.mgsx.gltf.scene3d.scene.MirrorSource;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
@@ -91,6 +93,7 @@ public class GLTFComposerContext {
 		public void renderShadows() {
 			beforeShadows.run();
 			super.renderShadows();
+			debugShadows();
 		}
 		public void renderTransmission() {
 			beforeTransmission.run();
@@ -134,6 +137,9 @@ public class GLTFComposerContext {
 	private final ObjectMap<String, Texture> textureCache = new ObjectMap<String, Texture>();
 
 	public MirrorSource mirrorSource;
+
+	public boolean shadowDebug;
+	public CascadeShadowMap csm;
 	
 	public GLTFComposerContext() {
 		batch = new SpriteBatch();
@@ -141,6 +147,23 @@ public class GLTFComposerContext {
 		shapes = new ShapeRenderer();
 	}
 	
+	protected void debugShadows() {
+		if(shadowDebug) {
+			// Draw UV grid into depth buffers
+			if(csm != null) {
+				for(int i=0 ; i<csm.lights.size ; i++) {
+					FrameBuffer fbo = csm.lights.get(i).getFrameBuffer();
+					FrameBufferUtils.blit(batch, textureCache("textures/uvs.png"), fbo);
+				}
+			}
+			if(keyLight instanceof DirectionalShadowLight) {
+				FrameBuffer fbo = ((DirectionalShadowLight)keyLight).getFrameBuffer();
+				FrameBufferUtils.blit(batch, textureCache("textures/uvs.png"), fbo);
+			}
+
+		}
+	}
+
 	public void invalidateShaders(){
 		shadersValid = false;
 	}
@@ -161,6 +184,12 @@ public class GLTFComposerContext {
 			colorShaderConfig.numDirectionalLights = 1;
 			colorShaderConfig.numPointLights = DEFAULT_POINT_LIGHTS;
 			colorShaderConfig.numSpotLights = 0;
+			
+			if(shadowDebug) {
+				colorShaderConfig.prefix = "#define shadowDebug\n";
+			}else {
+				colorShaderConfig.prefix = null;
+			}
 			
 			final boolean isHDR = !colorShaderConfig.manualGammaCorrection;
 			

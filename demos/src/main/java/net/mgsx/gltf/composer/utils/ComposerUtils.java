@@ -103,6 +103,11 @@ public class ComposerUtils {
 			 ctx.sceneManager.environment.set(new PBRFloatAttribute(PBRFloatAttribute.ShadowBias, ctx.compo.shadowBias));
 		}
 	}
+	
+	public static void updateShadowDebug(GLTFComposerContext ctx, boolean value) {
+		ctx.shadowDebug = value;
+		ctx.invalidateShaders();
+	}
 
 	public static void enabledSkybox(GLTFComposerContext ctx, boolean enabled) {
 		ctx.compo.skyBoxEnabled = enabled;

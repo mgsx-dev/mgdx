@@ -82,3 +82,9 @@
 #endif
 
 	applyClippingPlane();
+
+// Debug
+#if defined(shadowDebug) && defined(shadowMapFlag)
+	out_FragColor.rgb = getShadowDebug().rgb;
+#endif
+	

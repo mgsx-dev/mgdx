@@ -37,6 +37,8 @@ public class ShadowModule implements GLTFComposerModule
 		
 		UI.sliderTable(t, "bias", 1e-3f, 1f, ctx.compo.shadowBias, ControlScale.LOG, value->ComposerUtils.updateShadowBias(ctx, value));
 
+		UI.toggle(t, "debug", ctx.shadowDebug, value->ComposerUtils.updateShadowDebug(ctx, value));
+		
 		// CSM
 		t.add(csm.initUI(ctx, skin)).colspan(3).fill();
 		
