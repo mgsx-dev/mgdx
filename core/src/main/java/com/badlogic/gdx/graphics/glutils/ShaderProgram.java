@@ -28,6 +28,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -149,6 +150,19 @@ public class ShaderProgram implements Disposable {
 		// prepend code
 		for(ShaderPart part : parts) {
 			String prependCode = part.stage.prependCode;
+			
+			// XXX compatibility with old prepend
+			if(part.stage == ShaderStage.fragment) {
+				if(prependFragmentCode != null && !prependFragmentCode.isEmpty()) {
+					prependCode = prependFragmentCode;
+				}
+			}
+			if(part.stage == ShaderStage.vertex) {
+				if(prependVertexCode != null && !prependVertexCode.isEmpty()) {
+					prependCode = prependVertexCode;
+				}
+			}
+			
 			if(prependCode != null){
 				part.finalCode = prependCode + part.source;
 			}else{

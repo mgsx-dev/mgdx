@@ -138,12 +138,10 @@ public class ComposerUtils {
 	}
 	public static void syncSkyboxAmbientFactor(GLTFComposerContext ctx) {
 		if(ctx.skyBox != null){
-			ColorAttribute diffuseAttribute = ctx.skyBox.environment.get(ColorAttribute.class, ColorAttribute.Diffuse);
-			if(diffuseAttribute != null){
-				ColorUtils.hdrSet(
-					diffuseAttribute.color,
-					ctx.sceneManager.environment.get(ColorAttribute.class, ColorAttribute.AmbientLight).color);
-			}
+			Color diffuseColor = ctx.skyBox.getColor();
+			ColorUtils.hdrSet(
+				diffuseColor,
+				ctx.sceneManager.environment.get(ColorAttribute.class, ColorAttribute.AmbientLight).color);
 		}
 	}
 

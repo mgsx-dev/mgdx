@@ -30,10 +30,10 @@ import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
+import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.gltfx.GLFormat;
 import net.mgsx.gltfx.gfx.BrighnessExtractShader;
 import net.mgsx.gltfx.gfx.ToneMappingShader;
-import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.ibl.IBL;
 
 public class GLTFHDRRenderingSketch extends ScreenAdapter
@@ -58,7 +58,7 @@ public class GLTFHDRRenderingSketch extends ScreenAdapter
 		cameraManager = new BlenderCamera(Vector3.Zero, 5f, Input.Buttons.LEFT);
 		sunLight = new DirectionalLightEx().set(Color.WHITE, new Vector3(1,-2,-1), 3);
 		ibl = IBL.fromHDR(Gdx.files.internal("textures/demo2/table_mountain_2_4k.hdr"), true);
-		skyBox = new SceneSkybox(ibl.getEnvironmentCubemap(), SRGB.FAST, false);
+		skyBox = new SceneSkybox(ibl.getEnvironmentCubemap(), SRGB.FAST, false, true);
 		createSceneManager(0);
 		
 		// post processing

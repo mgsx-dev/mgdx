@@ -29,7 +29,6 @@ import net.mgsx.gltf.composer.core.Composition;
 import net.mgsx.gltf.composer.utils.ComposerUtils;
 import net.mgsx.gltf.composer.utils.Overlay;
 import net.mgsx.gltf.composer.utils.PBRRenderTargetsMultisample;
-import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 import net.mgsx.gltf.scene3d.scene.CascadeShadowMap;
@@ -37,6 +36,7 @@ import net.mgsx.gltf.scene3d.scene.MirrorSource;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
+import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.scene.TransmissionSource;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
@@ -100,7 +100,7 @@ public class GLTFComposerContext {
 			super.renderTransmission();
 		}
 	};
-	public Skybox skyBox;
+	public SceneSkybox skyBox;
 	public IBL ibl;
 	
 	public DirectionalLightEx keyLight = new DirectionalLightEx();
@@ -251,7 +251,7 @@ public class GLTFComposerContext {
 	}
 	
 	public void createSkybox(){
-		skyBox = new Skybox(ibl.getEnvironmentCubemap(), colorShaderConfig.manualSRGB, colorShaderConfig.manualGammaCorrection);
+		skyBox = new SceneSkybox(ibl.getEnvironmentCubemap(), colorShaderConfig.manualSRGB, colorShaderConfig.manualGammaCorrection, true);
 		
 		// enable blending and diffuse factor to enable opacity and ambient factor
 		skyBox.environment.set(new ColorAttribute(ColorAttribute.Diffuse, Color.WHITE));

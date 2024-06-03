@@ -9,11 +9,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import net.mgsx.gltf.composer.core.Composition.CameraConfig;
 import net.mgsx.gltf.composer.core.Composition.ToneMappingOptions.ToneMappingMode;
-import net.mgsx.gltf.scene.Skybox;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
+import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
@@ -36,7 +36,7 @@ public class CompositionManager {
 	private final ToneMappingShader.GammaCompression gammaMode = new ToneMappingShader.GammaCompression(true);
 	private final DirectionalLightEx keyLight = new DirectionalLightEx();
 	public final PerspectiveCamera camera = new PerspectiveCamera();
-	private Skybox skyBox;
+	private SceneSkybox skyBox;
 
 	/**
 	 * Create an empty composition manager. You need to load a composition
@@ -102,7 +102,7 @@ public class CompositionManager {
 		if(compo.ibl != null){
 			compo.ibl.apply(sceneManager);
 			if(compo.skyBoxEnabled){
-				skyBox = new Skybox(compo.ibl.environmentCubemap, colorConfig.manualSRGB, colorConfig.manualGammaCorrection);
+				skyBox = new SceneSkybox(compo.ibl.environmentCubemap, colorConfig.manualSRGB, colorConfig.manualGammaCorrection, true);
 				sceneManager.setSkyBox(skyBox);
 			}else{
 				sceneManager.setSkyBox(null);

@@ -406,7 +406,7 @@ public class IBLModule implements GLTFComposerModule
 		}
 		ctx.sceneManager.setEnvironmentRotation(ctx.compo.envRotation);
 		if(ctx.skyBox != null){
-			ctx.skyBox.setLod(ctx.compo.skyboxBlur);
+			ctx.skyBox.lodBias = ctx.compo.skyboxBlur;
 		}
 	}
 }
